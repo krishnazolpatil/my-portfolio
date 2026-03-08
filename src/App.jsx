@@ -746,11 +746,26 @@ const F = memo(function F({ children, d=0, className="", style={} }) {
   return (
     <div ref={ref} style={{ animationDelay:`${d}ms`, opacity:on?undefined:0, ...style }}
       className={`${on?"fu":""} ${className}`}>{children}</div>
-  );
+  )
 });
 
 /* ── DATA ── */
-const BRANDS = ["Swiggy","Zomato","Razorpay","Notion","Linear","Figma","Stripe","Vercel","Loom","Superhuman"];
+const BRAND_LOGOS = [
+  { name:"adidas",      src:"/my-portfolio/logos/adidas.svg" },
+  { name:"autodesk",    src:"/my-portfolio/logos/autodesk.svg" },
+  { name:"bmw",         src:"/my-portfolio/logos/bmw.svg" },
+  { name:"bose",        src:"/my-portfolio/logos/bose.svg" },
+  { name:"frog",        src:"/my-portfolio/logos/frog.svg" },
+  { name:"google",      src:"/my-portfolio/logos/google.svg" },
+  { name:"harvard",     src:"/my-portfolio/logos/harvard.svg" },
+  { name:"ideo",        src:"/my-portfolio/logos/ideo.svg" },
+  { name:"microsoft",   src:"/my-portfolio/logos/microsoft.svg" },
+  { name:"millerknoll", src:"/my-portfolio/logos/millerknoll.svg" },
+  { name:"mit",         src:"/my-portfolio/logos/mit.svg" },
+  { name:"nike",        src:"/my-portfolio/logos/nike.svg" },
+  { name:"onshape",     src:"/my-portfolio/logos/onshape.svg" },
+  { name:"risd",        src:"/my-portfolio/logos/risd.svg" },
+];
 
 const PROJECTS = [
   { id:"workflow",     n:"01", tag:"Workflow Tool",  title:"Workflow Tool — Home & Action Page",     short:"Redesigning the core dashboard to reduce friction through progressive disclosure.",       desc:"Redesigned the core home dashboard and action page, reducing friction and improving task discovery through progressive disclosure and intelligent defaults.",    chips:["UX Research","Dashboard Design","IA"],       Icon:Zap,          role:"Senior Product Designer", timeline:"8 weeks",  team:"1 Designer · 2 Eng · 1 PM", outcomes:["Reduced time-to-first-action by 40%","Increased daily active usage by 22%","Simplified navigation from 9 items to 4"],   overview:"This project focused on simplifying the most-used surface of a workflow tool — the home dashboard. Users were overwhelmed by the density of actions and struggled to find what mattered most." },
@@ -1124,9 +1139,9 @@ export default function Portfolio() {
           <div className="wrap logo-section">
             <span className="logo-label" style={{ color:mid }}>Designed for users from</span>
             <div className="logo-grid">
-              {BRANDS.map((b,i)=>(
-                <div key={i} className="logo-item" style={{ background:bg3, borderColor:bdr }}>
-                  <span className="logo-name" style={{ color:sub }}>{b}</span>
+              {BRAND_LOGOS.map(logo=>(
+                <div key={logo.name} className="logo-item" style={{ background:bg3, borderColor:bdr }}>
+                  <img src={logo.src} alt={logo.name} style={{ maxWidth:"100%", height:"auto", display:"block" }} />
                 </div>
               ))}
             </div>
