@@ -258,6 +258,12 @@ const Styles = memo(() => (
     .modal-vig { height:clamp(220px,34vw,360px); margin:20px 0 24px; border:1px solid var(--bdr-c);
                  border-radius:16px; display:flex; align-items:center; justify-content:center;
                  color:var(--sub); overflow:hidden; background:var(--media); }
+    .gal { display:flex; gap:10px; margin:20px 0 24px; overflow-x:auto;
+           scroll-snap-type:x mandatory; -webkit-overflow-scrolling:touch;
+           scrollbar-width:none; }
+    .gal::-webkit-scrollbar { display:none; }
+    .gal img { width:100%; flex:0 0 100%; border-radius:16px;
+               border:1px solid var(--bdr-c); scroll-snap-align:center; }
     .modal-rule { height:1px; margin:22px 0; }
     .modal-sec { margin-bottom:22px; }
     .modal-lbl { font-size:0.56rem; letter-spacing:0.14em; text-transform:uppercase;
@@ -425,7 +431,8 @@ const BUILT = [
   {
     slug: "yoink", name: "Yoink", kind: "Chrome extension",
     desc: "Pastes any website into Figma as editable layers.",
-    about: "Rebuilding UI in Figma by hand is slow. Yoink captures any website — layout, text, images — and pastes it into Figma as fully editable layers instead of flat screenshots. Built solo as a Chrome extension, and actively used by designers today.",
+    about: "Rebuilding UI in Figma by hand is slow. Yoink captures any website — layout, text, images — and pastes it into Figma as fully editable layers instead of flat screenshots. Free forever, open source (MIT), 100% offline. Built solo as a Chrome extension, and actively used by designers today.",
+    gallery: [1, 2, 3, 4, 5].map(i => `/work/yoink-${i}.png`),
   },
   {
     slug: "email-signature-generator", name: "Email Signature Generator", kind: "Internal tool",
@@ -524,7 +531,15 @@ const ToolModal = memo(function ToolModal({ t, onClose, T }) {
         <div className="modal-scroll">
           <span className="modal-tag">{t.kind}</span>
           <h2 className="f modal-title">{t.name}</h2>
-          <Shot p={{ id: t.slug, title: t.name }} className="modal-vig" />
+          {t.gallery ? (
+            <div className="gal" aria-label={`${t.name} screenshots — swipe`}>
+              {t.gallery.map((src, i) => (
+                <img key={src} src={src} alt={`${t.name} screenshot ${i + 1} of ${t.gallery.length}`} />
+              ))}
+            </div>
+          ) : (
+            <Shot p={{ id: t.slug, title: t.name }} className="modal-vig" />
+          )}
           <div className="modal-sec" style={{ marginBottom: 0 }}>
             <span className="modal-lbl">Overview</span>
             <p className="modal-body">{t.about}</p>
