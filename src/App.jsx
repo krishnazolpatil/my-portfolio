@@ -611,7 +611,7 @@ export default function Portfolio() {
   const barRef = useRef(null);
   const [now, setNow] = useState(() => new Date());
   const [tool, setTool] = useState(null);
-  const [party, setParty] = useState(false);
+  const [bursts, setBursts] = useState([]);
   const { bg, bdr, txt, mid, sub } = T;
 
   useEffect(() => {
@@ -792,16 +792,16 @@ export default function Portfolio() {
             <section id="process" aria-label="How I work">
               <div className="sec-head">
                 <h2 className="f sec-title">How I work</h2>
-                <span className="m sec-sub" style={{ color: mid }}>research → PRD → prototype → feedback → ship</span>
+                <span className="m sec-sub" style={{ color: mid }}>prioritise → PRD → research → design → ship · feedback throughout</span>
               </div>
               <div className="steps">
                 {[
-                  { t: "Research", d: "Market, platform and user research compiled into decision-ready comparisons before design starts." },
-                  { t: "Write the PRD", d: "Problem, scope and proposed approach on paper first — aligned with founders and design before a pixel moves." },
-                  { t: "Explore in code", d: "Divergent directions built as working prototypes with Claude — real states and motion, not static mocks." },
-                  { t: "Feedback loops", d: "Reviewed with the team, users and external stakeholders — every round implemented, not just noted." },
-                  { t: "Converge & refine", d: "One direction chosen deliberately, with the trade-offs behind each decision written down." },
-                  { t: "Hand off & ship", d: "Dev notes, decisions doc and a running Vercel preview — then iterate on what the launch teaches." },
+                  { t: "Prioritise", d: "Roadmap prioritisation and user-insight mapping with founders decide what's worth building next." },
+                  { t: "Write the PRD", d: "Problem, scope and proposed approach on paper first — aligned before a pixel moves." },
+                  { t: "Precedence research", d: "How existing products solve it — competitive and pattern research compiled into decision-ready references." },
+                  { t: "Lo-fi → hi-fi", d: "Divergent directions from rough frames to working prototypes in code with Claude — real states and motion." },
+                  { t: "Hand off to devs", d: "Dev notes, decisions doc and a running Vercel preview engineers can open and build from." },
+                  { t: "Feedback, always", d: "Team, user and external feedback loops between every stage — each round implemented, not just noted." },
                 ].map((s, i) => (
                   <div key={s.t} className="glass step">
                     <span className="m step-n">0{i + 1}</span>
@@ -837,7 +837,7 @@ export default function Portfolio() {
                   );
                 })}
                 <button type="button" className="lrow" style={{ width: "100%", textAlign: "left" }}
-                  onClick={() => setParty(true)} title="🤫">
+                  onClick={() => setBursts(b => [...b, b.length ? b[b.length - 1] + 1 : 1])} title="🤫">
                   <p className="lrow-name">This website</p>
                   <p className="lrow-desc" style={{ color: mid }}>Designed and built end to end — React + Claude.</p>
                   <span className="m lrow-kind" style={{ color: sub }}>krishnazolpatil.com</span>
@@ -883,7 +883,9 @@ export default function Portfolio() {
           </div>
         </div>
 
-        {party && <Confetti onDone={() => setParty(false)} />}
+        {bursts.map(id => (
+          <Confetti key={id} onDone={() => setBursts(b => b.filter(x => x !== id))} />
+        ))}
         {tool && <ToolModal t={tool} onClose={() => setTool(null)} T={T} />}
         {proj && <CaseModal p={proj} onClose={closeCase} T={T} />}
       </div>
