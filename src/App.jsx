@@ -168,7 +168,8 @@ const Styles = memo(() => (
     .tag-dim { border:1px solid var(--bdr-c); color:var(--mid); }
     .card-arrow { color:var(--sub); flex-shrink:0; transition:transform 0.3s, color 0.2s; }
     .card:hover .card-arrow { transform:translateX(3px); color:var(--accent); }
-    .also { padding:16px 4px 0; font-size:0.64rem; line-height:2; max-width:64ch; }
+    .also { padding:18px 4px 0; font-size:0.8rem; line-height:1.8; max-width:72ch; }
+    .also b { font-weight:600; }
 
     /* ── Process steps ── */
     .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
@@ -194,10 +195,10 @@ const Styles = memo(() => (
                       cursor:zoom-in; }
     .lrow-thumb { width:44px; height:44px; border-radius:11px; object-fit:cover;
                   object-position:top center; border:1px solid var(--bdr-c); }
-    .lightbox { z-index:300; cursor:zoom-out; }
-    .lightbox img { max-width:92vw; max-height:86vh; border-radius:16px;
-                    box-shadow:0 40px 100px -30px rgba(0,0,0,0.6);
-                    animation:modalIn 0.3s cubic-bezier(0.23,1,0.32,1) both; }
+    .confetti { position:fixed; inset:0; z-index:400; pointer-events:none; overflow:hidden; }
+    .confetti i { position:absolute; top:-3vh; display:block;
+                  animation:confetti-fall ease-in forwards; }
+    @keyframes confetti-fall { to { transform:translateY(110vh) rotate(680deg); } }
     .lrow-name { font-size:0.95rem; font-weight:600; letter-spacing:-0.015em; }
     .lrow-desc { font-size:0.76rem; line-height:1.6; }
     .lrow-kind { font-size:0.56rem; letter-spacing:0.1em; text-transform:uppercase; white-space:nowrap; }
@@ -423,9 +424,21 @@ const BENTO = ["b-big", "b-tall", "", "", "", "b-wide"];
 
 
 const BUILT = [
-  { slug: "yoink", name: "Yoink", kind: "Chrome extension", desc: "Pastes any website into Figma as editable layers." },
-  { slug: "email-signature-generator", name: "Email Signature Generator", kind: "Internal tool", desc: "Replaced a three-week, three-person manual process." },
-  { slug: "qr-code-builder", name: "QR Code Builder", kind: "Internal tool", desc: "On-brand QR codes, self-serve for the whole company." },
+  {
+    slug: "yoink", name: "Yoink", kind: "Chrome extension",
+    desc: "Pastes any website into Figma as editable layers.",
+    about: "Rebuilding UI in Figma by hand is slow. Yoink captures any website — layout, text, images — and pastes it into Figma as fully editable layers instead of flat screenshots. Built solo as a Chrome extension, and actively used by designers today.",
+  },
+  {
+    slug: "email-signature-generator", name: "Email Signature Generator", kind: "Internal tool",
+    desc: "Replaced a three-week, three-person manual process.",
+    about: "Getting a branded email signature used to take three weeks and three people across design, dev and marketing — and still ended in manual copy-paste. This tool replaced all of that: type your name, hit copy, paste into Gmail. Everyone at the company gets an on-brand signature, animated logo included, fully self-serve.",
+  },
+  {
+    slug: "qr-code-builder", name: "QR Code Builder", kind: "Internal tool",
+    desc: "On-brand QR codes, self-serve for the whole company.",
+    about: "Custom, on-brand QR codes for business cards and print — generated self-serve by anyone in the company, ready to share. Designed and built end to end.",
+  },
 ];
 
 /* Product screenshots only — no placeholders. A card's image area
@@ -462,6 +475,73 @@ const HeroShot = memo(function HeroShot() {
     <div className="hero-shot" style={state === "ok" ? undefined : { display: "none" }}>
       <img src="/work/hero.png" alt="Product work by Krishna Zolpatil"
         onLoad={() => setState("ok")} onError={() => setState("error")} />
+    </div>
+  );
+});
+
+/* ── Confetti easter egg (clicking "This website") ── */
+const CONFETTI_COLORS = ["#0A84FF", "#30D158", "#FFD60A", "#FF9F0A", "#FF375F", "#BF5AF2"];
+const Confetti = memo(function Confetti({ onDone }) {
+  const [pieces] = useState(() => Array.from({ length: 90 }, () => ({
+    left: Math.random() * 100,
+    size: 7 + Math.random() * 8,
+    delay: Math.random() * 0.5,
+    dur: 2.2 + Math.random() * 1.5,
+    color: CONFETTI_COLORS[Math.floor(Math.random() * CONFETTI_COLORS.length)],
+    round: Math.random() > 0.5,
+    tilt: Math.random() * 360,
+  })));
+  useEffect(() => {
+    const t = setTimeout(onDone, 4200);
+    return () => clearTimeout(t);
+  }, [onDone]);
+  return (
+    <div className="confetti" aria-hidden="true">
+      {pieces.map((p, i) => (
+        <i key={i} style={{
+          left: `${p.left}vw`, width: p.size, height: p.size * (p.round ? 1 : 0.45),
+          background: p.color, borderRadius: p.round ? "50%" : 2,
+          animationDelay: `${p.delay}s`, animationDuration: `${p.dur}s`,
+          transform: `rotate(${p.tilt}deg)`,
+        }} />
+      ))}
+    </div>
+  );
+});
+
+/* ── Tool sheet: screenshot + description, same chrome as case studies ── */
+const ToolModal = memo(function ToolModal({ t, onClose, T }) {
+  useEffect(() => {
+    const onKey = (e) => { if (e.key === "Escape") onClose(); };
+    document.addEventListener("keydown", onKey);
+    document.body.style.overflow = "hidden";
+    return () => { document.removeEventListener("keydown", onKey); document.body.style.overflow = ""; };
+  }, [onClose]);
+
+  if (!t) return null;
+  return (
+    <div className="backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label={t.name}>
+      <div className="modal" style={{ background: T.sheet, color: T.txt, maxWidth: 640 }}
+        onClick={e => e.stopPropagation()}>
+        <div className="modal-nav">
+          <span className="modal-nav-title">{t.name}</span>
+          <button className="modal-close" onClick={onClose} aria-label="Close"><X style={{ width: 16, height: 16 }} /></button>
+        </div>
+        <div className="modal-scroll">
+          <span className="modal-tag">{t.kind}</span>
+          <h2 className="f modal-title">{t.name}</h2>
+          <Shot p={{ id: t.slug, title: t.name }} className="modal-vig" />
+          <div className="modal-sec" style={{ marginBottom: 0 }}>
+            <span className="modal-lbl">Overview</span>
+            <p className="modal-body">{t.about}</p>
+          </div>
+          {t.href && (
+            <a className="cta cta-fill" style={{ marginTop: 22 }} href={t.href} target="_blank" rel="noopener noreferrer">
+              Get it on the Chrome Web Store
+            </a>
+          )}
+        </div>
+      </div>
     </div>
   );
 });
@@ -530,15 +610,9 @@ export default function Portfolio() {
   const [glow, setGlow] = useState({ x: 0, w: 0, on: false });
   const barRef = useRef(null);
   const [now, setNow] = useState(() => new Date());
-  const [lightbox, setLightbox] = useState(null);
+  const [tool, setTool] = useState(null);
+  const [party, setParty] = useState(false);
   const { bg, bdr, txt, mid, sub } = T;
-
-  useEffect(() => {
-    if (!lightbox) return;
-    const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
-    document.addEventListener("keydown", onKey);
-    return () => document.removeEventListener("keydown", onKey);
-  }, [lightbox]);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 30000);
@@ -709,8 +783,8 @@ export default function Portfolio() {
                   </F>
                 ))}
               </div>
-              <p className="m also" style={{ color: sub }}>
-                + 194 more shipped — {ARCHIVE}…
+              <p className="also" style={{ color: mid }}>
+                <b style={{ color: txt }}>+ 194 more shipped</b> — {ARCHIVE}…
               </p>
             </section>
 
@@ -751,7 +825,7 @@ export default function Portfolio() {
                   return (
                     <Row key={b.name} className="lrow" {...rowProps}>
                       <div className="lrow-head">
-                        <Thumb slug={b.slug} alt={`${b.name} — screenshot`} onZoom={setLightbox} />
+                        <Thumb slug={b.slug} alt={`${b.name} — screenshot`} onZoom={() => setTool(b)} />
                         <p className="lrow-name">
                           {b.name}
                           {b.href && <ArrowUpRight className="lrow-ext" aria-hidden="true" />}
@@ -762,11 +836,12 @@ export default function Portfolio() {
                     </Row>
                   );
                 })}
-                <div className="lrow">
+                <button type="button" className="lrow" style={{ width: "100%", textAlign: "left" }}
+                  onClick={() => setParty(true)} title="🤫">
                   <p className="lrow-name">This website</p>
                   <p className="lrow-desc" style={{ color: mid }}>Designed and built end to end — React + Claude.</p>
                   <span className="m lrow-kind" style={{ color: sub }}>krishnazolpatil.com</span>
-                </div>
+                </button>
               </div>
             </section>
 
@@ -808,11 +883,8 @@ export default function Portfolio() {
           </div>
         </div>
 
-        {lightbox && (
-          <div className="backdrop lightbox" onClick={() => setLightbox(null)} role="dialog" aria-modal="true" aria-label="Screenshot preview">
-            <img src={lightbox} alt="Screenshot, full size" />
-          </div>
-        )}
+        {party && <Confetti onDone={() => setParty(false)} />}
+        {tool && <ToolModal t={tool} onClose={() => setTool(null)} T={T} />}
         {proj && <CaseModal p={proj} onClose={closeCase} T={T} />}
       </div>
     </ErrorBoundary>
