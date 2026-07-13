@@ -187,14 +187,12 @@ const Styles = memo(() => (
             padding:17px 22px; border-bottom:1px solid var(--bdr-c); }
     .lrow:last-child { border-bottom:none; }
     .lrow-head { display:flex; align-items:center; gap:12px; min-width:0; }
-    a.lrow { transition:background 0.2s; }
-    a.lrow:hover { background:var(--media); }
+    a.lrow, button.lrow { transition:background 0.2s; }
+    a.lrow:hover, button.lrow:hover { background:var(--media); }
     .lrow-ext { width:13px; height:13px; color:var(--sub); margin-left:6px;
                 vertical-align:-2px; display:inline; }
-    .lrow-thumb-btn { padding:0; line-height:0; border-radius:11px; flex-shrink:0;
-                      cursor:zoom-in; }
     .lrow-thumb { width:44px; height:44px; border-radius:11px; object-fit:cover;
-                  object-position:top center; border:1px solid var(--bdr-c); }
+                  object-position:top center; border:1px solid var(--bdr-c); flex-shrink:0; }
     .confetti { position:fixed; inset:0; z-index:400; pointer-events:none; overflow:hidden; }
     .confetti i { position:absolute; top:-3vh; display:block;
                   animation:confetti-fall ease-in forwards; }
@@ -454,17 +452,13 @@ const Shot = memo(function Shot({ p, className = "card-media" }) {
   );
 });
 
-const Thumb = memo(function Thumb({ slug, alt, onZoom }) {
+const Thumb = memo(function Thumb({ slug, alt }) {
   const [state, setState] = useState("loading");
   if (state === "error") return null;
-  const src = `/work/${slug}.png`;
   return (
-    <button type="button" className="lrow-thumb-btn" aria-label={`View ${alt} full size`}
-      style={state === "ok" ? undefined : { display: "none" }}
-      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onZoom?.(src); }}>
-      <img className="lrow-thumb" src={src} alt={alt}
-        onLoad={() => setState("ok")} onError={() => setState("error")} />
-    </button>
+    <img className="lrow-thumb" style={state === "ok" ? undefined : { display: "none" }}
+      src={`/work/${slug}.png`} alt={alt}
+      onLoad={() => setState("ok")} onError={() => setState("error")} />
   );
 });
 
@@ -820,12 +814,14 @@ export default function Portfolio() {
               </div>
               <div className="glass list">
                 {BUILT.map(b => {
-                  const Row = b.href ? "a" : "div";
-                  const rowProps = b.href ? { href: b.href, target: "_blank", rel: "noopener noreferrer" } : {};
+                  const Row = b.href ? "a" : "button";
+                  const rowProps = b.href
+                    ? { href: b.href, target: "_blank", rel: "noopener noreferrer" }
+                    : { type: "button", onClick: () => setTool(b) };
                   return (
-                    <Row key={b.name} className="lrow" {...rowProps}>
+                    <Row key={b.name} className="lrow" style={{ width: "100%", textAlign: "left" }} {...rowProps}>
                       <div className="lrow-head">
-                        <Thumb slug={b.slug} alt={`${b.name} — screenshot`} onZoom={() => setTool(b)} />
+                        <Thumb slug={b.slug} alt={`${b.name} — screenshot`} />
                         <p className="lrow-name">
                           {b.name}
                           {b.href && <ArrowUpRight className="lrow-ext" aria-hidden="true" />}
