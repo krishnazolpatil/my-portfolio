@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, memo, Component } from "react";
-import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench } from "lucide-react";
+import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench, ArrowUpRight } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────
    Apple-style portfolio. Solid surfaces, hairline borders,
@@ -186,8 +186,18 @@ const Styles = memo(() => (
             padding:17px 22px; border-bottom:1px solid var(--bdr-c); }
     .lrow:last-child { border-bottom:none; }
     .lrow-head { display:flex; align-items:center; gap:12px; min-width:0; }
+    a.lrow { transition:background 0.2s; }
+    a.lrow:hover { background:var(--media); }
+    .lrow-ext { width:13px; height:13px; color:var(--sub); margin-left:6px;
+                vertical-align:-2px; display:inline; }
+    .lrow-thumb-btn { padding:0; line-height:0; border-radius:11px; flex-shrink:0;
+                      cursor:zoom-in; }
     .lrow-thumb { width:44px; height:44px; border-radius:11px; object-fit:cover;
-                  object-position:top center; border:1px solid var(--bdr-c); flex-shrink:0; }
+                  object-position:top center; border:1px solid var(--bdr-c); }
+    .lightbox { z-index:300; cursor:zoom-out; }
+    .lightbox img { max-width:92vw; max-height:86vh; border-radius:16px;
+                    box-shadow:0 40px 100px -30px rgba(0,0,0,0.6);
+                    animation:modalIn 0.3s cubic-bezier(0.23,1,0.32,1) both; }
     .lrow-name { font-size:0.95rem; font-weight:600; letter-spacing:-0.015em; }
     .lrow-desc { font-size:0.76rem; line-height:1.6; }
     .lrow-kind { font-size:0.56rem; letter-spacing:0.1em; text-transform:uppercase; white-space:nowrap; }
@@ -431,13 +441,17 @@ const Shot = memo(function Shot({ p, className = "card-media" }) {
   );
 });
 
-const Thumb = memo(function Thumb({ slug, alt }) {
+const Thumb = memo(function Thumb({ slug, alt, onZoom }) {
   const [state, setState] = useState("loading");
   if (state === "error") return null;
+  const src = `/work/${slug}.png`;
   return (
-    <img className="lrow-thumb" style={state === "ok" ? undefined : { display: "none" }}
-      src={`/work/${slug}.png`} alt={alt}
-      onLoad={() => setState("ok")} onError={() => setState("error")} />
+    <button type="button" className="lrow-thumb-btn" aria-label={`View ${alt} full size`}
+      style={state === "ok" ? undefined : { display: "none" }}
+      onClick={(e) => { e.preventDefault(); e.stopPropagation(); onZoom?.(src); }}>
+      <img className="lrow-thumb" src={src} alt={alt}
+        onLoad={() => setState("ok")} onError={() => setState("error")} />
+    </button>
   );
 });
 
@@ -516,7 +530,15 @@ export default function Portfolio() {
   const [glow, setGlow] = useState({ x: 0, w: 0, on: false });
   const barRef = useRef(null);
   const [now, setNow] = useState(() => new Date());
+  const [lightbox, setLightbox] = useState(null);
   const { bg, bdr, txt, mid, sub } = T;
+
+  useEffect(() => {
+    if (!lightbox) return;
+    const onKey = (e) => { if (e.key === "Escape") setLightbox(null); };
+    document.addEventListener("keydown", onKey);
+    return () => document.removeEventListener("keydown", onKey);
+  }, [lightbox]);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 30000);
@@ -723,16 +745,23 @@ export default function Portfolio() {
                 <span className="m sec-sub" style={{ color: mid }}>solo · end to end</span>
               </div>
               <div className="glass list">
-                {BUILT.map(b => (
-                  <div key={b.name} className="lrow">
-                    <div className="lrow-head">
-                      <Thumb slug={b.slug} alt={`${b.name} — screenshot`} />
-                      <p className="lrow-name">{b.name}</p>
-                    </div>
-                    <p className="lrow-desc" style={{ color: mid }}>{b.desc}</p>
-                    <span className="m lrow-kind" style={{ color: sub }}>{b.kind}</span>
-                  </div>
-                ))}
+                {BUILT.map(b => {
+                  const Row = b.href ? "a" : "div";
+                  const rowProps = b.href ? { href: b.href, target: "_blank", rel: "noopener noreferrer" } : {};
+                  return (
+                    <Row key={b.name} className="lrow" {...rowProps}>
+                      <div className="lrow-head">
+                        <Thumb slug={b.slug} alt={`${b.name} — screenshot`} onZoom={setLightbox} />
+                        <p className="lrow-name">
+                          {b.name}
+                          {b.href && <ArrowUpRight className="lrow-ext" aria-hidden="true" />}
+                        </p>
+                      </div>
+                      <p className="lrow-desc" style={{ color: mid }}>{b.desc}</p>
+                      <span className="m lrow-kind" style={{ color: sub }}>{b.kind}</span>
+                    </Row>
+                  );
+                })}
                 <div className="lrow">
                   <p className="lrow-name">This website</p>
                   <p className="lrow-desc" style={{ color: mid }}>Designed and built end to end — React + Claude.</p>
@@ -779,6 +808,11 @@ export default function Portfolio() {
           </div>
         </div>
 
+        {lightbox && (
+          <div className="backdrop lightbox" onClick={() => setLightbox(null)} role="dialog" aria-modal="true" aria-label="Screenshot preview">
+            <img src={lightbox} alt="Screenshot, full size" />
+          </div>
+        )}
         {proj && <CaseModal p={proj} onClose={closeCase} T={T} />}
       </div>
     </ErrorBoundary>
