@@ -232,15 +232,18 @@ const Styles = memo(() => (
     .also { padding:18px 4px 0; font-size:0.8rem; line-height:1.8; max-width:72ch; }
     .also b { font-weight:600; }
 
-    /* ── Process steps ── */
-    .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
-    .step { padding:20px 20px 22px; transition:transform 0.35s cubic-bezier(0.23,1,0.32,1); }
-    .step:hover { transform:translateY(-3px); }
-    .step-n { font-size:0.56rem; letter-spacing:0.22em; color:var(--accent); display:block; }
-    .step-t { font-family:'Playfair Display',Georgia,serif; font-size:1.05rem; font-weight:600; margin-top:10px; }
-    .step-d { font-size:0.76rem; line-height:1.6; color:var(--mid); margin-top:6px; font-weight:300; }
-    @media(max-width:860px){ .steps { grid-template-columns:1fr 1fr; } }
-    @media(max-width:520px){ .steps { grid-template-columns:1fr; } }
+    /* ── Process: numbered ledger, typography over boxes ── */
+    .steps { border-top:1px solid var(--bdr-c); }
+    .step { display:grid; grid-template-columns:72px 250px 1fr; gap:20px; align-items:baseline;
+            padding:21px 6px; border-bottom:1px solid var(--bdr-c); }
+    .step-n { font-family:'Playfair Display',Georgia,serif; font-style:italic; font-weight:500;
+              font-size:1.35rem; color:var(--accent); }
+    .step-t { font-family:'Playfair Display',Georgia,serif; font-size:1.12rem; font-weight:600; }
+    .step-d { font-size:0.82rem; line-height:1.6; color:var(--mid); font-weight:300; }
+    @media(max-width:700px){
+      .step { grid-template-columns:44px 1fr; }
+      .step-d { grid-column:2; margin-top:2px; }
+    }
 
     /* ── Built: grouped glass list ── */
     .list { overflow:hidden; }
@@ -1025,13 +1028,11 @@ export default function Portfolio() {
                   { t: "Hand off to devs", d: "Dev notes and a running preview to build from." },
                   { t: "Feedback, always", d: "Loops between every stage, each round implemented." },
                 ].map((s, i) => (
-                  <F key={s.t} d={(i % 3) * 90}>
-                    <div className="glass step">
-                      <span className="m step-n">0{i + 1}</span>
-                      <p className="step-t">{s.t}</p>
-                      <p className="step-d">{s.d}</p>
-                    </div>
-                  </F>
+                  <div key={s.t} className="step">
+                    <span className="step-n">0{i + 1}</span>
+                    <p className="step-t">{s.t}</p>
+                    <p className="step-d">{s.d}</p>
+                  </div>
                 ))}
               </div>
             </section>
