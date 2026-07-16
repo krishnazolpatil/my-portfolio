@@ -2,27 +2,27 @@ import { useState, useEffect, useRef, useCallback, memo, Component } from "react
 import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench, ArrowUpRight } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────
-   Apple-style portfolio. Solid surfaces, hairline borders,
-   monochrome black accent, blurred pill nav, keynote hero,
-   client marquee, cards driven by real product screenshots
-   in public/work/ (image areas appear once files exist).
+   v3 — warm editorial. Playfair Display serif display type
+   with italic accents, Spline Sans body, stone paper
+   surfaces, teal accent, wide-tracked uppercase labels.
+   Cards driven by real product screenshots in public/work/.
 ───────────────────────────────────────────────────────── */
 
 const Styles = memo(() => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,300..700&family=Geist+Mono:wght@400..500&display=swap');
+    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..800;1,400..800&family=Spline+Sans:wght@300..700&display=swap');
 
-    :root { --accent:#1D1D1F; }
+    :root { --accent:#0D9488; --ink:#1A1A1A; }
 
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
     html  { scroll-behavior:smooth; font-size:16px; overflow-x:clip; }
-    html, body { background:#F5F5F7; }
-    body  { font-family:'Inter',sans-serif; -webkit-font-smoothing:antialiased; overflow-x:clip; }
+    html, body { background:#FAF9F6; }
+    body  { font-family:'Spline Sans','Inter',sans-serif; -webkit-font-smoothing:antialiased; overflow-x:clip; }
     img   { display:block; max-width:100%; }
     a     { text-decoration:none; color:inherit; }
     button{ font-family:inherit; cursor:pointer; background:none; border:none; color:inherit; }
-    .f    { font-weight:650; letter-spacing:-0.035em; }
-    .m    { font-family:'Geist Mono',monospace; }
+    .f    { font-family:'Playfair Display',Georgia,serif; font-weight:600; letter-spacing:-0.01em; }
+    .m    { font-family:'Spline Sans',sans-serif; text-transform:uppercase; letter-spacing:0.18em; font-weight:500; }
 
     @keyframes fadeUp  { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
     @keyframes fadeIn  { from{opacity:0;} to{opacity:1;} }
@@ -93,7 +93,7 @@ const Styles = memo(() => (
                  letter-spacing:0.02em; color:var(--mid); position:relative; z-index:1;
                  transition:color 0.3s; }
     .dock-item svg { width:17px; height:17px; }
-    .dock-item.on { color:#000; }
+    .dock-item.on { color:var(--ink); }
     .dock-fab { width:58px; height:58px; border-radius:50%; display:flex; align-items:center;
                 justify-content:center; color:#fff; background:var(--accent);
                 box-shadow:0 14px 40px -16px rgba(0,0,0,0.4);
@@ -105,17 +105,19 @@ const Styles = memo(() => (
     .dock-fab svg { width:20px; height:20px; }
     .dock-cv .cv-menu { top:auto; bottom:calc(100% + 18px); right:auto; left:50%; margin-left:-115px; }
 
-    /* ── Hero: centered, keynote style ── */
+    /* ── Hero: centered, editorial ── */
     .hero { padding-top:clamp(120px,16vh,180px); text-align:center; }
-    .h1 { font-size:clamp(2.7rem,7.4vw,5.4rem); line-height:1.05; letter-spacing:-0.045em; font-weight:680; }
+    .hero-eyebrow { font-size:0.62rem; letter-spacing:0.32em; color:var(--accent);
+                    display:block; margin-bottom:22px; }
+    .h1 { font-family:'Playfair Display',Georgia,serif; font-weight:600;
+          font-size:clamp(2.6rem,7vw,5.1rem); line-height:1.08; letter-spacing:-0.015em; }
     .h1 .line { overflow:hidden; display:block; padding-bottom:0.14em; margin-bottom:-0.14em; }
     .h1 .line > span { display:block; transform:translateY(110%);
                        animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) forwards; }
     .h1 .line:nth-child(2) > span { animation-delay:0.12s; }
-    .h1 em { font-style:normal; background:linear-gradient(95deg,#1D1D1F,#86868B);
-             -webkit-background-clip:text; background-clip:text; color:transparent; }
-    .lede { margin:26px auto 0; max-width:76ch; font-size:clamp(0.98rem,1.4vw,1.12rem);
-            line-height:1.75; }
+    .h1 em { font-style:italic; font-weight:500; color:var(--accent); }
+    .lede { margin:24px auto 0; max-width:44ch; font-size:clamp(1rem,1.4vw,1.14rem);
+            line-height:1.7; font-weight:300; }
     .hero-cta { display:flex; justify-content:center; gap:12px; margin-top:30px; flex-wrap:wrap; }
     .cta { display:inline-flex; align-items:center; gap:8px; padding:13px 26px; border-radius:100px;
            font-size:0.88rem; font-weight:600;
@@ -137,8 +139,9 @@ const Styles = memo(() => (
     section { scroll-margin-top:88px; }
     .sec-head { display:flex; justify-content:space-between; align-items:baseline; gap:12px;
                 flex-wrap:wrap; margin:clamp(56px,9vh,88px) 0 18px; }
-    .sec-title { font-size:1.35rem; font-weight:650; letter-spacing:-0.03em; }
-    .sec-sub { font-size:0.6rem; letter-spacing:0.05em; }
+    .sec-title { font-size:1.6rem; font-weight:600; letter-spacing:-0.01em; }
+    .sec-title em { font-style:italic; font-weight:500; color:var(--accent); }
+    .sec-sub { font-size:0.58rem; letter-spacing:0.22em; }
 
     /* ── Work: bento grid ── */
     .cards { display:grid; grid-template-columns:repeat(3,1fr); gap:16px; }
@@ -159,12 +162,12 @@ const Styles = memo(() => (
     .shot { width:100%; height:100%; object-fit:cover; object-position:top center; }
     .card-body { padding:17px 20px 19px; display:flex; flex-direction:column; gap:7px; flex:1; }
     .card-top { display:flex; align-items:center; justify-content:space-between; gap:10px; }
-    .card-n { font-size:0.6rem; letter-spacing:0.08em; color:var(--accent); display:block; margin-bottom:2px; }
-    .card-title { font-size:1.08rem; font-weight:640; letter-spacing:-0.02em; }
-    .card-desc { font-size:0.78rem; line-height:1.6; }
+    .card-n { font-size:0.56rem; letter-spacing:0.22em; color:var(--accent); display:block; margin-bottom:2px; }
+    .card-title { font-family:'Playfair Display',Georgia,serif; font-size:1.22rem; font-weight:600; letter-spacing:-0.01em; }
+    .card-desc { font-size:0.8rem; line-height:1.6; font-weight:300; }
     .card-tags { display:flex; gap:7px; margin-top:auto; padding-top:10px; flex-wrap:wrap; }
-    .tag { font-size:0.58rem; letter-spacing:0.04em; padding:5px 11px; border-radius:100px; }
-    .tag-hot { background:rgba(0,0,0,0.06); color:var(--txt-c); }
+    .tag { font-size:0.56rem; letter-spacing:0.12em; text-transform:uppercase; padding:5px 11px; border-radius:100px; }
+    .tag-hot { background:rgba(13,148,136,0.08); color:var(--accent); }
     .tag-dim { border:1px solid var(--bdr-c); color:var(--mid); }
     .card-arrow { color:var(--sub); flex-shrink:0; transition:transform 0.3s, color 0.2s; }
     .card:hover .card-arrow { transform:translateX(3px); color:var(--accent); }
@@ -175,9 +178,9 @@ const Styles = memo(() => (
     .steps { display:grid; grid-template-columns:repeat(3,1fr); gap:14px; }
     .step { padding:20px 20px 22px; transition:transform 0.35s cubic-bezier(0.23,1,0.32,1); }
     .step:hover { transform:translateY(-3px); }
-    .step-n { font-size:0.6rem; letter-spacing:0.08em; color:var(--accent); display:block; }
-    .step-t { font-size:0.95rem; font-weight:640; letter-spacing:-0.02em; margin-top:10px; }
-    .step-d { font-size:0.74rem; line-height:1.6; color:var(--mid); margin-top:6px; }
+    .step-n { font-size:0.56rem; letter-spacing:0.22em; color:var(--accent); display:block; }
+    .step-t { font-family:'Playfair Display',Georgia,serif; font-size:1.05rem; font-weight:600; margin-top:10px; }
+    .step-d { font-size:0.76rem; line-height:1.6; color:var(--mid); margin-top:6px; font-weight:300; }
     @media(max-width:860px){ .steps { grid-template-columns:1fr 1fr; } }
     @media(max-width:520px){ .steps { grid-template-columns:1fr; } }
 
@@ -197,9 +200,9 @@ const Styles = memo(() => (
     .confetti i { position:absolute; top:-3vh; display:block;
                   animation:confetti-fall ease-in forwards; }
     @keyframes confetti-fall { to { transform:translateY(110vh) rotate(680deg); } }
-    .lrow-name { font-size:0.95rem; font-weight:600; letter-spacing:-0.015em; }
-    .lrow-desc { font-size:0.76rem; line-height:1.6; }
-    .lrow-kind { font-size:0.56rem; letter-spacing:0.1em; text-transform:uppercase; white-space:nowrap; }
+    .lrow-name { font-family:'Playfair Display',Georgia,serif; font-size:1.02rem; font-weight:600; }
+    .lrow-desc { font-size:0.78rem; line-height:1.6; font-weight:300; }
+    .lrow-kind { font-size:0.54rem; letter-spacing:0.18em; text-transform:uppercase; white-space:nowrap; }
 
     /* ── Footer ── */
     .foot { margin:clamp(56px,9vh,88px) 0 120px; }
@@ -210,9 +213,9 @@ const Styles = memo(() => (
                  box-shadow:0 1px 2px rgba(0,0,0,0.04); }
     .foot-rule { height:1px; background:var(--bdr-c); border:none;
                  margin:clamp(36px,6vh,56px) auto clamp(26px,4vh,40px); }
-    .foot-title { font-size:clamp(1.9rem,4.6vw,3.1rem); font-weight:680; letter-spacing:-0.04em;
-                  line-height:1.1; }
-    .foot-title em { font-style:normal; color:var(--mid); }
+    .foot-title { font-family:'Playfair Display',Georgia,serif; font-size:clamp(1.9rem,4.6vw,3.1rem);
+                  font-weight:600; letter-spacing:-0.01em; line-height:1.15; }
+    .foot-title em { font-style:italic; font-weight:500; color:var(--accent); }
     .foot-note { margin:16px auto 0; max-width:46ch; font-size:0.9rem; line-height:1.7;
                  color:var(--mid); }
     .foot-actions { display:flex; align-items:center; justify-content:center; gap:14px;
@@ -225,9 +228,9 @@ const Styles = memo(() => (
     .foot-link { font-size:0.68rem; font-weight:500; padding:8px 14px; border-radius:100px;
                  border:1px solid var(--bdr-c); transition:color 0.2s, border-color 0.2s, background 0.2s; }
     .foot-link:hover { color:var(--accent); border-color:var(--accent); }
-    .giant { font-size:clamp(2.3rem,8vw,6.6rem); line-height:0.98; letter-spacing:-0.05em;
-             font-weight:680; }
-    .giant em { font-style:normal; color:var(--mid); white-space:nowrap; }
+    .giant { font-family:'Playfair Display',Georgia,serif; font-size:clamp(2.3rem,8vw,6.6rem);
+             line-height:1; letter-spacing:-0.015em; font-weight:600; }
+    .giant em { font-style:italic; font-weight:500; color:var(--accent); white-space:nowrap; }
     .colophon { display:flex; flex-direction:column; align-items:center; gap:5px;
                 margin-top:30px; font-size:0.58rem; letter-spacing:0.05em; }
 
@@ -247,10 +250,10 @@ const Styles = memo(() => (
                        white-space:nowrap; overflow:hidden; text-overflow:ellipsis; }
     .modal-scroll { overflow-y:auto; padding:clamp(20px,4vw,36px) clamp(22px,4vw,40px); }
     .modal-top { display:flex; justify-content:space-between; align-items:flex-start; gap:16px; }
-    .modal-tag { font-size:0.58rem; letter-spacing:0.1em; text-transform:uppercase;
+    .modal-tag { font-size:0.56rem; letter-spacing:0.16em; text-transform:uppercase;
                  color:var(--accent); display:inline-block; margin-bottom:10px;
-                 background:rgba(0,0,0,0.06); padding:5px 11px; border-radius:100px; }
-    .modal-title { font-size:clamp(1.5rem,3.4vw,2.1rem); letter-spacing:-0.035em; line-height:1.1; }
+                 background:rgba(13,148,136,0.08); padding:5px 11px; border-radius:100px; }
+    .modal-title { font-size:clamp(1.5rem,3.4vw,2.1rem); letter-spacing:-0.01em; line-height:1.15; }
     .modal-close { display:flex; padding:9px; border-radius:50%; background:rgba(0,0,0,0.06);
                    opacity:0.85; transition:opacity 0.2s, transform 0.3s; flex-shrink:0; }
     .modal-close:hover { opacity:1; transform:rotate(90deg); }
@@ -299,7 +302,7 @@ const SEO = memo(function SEO() {
   useEffect(() => {
     let el = document.querySelector('meta[name="theme-color"]');
     if (!el) { el = document.createElement("meta"); el.name = "theme-color"; document.head.appendChild(el); }
-    el.content = "#F5F5F7";
+    el.content = "#FAF9F6";
   }, []);
   return null;
 });
@@ -343,7 +346,7 @@ const F = memo(function F({ children, d = 0, className = "", style = {} }) {
 const PROJECTS = [
   {
     id: "workflow-builder", n: "01", tag: "AI · Flagship", title: "AI Workflow Builder",
-    short: "Composable AI workflows teams can trust. A zero-to-one build, designed end to end, prototyped in code.",
+    short: "Composable AI workflows teams can trust. Zero to one.",
     role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Founders · Engineering · Me",
     overview: "Naya helps product teams take ideas to production. The Workflow Builder brings AI into that journey. Teams set up intelligent, repeatable workflows instead of managing every step by hand. I owned the design end to end, from early framing with the founders to prototypes and handoff.",
     outcomes: ["Shipped as a flagship AI capability of the platform", "Template-first design made workflows reusable across teams", "Click-through code prototypes replaced static mocks in reviews"],
@@ -356,7 +359,7 @@ const PROJECTS = [
   },
   {
     id: "estimation-ai", n: "02", tag: "AI Platform", title: "Estimation AI",
-    short: "Agentic AI that turns days of manufacturing cost estimation into minutes.",
+    short: "Days of cost estimation, done in minutes.",
     role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Founders · Engineering · Me",
     overview: "Manufacturing teams spend days building cost estimates by hand. Estimation AI automates that. But automation is worthless if buyers can't defend the numbers, so the real design problem was making AI output legible, auditable, and safe to act on.",
     outcomes: ["Estimates that took days now take minutes", "An explainability layer makes every AI output auditable", "Designed AI states end to end: thinking, partial, failed, done"],
@@ -369,7 +372,7 @@ const PROJECTS = [
   },
   {
     id: "homebase", n: "03", tag: "Core Product", title: "Projects & Homebase Redesign",
-    short: "The surface every user starts their day on. From a wall of actions to a clear next step.",
+    short: "The surface every user starts their day on.",
     role: "Senior Product Designer", timeline: "Naya Studio", team: "Founders · Engineering · Me",
     overview: "The home surface had grown feature by feature until it read like a control panel. Every user lands here every day, so the redesign focused on one question: what needs your attention right now?",
     outcomes: ["Simplified the most-used surface in the product", "Progressive disclosure replaced a wall of competing actions", "Set the visual foundation that later features built on"],
@@ -382,7 +385,7 @@ const PROJECTS = [
   },
   {
     id: "sharing", n: "04", tag: "Collaboration", title: "Group Sharing & Nested Groups",
-    short: "Complex permissions made predictable. One sharing model from individuals to nested orgs.",
+    short: "Complex permissions made predictable.",
     role: "Senior Product Designer", timeline: "Naya Studio", team: "Founders · Engineering · Me",
     overview: "Sharing started flat and all-or-nothing. But real teams are messy: clients, contractors, sub-teams inside teams. Nested groups solve the org problem and create a UX problem, inheritance. This project was about making 'who can see what' obvious before you hit share.",
     outcomes: ["Made permission inheritance predictable, not scary", "One sharing model scaled from individuals to nested orgs", "Shipped across web and mobile"],
@@ -395,7 +398,7 @@ const PROJECTS = [
   },
   {
     id: "design-system", n: "05", tag: "Foundations", title: "Design System",
-    short: "One source of truth for design and front-end, built so AI-assisted building stays on-brand.",
+    short: "One source of truth, in Figma and in code.",
     role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Design · Engineering",
     overview: "Shipping fast erodes consistency. Every rushed feature drifts a little. The design system is the counterweight: tokens, components, and documented patterns that make the right thing the easy thing, in Figma and in code.",
     outcomes: ["One source of truth shared by design and front-end", "Keeps AI-assisted prototyping on-brand by default", "Makes quality repeatable at startup pace"],
@@ -408,7 +411,7 @@ const PROJECTS = [
   },
   {
     id: "monetisation", n: "06", tag: "Monetisation", title: "Subscriptions, Teams & Stripe",
-    short: "End-to-end UX for subscriptions, team seats and payments. Designed for trust.",
+    short: "Subscriptions and payments, designed for trust.",
     role: "Senior Product Designer", timeline: "Naya Studio", team: "Founders · Engineering · Me",
     overview: "Enabling monetisation required designing for trust. Every step, from plan selection to payment confirmation, needed to feel safe, clear, and frictionless.",
     outcomes: ["Launched subscriptions, teams and per-seat pricing", "Every billing edge case mapped with engineering before build", "Checkout designed for trust at every step"],
@@ -421,7 +424,7 @@ const PROJECTS = [
   },
 ];
 
-const ARCHIVE = "Saved Views · Project Status · Template Workflows · Comments · Notifications · Mobile PM · Onboarding · Team Seats";
+const ARCHIVE = "Saved Views · Comments · Notifications · Onboarding · Mobile PM";
 
 /* Bento spans by project order: flagship 2×2, tall, three standard, full-width. */
 const BENTO = ["b-big", "b-tall", "", "", "", "b-wide"];
@@ -607,9 +610,9 @@ const CaseModal = memo(function CaseModal({ p, onClose, T }) {
 });
 
 const T = {
-  bg: "#F5F5F7", txt: "#1D1D1F", mid: "#6E6E73", sub: "#AEAEB2",
-  bdr: "rgba(0,0,0,0.08)", surface: "#FFFFFF", media: "#F5F5F7",
-  navBg: "rgba(255,255,255,0.72)", sheet: "#FFFFFF", accent: "#1D1D1F",
+  bg: "#FAF9F6", txt: "#1A1A1A", mid: "#57534E", sub: "#A8A29E",
+  bdr: "rgba(28,25,23,0.09)", surface: "#FFFFFF", media: "#F5F0EB",
+  navBg: "rgba(250,249,246,0.78)", sheet: "#FFFFFF", accent: "#0D9488",
 };
 
 export default function Portfolio() {
@@ -701,7 +704,7 @@ export default function Portfolio() {
             <img src="/about-photo.jpg" alt="Krishna Zolpatil" className="nav-avatar" />
             <div>
               <p className="nav-title">Krishna Zolpatil</p>
-              <p className="m nav-meta" style={{ color: mid }}>Senior Product Designer · Mumbai · Remote</p>
+              <p className="m nav-meta" style={{ color: mid }}>Mumbai · Remote</p>
             </div>
           </div>
           <div className="nav-right">
@@ -747,14 +750,15 @@ export default function Portfolio() {
 
             {/* ── Hero ── */}
             <section className="hero" aria-label="Introduction">
+              <span className="m hero-eyebrow">Senior Product Designer · AI SaaS</span>
               <h1 className="h1">
                 <span className="line"><span>I design AI products.</span></span>
                 <span className="line"><span><em>Then I build them.</em></span></span>
               </h1>
               <F d={220}>
                 <p className="lede" style={{ color: mid }}>
-                  Four years at <b style={{ color: txt, fontWeight: 600 }}>Naya Studio</b>, a Brooklyn 🇺🇸 AI-SaaS
-                  startup used by global enterprise teams. 200+ features, zero to one — Figma to working code, with Claude.
+                  Four years at <b style={{ color: txt, fontWeight: 500 }}>Naya Studio</b>.
+                  200+ features shipped — Figma to working code.
                 </p>
               </F>
               <F d={320}>
@@ -801,16 +805,16 @@ export default function Portfolio() {
             <section id="process" aria-label="How I work">
               <div className="sec-head">
                 <h2 className="f sec-title">How I work</h2>
-                <span className="m sec-sub" style={{ color: mid }}>prioritise → PRD → research → design → ship · feedback throughout</span>
+                <span className="m sec-sub" style={{ color: mid }}>six steps · feedback throughout</span>
               </div>
               <div className="steps">
                 {[
-                  { t: "Prioritise", d: "Roadmap prioritisation and user-insight mapping with founders decide what's worth building next." },
-                  { t: "Write the PRD", d: "Problem, scope and proposed approach on paper first — aligned before a pixel moves." },
-                  { t: "Precedence research", d: "How existing products solve it — competitive and pattern research compiled into decision-ready references." },
-                  { t: "Lo-fi → hi-fi", d: "Divergent directions from rough frames to working prototypes in code with Claude — real states and motion." },
-                  { t: "Hand off to devs", d: "Dev notes, decisions doc and a running Vercel preview engineers can open and build from." },
-                  { t: "Feedback, always", d: "Team, user and external feedback loops between every stage — each round implemented, not just noted." },
+                  { t: "Prioritise", d: "Decide what's worth building next, with founders." },
+                  { t: "Write the PRD", d: "Problem and scope on paper before a pixel moves." },
+                  { t: "Precedence research", d: "How existing products already solve it." },
+                  { t: "Lo-fi → hi-fi", d: "Rough frames to working prototypes in code." },
+                  { t: "Hand off to devs", d: "Dev notes and a running preview to build from." },
+                  { t: "Feedback, always", d: "Loops between every stage, each round implemented." },
                 ].map((s, i) => (
                   <div key={s.t} className="glass step">
                     <span className="m step-n">0{i + 1}</span>
@@ -866,8 +870,7 @@ export default function Portfolio() {
                 <div className="foot-card">
                   <h2 className="foot-title">Have an AI product to design?<br /><em>Let's talk.</em></h2>
                   <p className="foot-note">
-                    Open to senior product design roles — remote, worldwide.
-                    I read everything myself and usually reply within a day.
+                    Open to senior roles, remote worldwide. I reply within a day.
                   </p>
                   <div className="foot-actions">
                     <a href="mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20via%20krishnazolpatil.com" className="mail-btn">
@@ -883,7 +886,7 @@ export default function Portfolio() {
                   <hr className="foot-rule" />
                   <h2 className="giant">Krishna <em>Zolpatil</em></h2>
                   <div className="m colophon" style={{ color: sub }}>
-                    <span>Senior Product Designer — AI SaaS · beyond work: photography &amp; short films</span>
+                    <span>Senior Product Designer · photography &amp; short films</span>
                     <span>It's {ist} for Krishna in Mumbai</span>
                     <span>© 2026 · Built with Claude</span>
                   </div>
