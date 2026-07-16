@@ -753,13 +753,14 @@ export default function Portfolio() {
             <section className="hero" aria-label="Introduction">
               <span className="m hero-eyebrow">Senior Product Designer · AI SaaS</span>
               <h1 className="h1">
-                <span className="line"><span>I design AI products.</span></span>
-                <span className="line"><span><em>And prototype them in code.</em></span></span>
+                <span className="line"><span>I design AI products</span></span>
+                <span className="line"><span><em>people can trust.</em></span></span>
               </h1>
               <F d={220}>
                 <p className="lede" style={{ color: mid }}>
-                  Four years at <b style={{ color: txt, fontWeight: 500 }}>Naya Studio</b> —
-                  200+ features designed and shipped with my dev team.
+                  Four years in AI SaaS — agentic UX, design systems,
+                  and prototyping in code with Claude.
+                  At <b style={{ color: txt, fontWeight: 500 }}>Naya Studio</b>, 200+ features shipped.
                 </p>
               </F>
               <F d={320}>
