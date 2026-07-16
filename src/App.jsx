@@ -28,8 +28,6 @@ const Styles = memo(() => (
     @keyframes fadeIn  { from{opacity:0;} to{opacity:1;} }
     @keyframes modalIn { from{opacity:0;transform:translateY(18px) scale(0.98);} to{opacity:1;transform:none;} }
     @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
-    .fu { animation:fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
-
     /* ── Ambient background: two slow-drifting warm/teal washes ── */
     .bg { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
     .bg i { position:absolute; display:block; border-radius:50%; will-change:transform; }
@@ -264,13 +262,8 @@ const Styles = memo(() => (
     .lrow-desc { font-size:0.78rem; line-height:1.6; font-weight:300; }
     .lrow-kind { font-size:0.54rem; letter-spacing:0.18em; text-transform:uppercase; white-space:nowrap; }
 
-    /* ── Contact CTA ── */
-    .foot { margin:clamp(56px,9vh,88px) 0 clamp(48px,8vh,72px); }
-    .foot .sec-head { margin-top:0; }
-    .foot-card { text-align:center; }
-    .foot-card { background:var(--surface); border:1px solid var(--bdr-c); border-radius:28px;
-                 padding:clamp(36px,7vw,72px) clamp(20px,5vw,64px) clamp(28px,4vw,40px);
-                 box-shadow:0 1px 2px rgba(0,0,0,0.04); }
+    /* ── Contact CTA: plain centered statement, no card chrome ── */
+    .foot { margin:clamp(80px,13vh,140px) 0 clamp(72px,11vh,120px); text-align:center; }
     .foot-rule { height:1px; background:var(--bdr-c); border:none;
                  margin:clamp(36px,6vh,56px) auto clamp(26px,4vh,40px); }
     .foot-title { font-family:'Playfair Display',Georgia,serif; font-size:clamp(1.9rem,4.6vw,3.1rem);
@@ -388,26 +381,10 @@ class ErrorBoundary extends Component {
   }
 }
 
-function useFade() {
-  const ref = useRef(null);
-  const [on, setOn] = useState(false);
-  useEffect(() => {
-    const o = new IntersectionObserver(
-      ([e]) => { if (e.isIntersecting) { setOn(true); o.disconnect(); } },
-      { threshold: 0.07, rootMargin: "0px 0px -24px 0px" }
-    );
-    if (ref.current) o.observe(ref.current);
-    return () => o.disconnect();
-  }, []);
-  return [ref, on];
-}
-
-const F = memo(function F({ children, d = 0, className = "", style = {} }) {
-  const [ref, on] = useFade();
-  return (
-    <div ref={ref} style={{ animationDelay: `${d}ms`, opacity: on ? undefined : 0, ...style }}
-      className={`${on ? "fu" : ""} ${className}`}>{children}</div>
-  );
+/* Reveal-on-scroll removed (was buggy) — F is now a plain wrapper.
+   Scroll feel comes from the velocity motion blur instead. */
+const F = memo(function F({ children, className = "", style = {} }) {
+  return <div className={className} style={style}>{children}</div>;
 });
 
 /* ── DATA ── */
@@ -1102,25 +1079,15 @@ export default function Portfolio() {
 
             {/* ── Contact CTA ── */}
             <section className="foot" id="contact" aria-label="Contact">
-              <F>
-                <div className="sec-head">
-                  <h2 className="f sec-title">One more thing…</h2>
-                  <span className="m sec-sub" style={{ color: mid }}>open to senior remote roles</span>
-                </div>
-              </F>
-              <F>
-                <div className="foot-card">
-                  <h2 className="foot-title">Have an AI product to design?<br /><em>Let's talk.</em></h2>
-                  <p className="foot-note">
-                    Open to senior roles, remote worldwide. I reply within a day.
-                  </p>
-                  <div className="foot-actions">
-                    <a href="mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20via%20krishnazolpatil.com" className="mail-btn">
-                      <Mail style={{ width: 15, height: 15 }} /> krishna.zolpatil@gmail.com
-                    </a>
-                  </div>
-                </div>
-              </F>
+              <h2 className="foot-title">Have an AI product to design?<br /><em>Let's talk.</em></h2>
+              <p className="foot-note">
+                Open to senior roles, remote worldwide. I reply within a day.
+              </p>
+              <div className="foot-actions">
+                <a href="mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20via%20krishnazolpatil.com" className="mail-btn">
+                  <Mail style={{ width: 15, height: 15 }} /> krishna.zolpatil@gmail.com
+                </a>
+              </div>
             </section>
 
           </div>
