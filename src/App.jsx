@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, memo, Component } from "react";
-import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench, ArrowUpRight } from "lucide-react";
+import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Gamepad2, ArrowUpRight } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────
    v3 — warm editorial. Playfair Display serif display type
@@ -933,7 +933,7 @@ export default function Portfolio() {
             </a>
             <a href="#tools" data-tab="tools" onClick={() => setActiveSec("tools")}
               className={`dock-item ${activeTab === "tools" ? "on" : ""}`}>
-              <Wrench /> Built
+              <Gamepad2 /> Quests
             </a>
             <div className="cv-wrap dock-cv">
               <button data-tab="resume" className={`dock-item ${cvOpen ? "on" : ""}`} onClick={() => setCvOpen(o => !o)}
