@@ -31,6 +31,18 @@ const Styles = memo(() => (
     @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
     .fu { animation:fadeUp 0.6s ease both; }
 
+    /* ── Opening: avatar pops center, flies into the nav, site settles in ── */
+    .intro { position:fixed; inset:0; z-index:300; display:flex; align-items:center;
+             justify-content:center; pointer-events:none; }
+    .intro-avatar { width:92px; height:92px; border-radius:50%; object-fit:cover;
+                    will-change:transform; box-shadow:0 18px 50px -18px rgba(0,0,0,0.3);
+                    animation:introPop 0.7s cubic-bezier(0.23,1,0.32,1) both; }
+    @keyframes introPop { from{opacity:0; transform:scale(0.55);} to{opacity:1; transform:scale(1);} }
+    .pre .nav, .pre .dock, .pre .content { opacity:0; }
+    .ready .nav { animation:fadeIn 0.35s ease 0.35s both; }
+    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 0.7s both; }
+    .ready .content { animation:fadeIn 0.6s ease 0.2s both; }
+
     ::selection { background:var(--accent); color:#fff; }
     ::-webkit-scrollbar { width:4px; }
     ::-webkit-scrollbar-thumb { background:#8884; border-radius:4px; }
@@ -112,9 +124,9 @@ const Styles = memo(() => (
     .h1 { font-family:'Playfair Display',Georgia,serif; font-weight:600;
           font-size:clamp(2.6rem,7vw,5.1rem); line-height:1.08; letter-spacing:-0.015em; }
     .h1 .line { overflow:hidden; display:block; padding-bottom:0.14em; margin-bottom:-0.14em; }
-    .h1 .line > span { display:block; transform:translateY(110%);
-                       animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) forwards; }
-    .h1 .line:nth-child(2) > span { animation-delay:0.12s; }
+    .h1 .line > span { display:block; transform:translateY(110%); }
+    .ready .h1 .line > span { animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) 0.45s forwards; }
+    .ready .h1 .line:nth-child(2) > span { animation-delay:0.57s; }
     .h1 em { font-style:italic; font-weight:500; color:var(--accent); }
     .lede { margin:24px auto 0; max-width:44ch; font-size:clamp(1rem,1.4vw,1.14rem);
             line-height:1.7; font-weight:300; }
@@ -484,6 +496,39 @@ const HeroShot = memo(function HeroShot() {
   );
 });
 
+/* ── Opening animation: avatar pops center-screen, flies into the nav slot ── */
+const Intro = memo(function Intro({ onReady, onDone }) {
+  const imgRef = useRef(null);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      onReady(); onDone(); return;
+    }
+    const t = setTimeout(() => {
+      const img = imgRef.current;
+      const target = document.querySelector(".nav-avatar");
+      onReady();
+      if (img && target) {
+        img.style.animation = "none";
+        const a = img.getBoundingClientRect();
+        const b = target.getBoundingClientRect();
+        img.style.transition = "transform 0.7s cubic-bezier(0.65,0.05,0.36,1)";
+        requestAnimationFrame(() => {
+          const dx = (b.left + b.width / 2) - (a.left + a.width / 2);
+          const dy = (b.top + b.height / 2) - (a.top + a.height / 2);
+          img.style.transform = `translate(${dx}px, ${dy}px) scale(${b.width / a.width})`;
+        });
+      }
+      setTimeout(onDone, 850);
+    }, 1000);
+    return () => clearTimeout(t);
+  }, [onReady, onDone]);
+  return (
+    <div className="intro" aria-hidden="true">
+      <img ref={imgRef} className="intro-avatar" src="/about-photo.jpg" alt="" />
+    </div>
+  );
+});
+
 /* ── Confetti easter egg (clicking "This website") ── */
 const CONFETTI_COLORS = ["#0A84FF", "#30D158", "#FFD60A", "#FF9F0A", "#FF375F", "#BF5AF2"];
 const Confetti = memo(function Confetti({ onDone }) {
@@ -625,6 +670,10 @@ export default function Portfolio() {
   const [now, setNow] = useState(() => new Date());
   const [tool, setTool] = useState(null);
   const [bursts, setBursts] = useState([]);
+  const [ready, setReady] = useState(false);
+  const [introDone, setIntroDone] = useState(false);
+  const onIntroReady = useCallback(() => setReady(true), []);
+  const onIntroDone = useCallback(() => setIntroDone(true), []);
   const { bg, bdr, txt, mid, sub } = T;
 
   useEffect(() => {
@@ -691,7 +740,7 @@ export default function Portfolio() {
     <ErrorBoundary>
       <Styles />
       <SEO />
-      <div className="page"
+      <div className={`page ${ready ? "ready" : "pre"}`}
         style={{
           background: bg, color: txt,
           "--paper": bg, "--mid": mid, "--sub": sub, "--bdr-c": bdr,
@@ -760,7 +809,7 @@ export default function Portfolio() {
                 <p className="lede" style={{ color: mid }}>
                   Four years in AI SaaS — agentic UX, design systems,
                   and prototyping in code with Claude.
-                  At <b style={{ color: txt, fontWeight: 500 }}>Naya Studio</b>, 200+ features shipped.
+                  At Naya Studio, 200+ features shipped.
                 </p>
               </F>
               <F d={320}>
@@ -900,6 +949,7 @@ export default function Portfolio() {
           </div>
         </div>
 
+        {!introDone && <Intro onReady={onIntroReady} onDone={onIntroDone} />}
         {bursts.map(id => (
           <Confetti key={id} onDone={() => setBursts(b => b.filter(x => x !== id))} />
         ))}
