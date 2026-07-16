@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, memo, Component } from "react";
-import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench, ArrowUpRight } from "lucide-react";
+import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench, ArrowUpRight, Rocket, PenLine, MousePointerClick } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────
    v3 — warm editorial. Playfair Display serif display type
@@ -262,13 +262,17 @@ const Styles = memo(() => (
     .lrow-desc { font-size:0.78rem; line-height:1.6; font-weight:300; }
     .lrow-kind { font-size:0.54rem; letter-spacing:0.18em; text-transform:uppercase; white-space:nowrap; }
 
-    /* ── Everyday stack: pill grid ── */
+    /* ── Everyday stack: icon tiles, names on hover ── */
     .stack { display:flex; flex-wrap:wrap; gap:10px; }
-    .stack-pill { font-size:0.78rem; font-weight:500; padding:9px 17px; border-radius:100px;
-                  background:var(--surface); border:1px solid var(--bdr-c); color:var(--txt-c); }
-    .stack-pill.mine { background:rgba(13,148,136,0.08); border-color:rgba(13,148,136,0.28);
-                       color:var(--accent); transition:background 0.2s, border-color 0.2s; }
-    .stack-pill.mine:hover { background:rgba(13,148,136,0.14); border-color:var(--accent); }
+    .stack-tile { width:48px; height:48px; border-radius:14px; display:flex; align-items:center;
+                  justify-content:center; background:var(--surface); border:1px solid var(--bdr-c);
+                  transition:transform 0.3s cubic-bezier(0.23,1,0.32,1), border-color 0.2s; }
+    .stack-tile img { width:19px; height:19px; opacity:0.78; }
+    .stack-tile svg { width:19px; height:19px; color:var(--txt-c); opacity:0.78; }
+    .stack-tile:hover { transform:translateY(-3px); border-color:var(--sub); }
+    .stack-tile.mine { background:rgba(13,148,136,0.08); border-color:rgba(13,148,136,0.28); }
+    .stack-tile.mine svg { color:var(--accent); opacity:1; }
+    .stack-tile.mine:hover { border-color:var(--accent); }
 
     /* ── Contact CTA: plain centered statement, no card chrome ── */
     .foot { margin:clamp(80px,13vh,140px) 0 clamp(72px,11vh,120px); text-align:center; }
@@ -988,10 +992,19 @@ export default function Portfolio() {
                 <span className="m sec-sub" style={{ color: mid }}>design → code → ship</span>
               </div>
               <div className="stack">
-                {["Figma", "Claude", "Antigravity IDE", "GitHub", "Vercel", "Supabase", "Linear",
-                  "Notion", "Slack", "Google Docs", "Google Sheets", "Google Drive", "Pen & paper"]
-                  .map(t => <span key={t} className="stack-pill">{t}</span>)}
-                <a href="#tools" className="stack-pill mine" title="Built it myself — see Tools I built">Yoink · mine</a>
+                {[["Figma", "figma"], ["Claude", "claude"], ["GitHub", "github"], ["Vercel", "vercel"],
+                  ["Supabase", "supabase"], ["Linear", "linear"], ["Notion", "notion"], ["Slack", "slack"],
+                  ["Google Docs", "googledocs"], ["Google Sheets", "googlesheets"], ["Google Drive", "googledrive"]]
+                  .map(([n, i]) => (
+                    <span key={i} className="stack-tile" title={n}>
+                      <img src={`/stack/${i}.svg`} alt={n} />
+                    </span>
+                  ))}
+                <span className="stack-tile" title="Antigravity IDE"><Rocket aria-label="Antigravity IDE" /></span>
+                <span className="stack-tile" title="Pen & paper — rough sketches"><PenLine aria-label="Pen & paper" /></span>
+                <a href="#tools" className="stack-tile mine" title="Yoink — built it myself">
+                  <MousePointerClick aria-label="Yoink" />
+                </a>
               </div>
             </section>
 
