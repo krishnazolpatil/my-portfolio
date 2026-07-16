@@ -31,19 +31,30 @@ const Styles = memo(() => (
     @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
     .fu { animation:fadeUp 0.6s ease both; }
 
-    /* ── Opening: nav starts as a centered name badge, then expands into the full navbar ── */
+    /* ── Opening: centered name badge; the page "scrolls" up with it as the
+         badge glides to the top and expands into the full navbar ── */
     .pre .nav { top:50%; transform:translate(-50%,-50%); max-width:242px;
                 animation:introPop 0.6s cubic-bezier(0.23,1,0.32,1) both; }
-    .ready .nav { transition:top 0.85s cubic-bezier(0.65,0.05,0.36,1),
-                             transform 0.85s cubic-bezier(0.65,0.05,0.36,1),
-                             max-width 0.85s cubic-bezier(0.65,0.05,0.36,1); }
+    .ready .nav { transition:top 0.9s cubic-bezier(0.65,0.05,0.36,1),
+                             transform 0.9s cubic-bezier(0.65,0.05,0.36,1),
+                             max-width 0.9s cubic-bezier(0.65,0.05,0.36,1); }
+    /* solid pill while it travels — backdrop blur on a moving element is what lags */
+    .pre .nav, .ready:not(.settled) .nav { background:var(--surface);
+                backdrop-filter:none; -webkit-backdrop-filter:none; }
     @keyframes introPop { from{opacity:0; transform:translate(-50%,-50%) scale(0.85);}
                           to{opacity:1; transform:translate(-50%,-50%) scale(1);} }
     .pre .nav-right { display:none; }
-    .ready .nav-right { animation:fadeIn 0.4s ease 0.75s both; }
+    .ready .nav-right { animation:fadeIn 0.4s ease 0.85s both; }
     .pre .dock, .pre .content { opacity:0; }
-    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 0.8s both; }
-    .ready .content { animation:fadeIn 0.6s ease 0.35s both; }
+    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 1.05s both; }
+    .ready .content { animation:settleUp 0.9s cubic-bezier(0.65,0.05,0.36,1) both; }
+    .ready:not(.settled) .content { will-change:transform; }
+    @keyframes settleUp { from{opacity:0.3; transform:translateY(44vh);}
+                          55%{opacity:1;}
+                          to{opacity:1; transform:translateY(0);} }
+    @media (prefers-reduced-motion:reduce){
+      .page, .page * { animation-duration:0.01ms !important; transition-duration:0.01ms !important; }
+    }
 
     ::selection { background:var(--accent); color:#fff; }
     ::-webkit-scrollbar { width:4px; }
@@ -127,8 +138,8 @@ const Styles = memo(() => (
           font-size:clamp(2.6rem,7vw,5.1rem); line-height:1.08; letter-spacing:-0.015em; }
     .h1 .line { overflow:hidden; display:block; padding-bottom:0.14em; margin-bottom:-0.14em; }
     .h1 .line > span { display:block; transform:translateY(110%); }
-    .ready .h1 .line > span { animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) 0.45s forwards; }
-    .ready .h1 .line:nth-child(2) > span { animation-delay:0.57s; }
+    .ready .h1 .line > span { animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) 0.75s forwards; }
+    .ready .h1 .line:nth-child(2) > span { animation-delay:0.87s; }
     .h1 em { font-style:italic; font-weight:500; color:var(--accent); }
     .lede { margin:24px auto 0; max-width:44ch; font-size:clamp(1rem,1.4vw,1.14rem);
             line-height:1.7; font-weight:300; }
@@ -640,12 +651,14 @@ export default function Portfolio() {
   const [tool, setTool] = useState(null);
   const [bursts, setBursts] = useState([]);
   const [ready, setReady] = useState(false);
+  const [settled, setSettled] = useState(false);
   const { bg, bdr, txt, mid, sub } = T;
 
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const t = setTimeout(() => setReady(true), reduce ? 0 : 950);
-    return () => clearTimeout(t);
+    const t1 = setTimeout(() => setReady(true), reduce ? 0 : 950);
+    const t2 = setTimeout(() => setSettled(true), reduce ? 0 : 2100);
+    return () => { clearTimeout(t1); clearTimeout(t2); };
   }, []);
 
   useEffect(() => {
@@ -712,7 +725,7 @@ export default function Portfolio() {
     <ErrorBoundary>
       <Styles />
       <SEO />
-      <div className={`page ${ready ? "ready" : "pre"}`}
+      <div className={`page ${ready ? "ready" : "pre"}${settled ? " settled" : ""}`}
         style={{
           background: bg, color: txt,
           "--paper": bg, "--mid": mid, "--sub": sub, "--bdr-c": bdr,
