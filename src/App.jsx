@@ -264,8 +264,8 @@ const Styles = memo(() => (
     .lrow-desc { font-size:0.78rem; line-height:1.6; font-weight:300; }
     .lrow-kind { font-size:0.54rem; letter-spacing:0.18em; text-transform:uppercase; white-space:nowrap; }
 
-    /* ── Footer ── */
-    .foot { margin:clamp(56px,9vh,88px) 0 120px; }
+    /* ── Contact CTA ── */
+    .foot { margin:clamp(56px,9vh,88px) 0 clamp(48px,8vh,72px); }
     .foot .sec-head { margin-top:0; }
     .foot-card { text-align:center; }
     .foot-card { background:var(--surface); border:1px solid var(--bdr-c); border-radius:28px;
@@ -284,15 +284,24 @@ const Styles = memo(() => (
                 border-radius:100px; font-size:0.85rem; font-weight:600; color:#fff;
                 background:var(--accent); transition:transform 0.3s cubic-bezier(0.23,1,0.32,1), filter 0.2s; }
     .mail-btn:hover { transform:scale(1.03); filter:brightness(1.1); }
-    .foot-links { display:flex; gap:8px; flex-wrap:wrap; justify-content:center; }
-    .foot-link { font-size:0.68rem; font-weight:500; padding:8px 14px; border-radius:100px;
-                 border:1px solid var(--bdr-c); transition:color 0.2s, border-color 0.2s, background 0.2s; }
-    .foot-link:hover { color:var(--accent); border-color:var(--accent); }
-    .giant { font-family:'Playfair Display',Georgia,serif; font-size:clamp(2.3rem,8vw,6.6rem);
-             line-height:1; letter-spacing:-0.015em; font-weight:600; }
-    .giant em { font-style:italic; font-weight:500; color:var(--accent); white-space:nowrap; }
-    .colophon { display:flex; flex-direction:column; align-items:center; gap:5px;
-                margin-top:30px; font-size:0.58rem; letter-spacing:0.05em; }
+    /* ── Footer: full-bleed, brand left, link columns right, clock bar ── */
+    .foot2 { border-top:1px solid var(--bdr-c); background:var(--surface);
+             margin-top:clamp(40px,6vh,64px); }
+    .foot2 .wrap { padding-top:clamp(44px,7vw,72px); padding-bottom:130px; }
+    .foot2-top { display:flex; justify-content:space-between; gap:44px; flex-wrap:wrap; }
+    .foot2-logo { font-size:clamp(1.5rem,2.6vw,2rem); font-weight:600; }
+    .foot2-logo em { font-style:italic; font-weight:500; color:var(--accent); }
+    .foot2-tag { margin-top:12px; font-size:0.88rem; color:var(--mid); font-weight:300; }
+    .foot2-heart { margin-top:30px; font-size:0.78rem; color:var(--mid); }
+    .foot2-cols { display:flex; gap:clamp(44px,8vw,96px); }
+    .foot2-col { display:flex; flex-direction:column; gap:13px; align-items:flex-start; }
+    .foot2-lbl { font-size:0.54rem; letter-spacing:0.22em; color:var(--sub); margin-bottom:5px; }
+    .foot2-col a { font-size:0.88rem; font-weight:500; transition:color 0.2s; }
+    .foot2-col a:hover { color:var(--accent); }
+    .foot2-rule { border:none; height:1px; background:var(--bdr-c);
+                  margin:clamp(40px,6vh,60px) 0 24px; }
+    .foot2-bottom { display:flex; justify-content:space-between; gap:12px; flex-wrap:wrap;
+                    font-size:0.56rem; color:var(--sub); }
 
     /* ── Modal: glass sheet ── */
     .backdrop { position:fixed; inset:0; z-index:200; display:flex; align-items:center;
@@ -352,8 +361,8 @@ const Styles = memo(() => (
       .st-long { display:none; }
       .st-short { display:inline; }
       .hero { padding-top:104px; }
-      .giant { font-size:14vw; }
-      .colophon { flex-direction:column; gap:4px; align-items:center; text-align:center; }
+      .foot2-top { flex-direction:column; }
+      .foot2-bottom { flex-direction:column; gap:6px; }
     }
   `}</style>
 ));
@@ -841,6 +850,7 @@ export default function Portfolio() {
     return () => clearInterval(t);
   }, []);
   const ist = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "Asia/Kolkata" });
+  const nyc = now.toLocaleTimeString("en-US", { hour: "numeric", minute: "2-digit", timeZone: "America/New_York" });
 
   useEffect(() => {
     const obs = new IntersectionObserver(
@@ -1090,8 +1100,8 @@ export default function Portfolio() {
               </F>
             </section>
 
-            {/* ── Footer ── */}
-            <footer className="foot" id="contact">
+            {/* ── Contact CTA ── */}
+            <section className="foot" id="contact" aria-label="Contact">
               <F>
                 <div className="sec-head">
                   <h2 className="f sec-title">One more thing…</h2>
@@ -1108,25 +1118,47 @@ export default function Portfolio() {
                     <a href="mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20via%20krishnazolpatil.com" className="mail-btn">
                       <Mail style={{ width: 15, height: 15 }} /> krishna.zolpatil@gmail.com
                     </a>
-                    <div className="foot-links" style={{ color: mid }}>
-                      <a href="https://www.linkedin.com/in/krishnazolpatil/" target="_blank" rel="noopener noreferrer" className="foot-link">LinkedIn</a>
-                      <a href="https://github.com/krishnazolpatil" target="_blank" rel="noopener noreferrer" className="foot-link">GitHub</a>
-                      <a href="https://instagram.com/krishna.ux" target="_blank" rel="noopener noreferrer" className="foot-link">Instagram</a>
-                      <a href="https://x.com/krishnazolpatil" target="_blank" rel="noopener noreferrer" className="foot-link">Twitter / X</a>
-                    </div>
-                  </div>
-                  <hr className="foot-rule" />
-                  <h2 className="giant">Krishna <em>Zolpatil</em></h2>
-                  <div className="m colophon" style={{ color: sub }}>
-                    <span>Senior Product Designer · photography &amp; short films</span>
-                    <span>It's {ist} for Krishna in Mumbai</span>
-                    <span>© 2026 · Built with Claude</span>
                   </div>
                 </div>
               </F>
-            </footer>
+            </section>
 
           </div>
+
+          {/* ── Footer: full-bleed ── */}
+          <footer className="foot2">
+            <div className="wrap">
+              <div className="foot2-top">
+                <div className="foot2-brand">
+                  <h2 className="f foot2-logo">Krishna Zolpatil<em>.</em></h2>
+                  <p className="foot2-tag">Designing AI products people can trust.</p>
+                  <p className="foot2-heart">Designed &amp; built end to end — with ♥ and Claude</p>
+                </div>
+                <div className="foot2-cols">
+                  <div className="foot2-col">
+                    <span className="m foot2-lbl">Explore</span>
+                    <a href="#work">Work</a>
+                    <a href="#process">Process</a>
+                    <a href="#tools">Tools</a>
+                    <a href="/resume.pdf" target="_blank" rel="noopener noreferrer">Resume</a>
+                  </div>
+                  <div className="foot2-col">
+                    <span className="m foot2-lbl">Connect</span>
+                    <a href="mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20via%20krishnazolpatil.com">Email</a>
+                    <a href="https://www.linkedin.com/in/krishnazolpatil/" target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                    <a href="https://github.com/krishnazolpatil" target="_blank" rel="noopener noreferrer">GitHub</a>
+                    <a href="https://instagram.com/krishna.ux" target="_blank" rel="noopener noreferrer">Instagram</a>
+                    <a href="https://x.com/krishnazolpatil" target="_blank" rel="noopener noreferrer">Twitter / X</a>
+                  </div>
+                </div>
+              </div>
+              <hr className="foot2-rule" />
+              <div className="m foot2-bottom">
+                <span>© 2026 Krishna Zolpatil. All rights reserved.</span>
+                <span>MUM {ist} · NYC {nyc}</span>
+              </div>
+            </div>
+          </footer>
         </div>
 
         <Cursor />
