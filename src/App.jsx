@@ -1,5 +1,5 @@
 import { useState, useEffect, useRef, useCallback, memo, Component } from "react";
-import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench, ArrowUpRight, PenLine } from "lucide-react";
+import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench, ArrowUpRight } from "lucide-react";
 
 /* ─────────────────────────────────────────────────────────
    v3 — warm editorial. Playfair Display serif display type
@@ -261,27 +261,6 @@ const Styles = memo(() => (
     .lrow-name { font-family:'Playfair Display',Georgia,serif; font-size:1.02rem; font-weight:600; }
     .lrow-desc { font-size:0.78rem; line-height:1.6; font-weight:300; }
     .lrow-kind { font-size:0.54rem; letter-spacing:0.18em; text-transform:uppercase; white-space:nowrap; }
-
-    /* ── Everyday stack: quiet one-line strip, sticker-chip names on hover ── */
-    .stackbar { display:flex; align-items:center; gap:20px; flex-wrap:wrap; margin-top:26px; }
-    .stackbar-lbl { font-size:0.54rem; letter-spacing:0.22em; color:var(--sub); flex-shrink:0; }
-    .stack { display:flex; flex-wrap:wrap; gap:4px; }
-    .stack-tile { width:34px; height:34px; border-radius:10px; display:flex; align-items:center;
-                  justify-content:center; position:relative;
-                  transition:background 0.2s, transform 0.3s cubic-bezier(0.23,1,0.32,1); }
-    .stack-tile img, .stack-tile svg { width:15px; height:15px; opacity:0.42;
-                                       color:var(--txt-c); transition:opacity 0.2s; }
-    .stack-tile:hover { background:var(--surface); transform:translateY(-2px); }
-    .stack-tile:hover img, .stack-tile:hover svg { opacity:0.9; }
-    .stack-tile.mine img { opacity:0.8; }
-    .stack-tile::after { content:attr(data-n); position:absolute; bottom:calc(100% + 8px);
-                         left:50%; transform:translate(-50%, 3px); background:#FFFFFF;
-                         border:1px solid var(--bdr-c); border-radius:100px; padding:5px 11px;
-                         font-size:0.6rem; font-weight:600; white-space:nowrap; color:var(--ink);
-                         box-shadow:0 8px 20px -10px rgba(0,0,0,0.25); opacity:0;
-                         pointer-events:none; z-index:10;
-                         transition:opacity 0.18s ease, transform 0.18s ease; }
-    .stack-tile:hover::after { opacity:1; transform:translate(-50%, 0); }
 
     /* ── Contact CTA: plain centered statement, no card chrome ── */
     .foot { margin:clamp(80px,13vh,140px) 0 clamp(72px,11vh,120px); text-align:center; }
@@ -1054,27 +1033,6 @@ export default function Portfolio() {
                     </div>
                   </F>
                 ))}
-              </div>
-              {/* quiet colophon strip — tools are incidental, craft is the point */}
-              <div className="stackbar">
-                <span className="m stackbar-lbl">Everyday stack</span>
-                <div className="stack">
-                  {[["Figma", "figma"], ["Claude", "claude"], ["GitHub", "github"], ["Vercel", "vercel"],
-                    ["Supabase", "supabase"], ["Linear", "linear"], ["Notion", "notion"], ["Slack", "slack"],
-                    ["Google Docs", "googledocs"], ["Google Sheets", "googlesheets"], ["Google Drive", "googledrive"]]
-                    .map(([n, i]) => (
-                      <span key={i} className="stack-tile" data-n={n}>
-                        <img src={`/stack/${i}.svg`} alt={n} />
-                      </span>
-                    ))}
-                  <span className="stack-tile" data-n="Antigravity IDE">
-                    <img src="/stack/antigravity.png" alt="Antigravity IDE" />
-                  </span>
-                  <span className="stack-tile" data-n="Pen & paper"><PenLine aria-label="Pen & paper" /></span>
-                  <a href="#tools" className="stack-tile mine" data-n="Yoink — built it myself">
-                    <img src="/stack/yoink.svg" alt="Yoink" />
-                  </a>
-                </div>
               </div>
             </section>
 
