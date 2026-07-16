@@ -805,6 +805,13 @@ export default function Portfolio() {
   const [settled, setSettled] = useState(false);
   const { bg, bdr, txt, mid, sub } = T;
 
+  // Fresh loads always start at the top — drop any #hash and browser scroll memory
+  useEffect(() => {
+    if ("scrollRestoration" in history) history.scrollRestoration = "manual";
+    if (window.location.hash) history.replaceState(null, "", window.location.pathname + window.location.search);
+    window.scrollTo(0, 0);
+  }, []);
+
   // Opening sequence starts only once fonts + avatar are in (capped at 2.5s),
   // so the reveal never shows a half-loaded page.
   useEffect(() => {
