@@ -985,7 +985,7 @@ export default function Portfolio() {
               <F>
                 <div className="sec-head">
                   <div>
-                    <span className="m sec-kicker">Chapter 01</span>
+                    <span className="m sec-kicker">The work</span>
                     <h2 className="f sec-title">Selected work</h2>
                   </div>
                   <span className="m sec-sub" style={{ color: mid }}>Naya Studio · 2022 → 2026</span>
@@ -1023,7 +1023,7 @@ export default function Portfolio() {
               <F>
                 <div className="sec-head">
                   <div>
-                    <span className="m sec-kicker">Chapter 02</span>
+                    <span className="m sec-kicker">The method</span>
                     <h2 className="f sec-title">How a feature comes to life</h2>
                   </div>
                   <span className="m sec-sub" style={{ color: mid }}>the same journey · 200+ times</span>
@@ -1052,7 +1052,7 @@ export default function Portfolio() {
               <F>
                 <div className="sec-head">
                   <div>
-                    <span className="m sec-kicker">Chapter 03</span>
+                    <span className="m sec-kicker">Off the clock</span>
                     <h2 className="f sec-title">Side quests</h2>
                   </div>
                   <span className="m sec-sub" style={{ color: mid }}>built solo · end to end</span>
@@ -1092,7 +1092,7 @@ export default function Portfolio() {
 
             {/* ── Contact CTA ── */}
             <section className="foot" id="contact" aria-label="Contact">
-              <span className="m foot-kicker">Chapter 04 · the next one</span>
+              <span className="m foot-kicker">What's next</span>
               <h2 className="foot-title">Have an AI product to design?<br /><em>Let's talk.</em></h2>
               <p className="foot-note">
                 Open to senior roles, remote worldwide. I reply within a day.
