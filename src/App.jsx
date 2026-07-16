@@ -10,8 +10,6 @@ import { X, Mail, ChevronRight, LayoutGrid, FileText, Workflow, Wrench, ArrowUpR
 
 const Styles = memo(() => (
   <style>{`
-    @import url('https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..800;1,400..800&family=Spline+Sans:wght@300..700&display=swap');
-
     :root { --accent:#0D9488; --ink:#1A1A1A; }
 
     *, *::before, *::after { box-sizing:border-box; margin:0; padding:0; }
@@ -32,7 +30,9 @@ const Styles = memo(() => (
     .fu { animation:fadeUp 0.6s ease both; }
 
     /* ── Opening: centered name badge; the page "scrolls" up with it as the
-         badge glides to the top and expands into the full navbar ── */
+         badge glides to the top and expands into the full navbar.
+         boot = assets still loading, everything hidden ── */
+    .boot .nav, .boot .dock, .boot .content { opacity:0; }
     .pre .nav { top:50%; transform:translate(-50%,-50%); max-width:242px;
                 animation:introPop 0.6s cubic-bezier(0.23,1,0.32,1) both; }
     .ready .nav { transition:top 0.9s cubic-bezier(0.65,0.05,0.36,1),
@@ -650,16 +650,34 @@ export default function Portfolio() {
   const [now, setNow] = useState(() => new Date());
   const [tool, setTool] = useState(null);
   const [bursts, setBursts] = useState([]);
+  const [boot, setBoot] = useState(true);
   const [ready, setReady] = useState(false);
   const [settled, setSettled] = useState(false);
   const { bg, bdr, txt, mid, sub } = T;
 
+  // Opening sequence starts only once fonts + avatar are in (capped at 2.5s),
+  // so the reveal never shows a half-loaded page.
   useEffect(() => {
     const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const t1 = setTimeout(() => setReady(true), reduce ? 0 : 950);
-    const t2 = setTimeout(() => setSettled(true), reduce ? 0 : 2100);
-    return () => { clearTimeout(t1); clearTimeout(t2); };
+    if (reduce) { setBoot(false); setReady(true); setSettled(true); return; }
+    let t1, t2, cancelled = false;
+    const begin = () => {
+      if (cancelled) return;
+      setBoot(false);
+      t1 = setTimeout(() => setReady(true), 950);
+      t2 = setTimeout(() => setSettled(true), 2100);
+    };
+    const cap = new Promise(r => setTimeout(r, 2500));
+    const fonts = document.fonts?.ready ?? Promise.resolve();
+    const avatar = new Promise(r => { const i = new Image(); i.onload = i.onerror = r; i.src = "/about-photo.jpg"; });
+    Promise.race([Promise.all([fonts, avatar]), cap]).then(begin);
+    return () => { cancelled = true; clearTimeout(t1); clearTimeout(t2); };
   }, []);
+
+  // No scrolling until the navbar has fully landed
+  useEffect(() => {
+    document.body.style.overflow = settled ? "" : "hidden";
+  }, [settled]);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 30000);
@@ -725,7 +743,7 @@ export default function Portfolio() {
     <ErrorBoundary>
       <Styles />
       <SEO />
-      <div className={`page ${ready ? "ready" : "pre"}${settled ? " settled" : ""}`}
+      <div className={`page ${boot ? "boot" : ready ? "ready" : "pre"}${settled ? " settled" : ""}`}
         style={{
           background: bg, color: txt,
           "--paper": bg, "--mid": mid, "--sub": sub, "--bdr-c": bdr,
