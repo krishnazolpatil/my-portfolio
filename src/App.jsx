@@ -33,23 +33,31 @@ const Styles = memo(() => (
          badge glides to the top and expands into the full navbar.
          boot = assets still loading, everything hidden ── */
     .boot .nav, .boot .dock, .boot .content { opacity:0; }
-    .pre .nav { top:50%; transform:translate(-50%,-50%) scale(1.3); max-width:286px;
-                animation:introPop 0.65s cubic-bezier(0.23,1,0.32,1) both;
-                will-change:transform; }
-    .ready .nav { transition:top 1.05s cubic-bezier(0.4,0,0.12,1),
-                             transform 1.05s cubic-bezier(0.4,0,0.12,1),
-                             max-width 1.05s cubic-bezier(0.4,0,0.12,1); }
-    .ready:not(.settled) .nav { will-change:transform, max-width; }
+    /* badge is BIGGER via real layout (avatar, type, padding), not transform scale —
+       so size, width and position all interpolate in the same pipeline as one motion */
+    .pre .nav { top:50%; transform:translate(-50%,-50%); max-width:300px;
+                padding:14px 16px 14px 18px;
+                animation:introPop 0.65s cubic-bezier(0.23,1,0.32,1) both; }
+    .pre .nav-avatar { width:52px; height:52px; }
+    .pre .nav-title { font-size:1.15rem; }
+    .pre .nav-meta { font-size:0.66rem; }
+    .ready .nav { transition:top 1.15s cubic-bezier(0.65,0,0.35,1),
+                             transform 1.15s cubic-bezier(0.65,0,0.35,1),
+                             max-width 1.15s cubic-bezier(0.65,0,0.35,1),
+                             padding 1.15s cubic-bezier(0.65,0,0.35,1); }
+    .ready .nav-avatar { transition:width 1.15s cubic-bezier(0.65,0,0.35,1),
+                                    height 1.15s cubic-bezier(0.65,0,0.35,1); }
+    .ready .nav-title, .ready .nav-meta { transition:font-size 1.15s cubic-bezier(0.65,0,0.35,1); }
     /* solid pill while it travels — backdrop blur on a moving element is what lags */
     .pre .nav, .ready:not(.settled) .nav { background:var(--surface);
                 backdrop-filter:none; -webkit-backdrop-filter:none; }
-    @keyframes introPop { from{opacity:0; transform:translate(-50%,-50%) scale(1.12);}
-                          to{opacity:1; transform:translate(-50%,-50%) scale(1.3);} }
+    @keyframes introPop { from{opacity:0; transform:translate(-50%,-50%) scale(0.94);}
+                          to{opacity:1; transform:translate(-50%,-50%) scale(1);} }
     .pre .nav-right { display:none; }
-    .ready .nav-right { animation:fadeIn 0.4s ease 1s both; }
+    .ready .nav-right { animation:fadeIn 0.4s ease 1.15s both; }
     .pre .dock, .pre .content { opacity:0; }
-    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 1.2s both; }
-    .ready .content { animation:settleUp 1.05s cubic-bezier(0.4,0,0.12,1) both; }
+    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 1.35s both; }
+    .ready .content { animation:settleUp 1.15s cubic-bezier(0.65,0,0.35,1) both; }
     .ready:not(.settled) .content { will-change:transform; }
     @keyframes settleUp { from{opacity:0.3; transform:translateY(44vh);}
                           55%{opacity:1;}
@@ -140,8 +148,8 @@ const Styles = memo(() => (
           font-size:clamp(2.6rem,7vw,5.1rem); line-height:1.08; letter-spacing:-0.015em; }
     .h1 .line { overflow:hidden; display:block; padding-bottom:0.14em; margin-bottom:-0.14em; }
     .h1 .line > span { display:block; transform:translateY(110%); }
-    .ready .h1 .line > span { animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) 0.9s forwards; }
-    .ready .h1 .line:nth-child(2) > span { animation-delay:1.02s; }
+    .ready .h1 .line > span { animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) 1s forwards; }
+    .ready .h1 .line:nth-child(2) > span { animation-delay:1.12s; }
     .h1 em { font-style:italic; font-weight:500; color:var(--accent); }
     .lede { margin:24px auto 0; max-width:44ch; font-size:clamp(1rem,1.4vw,1.14rem);
             line-height:1.7; font-weight:300; }
@@ -667,7 +675,7 @@ export default function Portfolio() {
       if (cancelled) return;
       setBoot(false);
       t1 = setTimeout(() => setReady(true), 1000);
-      t2 = setTimeout(() => setSettled(true), 2350);
+      t2 = setTimeout(() => setSettled(true), 2500);
     };
     const cap = new Promise(r => setTimeout(r, 2500));
     const fonts = document.fonts?.ready ?? Promise.resolve();
