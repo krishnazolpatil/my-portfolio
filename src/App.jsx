@@ -33,7 +33,7 @@ const Styles = memo(() => (
          badge glides to the top and expands into the full navbar.
          boot = assets still loading, everything hidden ── */
     .boot .nav, .boot .dock, .boot .content { opacity:0; }
-    .pre .nav { top:50%; transform:translate(-50%,-50%); max-width:242px;
+    .pre .nav { top:50%; transform:translate(-50%,-50%); max-width:286px;
                 animation:introPop 0.6s cubic-bezier(0.23,1,0.32,1) both; }
     .ready .nav { transition:top 0.9s cubic-bezier(0.65,0.05,0.36,1),
                              transform 0.9s cubic-bezier(0.65,0.05,0.36,1),
@@ -757,7 +757,7 @@ export default function Portfolio() {
             <img src="/about-photo.jpg" alt="Krishna Zolpatil" className="nav-avatar" />
             <div>
               <p className="nav-title">Krishna Zolpatil</p>
-              <p className="m nav-meta" style={{ color: mid }}>Mumbai · Remote</p>
+              <p className="m nav-meta" style={{ color: mid }}>Senior Product Designer</p>
             </div>
           </div>
           <div className="nav-right">
