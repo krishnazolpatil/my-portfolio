@@ -24,7 +24,6 @@ const Styles = memo(() => (
 
     @keyframes fadeUp  { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
     @keyframes fadeIn  { from{opacity:0;} to{opacity:1;} }
-    @keyframes rise    { from{transform:translateY(110%);} to{transform:translateY(0);} }
     @keyframes modalIn { from{opacity:0;transform:translateY(18px) scale(0.98);} to{opacity:1;transform:none;} }
     @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
     .fu { animation:fadeUp 0.6s ease both; }
@@ -146,10 +145,7 @@ const Styles = memo(() => (
                     display:block; margin-bottom:22px; }
     .h1 { font-family:'Playfair Display',Georgia,serif; font-weight:600;
           font-size:clamp(2.6rem,7vw,5.1rem); line-height:1.08; letter-spacing:-0.015em; }
-    .h1 .line { overflow:hidden; display:block; padding-bottom:0.14em; margin-bottom:-0.14em; }
-    .h1 .line > span { display:block; transform:translateY(110%); }
-    .ready .h1 .line > span { animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) 1s forwards; }
-    .ready .h1 .line:nth-child(2) > span { animation-delay:1.12s; }
+    .h1 .line { display:block; padding-bottom:0.14em; margin-bottom:-0.14em; }
     .h1 em { font-style:italic; font-weight:500; color:var(--accent); }
     .lede { margin:24px auto 0; max-width:44ch; font-size:clamp(1rem,1.4vw,1.14rem);
             line-height:1.7; font-weight:300; }
