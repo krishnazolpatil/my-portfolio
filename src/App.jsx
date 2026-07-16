@@ -754,12 +754,12 @@ export default function Portfolio() {
               <span className="m hero-eyebrow">Senior Product Designer · AI SaaS</span>
               <h1 className="h1">
                 <span className="line"><span>I design AI products.</span></span>
-                <span className="line"><span><em>Then I build them.</em></span></span>
+                <span className="line"><span><em>And prototype them in code.</em></span></span>
               </h1>
               <F d={220}>
                 <p className="lede" style={{ color: mid }}>
-                  Four years at <b style={{ color: txt, fontWeight: 500 }}>Naya Studio</b>.
-                  200+ features shipped — Figma to working code.
+                  Four years at <b style={{ color: txt, fontWeight: 500 }}>Naya Studio</b> —
+                  200+ features designed and shipped with my dev team.
                 </p>
               </F>
               <F d={320}>
