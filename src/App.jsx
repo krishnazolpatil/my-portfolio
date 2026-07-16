@@ -135,26 +135,25 @@ const Styles = memo(() => (
                 background:var(--accent); transition:transform 0.3s cubic-bezier(0.23,1,0.32,1), filter 0.2s; }
     .nav-mail:hover { transform:scale(1.04); filter:brightness(1.1); }
 
-    /* ── Bottom dock, all viewports (Slack-style: dark bar + detached action circle) ── */
+    /* ── Bottom dock: paper pill, teal puck, tracked labels ── */
     .dock { display:flex; position:fixed; bottom:max(16px, env(safe-area-inset-bottom)); left:50%;
             transform:translateX(-50%); z-index:110; align-items:center; gap:10px; }
     .dock-bar { display:flex; gap:2px; padding:7px; border-radius:100px; position:relative;
-                background:var(--nav-bg); border:1px solid var(--bdr-c);
-                backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%);
-                box-shadow:0 14px 40px -16px rgba(0,0,0,0.3); }
-    /* liquid-glass puck that flows between active tabs */
+                background:var(--surface); border:1px solid var(--bdr-c);
+                box-shadow:0 18px 44px -18px rgba(28,25,23,0.25); }
+    /* teal puck that flows between active tabs */
     .dock-glow { position:absolute; top:7px; bottom:7px; left:0; border-radius:100px;
-                 background:#FFFFFF;
-                 box-shadow:0 1px 4px rgba(0,0,0,0.1), 0 0 0 1px rgba(0,0,0,0.04);
+                 background:rgba(13,148,136,0.09);
+                 box-shadow:inset 0 0 0 1px rgba(13,148,136,0.16);
                  transition:transform 0.6s cubic-bezier(0.34,1.3,0.3,1),
                             width 0.6s cubic-bezier(0.34,1.3,0.3,1), opacity 0.25s ease;
                  will-change:transform, width; pointer-events:none; }
-    .dock-item { display:flex; flex-direction:column; align-items:center; gap:3px;
-                 padding:9px 15px; border-radius:100px; font-size:0.56rem; font-weight:600;
-                 letter-spacing:0.02em; color:var(--mid); position:relative; z-index:1;
-                 transition:color 0.3s; }
+    .dock-item { display:flex; flex-direction:column; align-items:center; gap:4px;
+                 padding:9px 15px; border-radius:100px; font-size:0.5rem; font-weight:600;
+                 letter-spacing:0.12em; text-transform:uppercase; color:var(--mid);
+                 position:relative; z-index:1; transition:color 0.3s; }
     .dock-item svg { width:17px; height:17px; }
-    .dock-item.on { color:var(--ink); }
+    .dock-item.on { color:var(--accent); }
     .dock-fab { width:58px; height:58px; border-radius:50%; display:flex; align-items:center;
                 justify-content:center; color:#fff; background:var(--accent);
                 box-shadow:0 14px 40px -16px rgba(0,0,0,0.4);
@@ -944,7 +943,8 @@ export default function Portfolio() {
               {cvOpen && cvMenu}
             </div>
           </div>
-          <a href="mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20via%20krishnazolpatil.com" aria-label="Email me"
+          <a href="mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20via%20krishnazolpatil.com"
+            aria-label="Email me" title="Email me"
             className={`dock-fab ${activeTab === "contact" ? "on" : ""}`}>
             <Mail />
           </a>
