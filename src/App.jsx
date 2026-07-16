@@ -34,13 +34,14 @@ const Styles = memo(() => (
     .bg { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
     .bg i { position:absolute; display:block; border-radius:50%; will-change:transform; }
     .bg i:nth-child(1) { width:54vmax; height:54vmax; left:-20vmax; top:-22vmax;
-                         background:radial-gradient(circle, rgba(13,148,136,0.07), transparent 62%);
+                         background:radial-gradient(circle, rgba(13,148,136,0.10), transparent 62%);
                          animation:drift1 36s ease-in-out infinite alternate; }
     .bg i:nth-child(2) { width:48vmax; height:48vmax; right:-18vmax; bottom:-20vmax;
-                         background:radial-gradient(circle, rgba(196,164,110,0.10), transparent 62%);
+                         background:radial-gradient(circle, rgba(196,164,110,0.14), transparent 62%);
                          animation:drift2 44s ease-in-out infinite alternate; }
     @keyframes drift1 { to{ transform:translate(8vmax, 6vmax); } }
     @keyframes drift2 { to{ transform:translate(-7vmax, -5vmax); } }
+    .bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
 
     /* ── Custom cursor: teal dot + trailing ring (fine pointers only) ── */
     @media (hover:hover) and (pointer:fine) {
@@ -543,6 +544,54 @@ const HeroShot = memo(function HeroShot() {
   );
 });
 
+/* ── Background particles: slow dust motes in teal and warm sand ── */
+const Particles = memo(function Particles() {
+  const ref = useRef(null);
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const cv = ref.current, ctx = cv.getContext("2d");
+    let w, h, raf;
+    const resize = () => {
+      const dpr = Math.min(window.devicePixelRatio || 1, 2);
+      w = window.innerWidth; h = window.innerHeight;
+      cv.width = w * dpr; cv.height = h * dpr;
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    };
+    resize();
+    const N = Math.max(26, Math.min(64, Math.floor(w / 26)));
+    const P = Array.from({ length: N }, () => ({
+      x: Math.random() * w, y: Math.random() * h,
+      r: 0.8 + Math.random() * 1.7,
+      vy: 0.06 + Math.random() * 0.16,
+      ph: Math.random() * Math.PI * 2,
+      sw: 6 + Math.random() * 14,
+      teal: Math.random() < 0.35,
+      o: 0.25 + Math.random() * 0.5,
+    }));
+    let t = 0;
+    const step = () => {
+      t += 0.006;
+      ctx.clearRect(0, 0, w, h);
+      for (const p of P) {
+        p.y -= p.vy;
+        if (p.y < -8) { p.y = h + 8; p.x = Math.random() * w; }
+        const x = p.x + Math.sin(t + p.ph) * p.sw;
+        ctx.beginPath();
+        ctx.arc(x, p.y, p.r, 0, Math.PI * 2);
+        ctx.fillStyle = p.teal
+          ? `rgba(13,148,136,${(0.4 * p.o).toFixed(3)})`
+          : `rgba(163,132,92,${(0.45 * p.o).toFixed(3)})`;
+        ctx.fill();
+      }
+      raf = requestAnimationFrame(step);
+    };
+    raf = requestAnimationFrame(step);
+    window.addEventListener("resize", resize);
+    return () => { cancelAnimationFrame(raf); window.removeEventListener("resize", resize); };
+  }, []);
+  return <canvas ref={ref} className="bg-canvas" aria-hidden="true" />;
+});
+
 /* ── Custom cursor: teal dot follows exactly, ring trails with lerp ── */
 const Cursor = memo(function Cursor() {
   const dotRef = useRef(null), ringRef = useRef(null);
@@ -821,8 +870,9 @@ export default function Portfolio() {
           "--accent": T.accent, "--txt-c": txt,
         }}>
 
-        {/* ── Ambient background washes ── */}
+        {/* ── Ambient background: drifting washes + dust motes ── */}
         <div className="bg" aria-hidden="true"><i /><i /></div>
+        <Particles />
 
         {/* ── Floating nav ── */}
         <header className="nav">
