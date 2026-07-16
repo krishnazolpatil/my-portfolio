@@ -1098,8 +1098,8 @@ export default function Portfolio() {
               <div className="foot2-top">
                 <div className="foot2-brand">
                   <h2 className="f foot2-logo">Krishna Zolpatil<em>.</em></h2>
-                  <p className="foot2-tag">Designing AI products people can trust.</p>
-                  <p className="foot2-heart">Designed &amp; built end to end — with ♥ and Claude</p>
+                  <p className="foot2-tag">Senior Product Designer · AI SaaS · remote, worldwide.</p>
+                  <p className="foot2-heart">Handcrafted with ♥ — React + Claude.</p>
                 </div>
                 <div className="foot2-cols">
                   <div className="foot2-col">
