@@ -31,17 +31,19 @@ const Styles = memo(() => (
     @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
     .fu { animation:fadeUp 0.6s ease both; }
 
-    /* ── Opening: avatar pops center, flies into the nav, site settles in ── */
-    .intro { position:fixed; inset:0; z-index:300; display:flex; align-items:center;
-             justify-content:center; pointer-events:none; }
-    .intro-avatar { width:92px; height:92px; border-radius:50%; object-fit:cover;
-                    will-change:transform; box-shadow:0 18px 50px -18px rgba(0,0,0,0.3);
-                    animation:introPop 0.7s cubic-bezier(0.23,1,0.32,1) both; }
-    @keyframes introPop { from{opacity:0; transform:scale(0.55);} to{opacity:1; transform:scale(1);} }
-    .pre .nav, .pre .dock, .pre .content { opacity:0; }
-    .ready .nav { animation:fadeIn 0.35s ease 0.35s both; }
-    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 0.7s both; }
-    .ready .content { animation:fadeIn 0.6s ease 0.2s both; }
+    /* ── Opening: nav starts as a centered name badge, then expands into the full navbar ── */
+    .pre .nav { top:50%; transform:translate(-50%,-50%); max-width:242px;
+                animation:introPop 0.6s cubic-bezier(0.23,1,0.32,1) both; }
+    .ready .nav { transition:top 0.85s cubic-bezier(0.65,0.05,0.36,1),
+                             transform 0.85s cubic-bezier(0.65,0.05,0.36,1),
+                             max-width 0.85s cubic-bezier(0.65,0.05,0.36,1); }
+    @keyframes introPop { from{opacity:0; transform:translate(-50%,-50%) scale(0.85);}
+                          to{opacity:1; transform:translate(-50%,-50%) scale(1);} }
+    .pre .nav-right { display:none; }
+    .ready .nav-right { animation:fadeIn 0.4s ease 0.75s both; }
+    .pre .dock, .pre .content { opacity:0; }
+    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 0.8s both; }
+    .ready .content { animation:fadeIn 0.6s ease 0.35s both; }
 
     ::selection { background:var(--accent); color:#fff; }
     ::-webkit-scrollbar { width:4px; }
@@ -57,7 +59,7 @@ const Styles = memo(() => (
 
     /* ── Floating nav (the one true blur, like apple.com) ── */
     .nav { position:fixed; top:14px; left:50%; transform:translateX(-50%); z-index:100;
-           width:min(980px, calc(100% - 24px)); display:flex; align-items:center;
+           width:min(980px, calc(100% - 24px)); max-width:980px; display:flex; align-items:center;
            justify-content:space-between; gap:12px; padding:9px 10px 9px 14px; border-radius:100px;
            background:var(--nav-bg); border:1px solid var(--bdr-c);
            backdrop-filter:blur(20px) saturate(180%); -webkit-backdrop-filter:blur(20px) saturate(180%);
@@ -496,39 +498,6 @@ const HeroShot = memo(function HeroShot() {
   );
 });
 
-/* ── Opening animation: avatar pops center-screen, flies into the nav slot ── */
-const Intro = memo(function Intro({ onReady, onDone }) {
-  const imgRef = useRef(null);
-  useEffect(() => {
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      onReady(); onDone(); return;
-    }
-    const t = setTimeout(() => {
-      const img = imgRef.current;
-      const target = document.querySelector(".nav-avatar");
-      onReady();
-      if (img && target) {
-        img.style.animation = "none";
-        const a = img.getBoundingClientRect();
-        const b = target.getBoundingClientRect();
-        img.style.transition = "transform 0.7s cubic-bezier(0.65,0.05,0.36,1)";
-        requestAnimationFrame(() => {
-          const dx = (b.left + b.width / 2) - (a.left + a.width / 2);
-          const dy = (b.top + b.height / 2) - (a.top + a.height / 2);
-          img.style.transform = `translate(${dx}px, ${dy}px) scale(${b.width / a.width})`;
-        });
-      }
-      setTimeout(onDone, 850);
-    }, 1000);
-    return () => clearTimeout(t);
-  }, [onReady, onDone]);
-  return (
-    <div className="intro" aria-hidden="true">
-      <img ref={imgRef} className="intro-avatar" src="/about-photo.jpg" alt="" />
-    </div>
-  );
-});
-
 /* ── Confetti easter egg (clicking "This website") ── */
 const CONFETTI_COLORS = ["#0A84FF", "#30D158", "#FFD60A", "#FF9F0A", "#FF375F", "#BF5AF2"];
 const Confetti = memo(function Confetti({ onDone }) {
@@ -671,10 +640,13 @@ export default function Portfolio() {
   const [tool, setTool] = useState(null);
   const [bursts, setBursts] = useState([]);
   const [ready, setReady] = useState(false);
-  const [introDone, setIntroDone] = useState(false);
-  const onIntroReady = useCallback(() => setReady(true), []);
-  const onIntroDone = useCallback(() => setIntroDone(true), []);
   const { bg, bdr, txt, mid, sub } = T;
+
+  useEffect(() => {
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const t = setTimeout(() => setReady(true), reduce ? 0 : 950);
+    return () => clearTimeout(t);
+  }, []);
 
   useEffect(() => {
     const t = setInterval(() => setNow(new Date()), 30000);
@@ -949,7 +921,6 @@ export default function Portfolio() {
           </div>
         </div>
 
-        {!introDone && <Intro onReady={onIntroReady} onDone={onIntroDone} />}
         {bursts.map(id => (
           <Confetti key={id} onDone={() => setBursts(b => b.filter(x => x !== id))} />
         ))}
