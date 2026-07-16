@@ -262,6 +262,14 @@ const Styles = memo(() => (
     .lrow-desc { font-size:0.78rem; line-height:1.6; font-weight:300; }
     .lrow-kind { font-size:0.54rem; letter-spacing:0.18em; text-transform:uppercase; white-space:nowrap; }
 
+    /* ── Everyday stack: pill grid ── */
+    .stack { display:flex; flex-wrap:wrap; gap:10px; }
+    .stack-pill { font-size:0.78rem; font-weight:500; padding:9px 17px; border-radius:100px;
+                  background:var(--surface); border:1px solid var(--bdr-c); color:var(--txt-c); }
+    .stack-pill.mine { background:rgba(13,148,136,0.08); border-color:rgba(13,148,136,0.28);
+                       color:var(--accent); transition:background 0.2s, border-color 0.2s; }
+    .stack-pill.mine:hover { background:rgba(13,148,136,0.14); border-color:var(--accent); }
+
     /* ── Contact CTA: plain centered statement, no card chrome ── */
     .foot { margin:clamp(80px,13vh,140px) 0 clamp(72px,11vh,120px); text-align:center; }
     .foot-rule { height:1px; background:var(--bdr-c); border:none;
@@ -1075,6 +1083,20 @@ export default function Portfolio() {
                 </button>
               </div>
               </F>
+            </section>
+
+            {/* ── Everyday stack ── */}
+            <section id="stack" aria-label="Everyday stack">
+              <div className="sec-head">
+                <h2 className="f sec-title">Everyday stack</h2>
+                <span className="m sec-sub" style={{ color: mid }}>design → code → ship</span>
+              </div>
+              <div className="stack">
+                {["Figma", "Claude", "Antigravity IDE", "GitHub", "Vercel", "Supabase", "Linear",
+                  "Notion", "Slack", "Google Docs", "Google Sheets", "Google Drive", "Pen & paper"]
+                  .map(t => <span key={t} className="stack-pill">{t}</span>)}
+                <a href="#tools" className="stack-pill mine" title="Built it myself — see Tools I built">Yoink · mine</a>
+              </div>
             </section>
 
             {/* ── Contact CTA ── */}
