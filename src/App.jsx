@@ -43,19 +43,17 @@ const Styles = memo(() => (
     @keyframes drift2 { to{ transform:translate(-7vmax, -5vmax); } }
     .bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
 
-    /* ── Custom cursor: soft teal halo trailing the native cursor ── */
+    /* ── Custom cursor: teal dot + trailing ring (fine pointers only) ── */
     @media (hover:hover) and (pointer:fine) {
-      .cur { position:fixed; left:0; top:0; width:26px; height:26px; border-radius:50%;
-             background:rgba(13,148,136,0.10); border:1px solid rgba(13,148,136,0.22);
-             z-index:500; pointer-events:none; opacity:0;
-             transition:width 0.3s cubic-bezier(0.23,1,0.32,1),
-                        height 0.3s cubic-bezier(0.23,1,0.32,1),
-                        background 0.3s ease, border-color 0.3s ease; }
-      .cur.on { width:44px; height:44px; background:rgba(13,148,136,0.14);
-                border-color:rgba(13,148,136,0.34); }
-      .cur.down { width:20px; height:20px; }
+      html, body, a, button { cursor:none; }
+      .cur-dot, .cur-ring { position:fixed; left:0; top:0; z-index:500; pointer-events:none;
+                            border-radius:50%; opacity:0; }
+      .cur-dot { width:6px; height:6px; background:var(--accent); }
+      .cur-ring { width:30px; height:30px; border:1.5px solid rgba(13,148,136,0.3);
+                  transition:width 0.25s ease, height 0.25s ease, border-color 0.25s ease; }
+      .cur-ring.on { width:42px; height:42px; border-color:rgba(13,148,136,0.5); }
     }
-    @media not ((hover:hover) and (pointer:fine)) { .cur { display:none; } }
+    @media not ((hover:hover) and (pointer:fine)) { .cur-dot, .cur-ring { display:none; } }
 
     /* ── Opening: centered name badge; the page "scrolls" up with it as the
          badge glides to the top and expands into the full navbar.
@@ -634,40 +632,40 @@ const ScrollBlur = memo(function ScrollBlur() {
   );
 });
 
-/* ── Custom cursor: blend-difference circle, smooth trailing follow ── */
+/* ── Custom cursor: teal dot follows exactly, ring trails with lerp ── */
 const Cursor = memo(function Cursor() {
-  const ref = useRef(null);
+  const dotRef = useRef(null), ringRef = useRef(null);
   useEffect(() => {
     if (!window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
-    const el = ref.current;
-    let x = -100, y = -100, cx = -100, cy = -100, raf, shown = false;
+    const dot = dotRef.current, ring = ringRef.current;
+    let x = -100, y = -100, rx = -100, ry = -100, raf, shown = false;
     const move = (e) => {
       x = e.clientX; y = e.clientY;
-      if (!shown) { shown = true; cx = x; cy = y; el.style.opacity = 1; }
-      el.classList.toggle("on", !!e.target.closest?.("a, button, [role='button']"));
+      if (!shown) { shown = true; dot.style.opacity = 1; ring.style.opacity = 1; rx = x; ry = y; }
+      dot.style.transform = `translate(${x - 3}px, ${y - 3}px)`;
+      ring.classList.toggle("on", !!e.target.closest?.("a, button, [role='button']"));
     };
-    const out = () => { shown = false; el.style.opacity = 0; };
-    const down = () => el.classList.add("down");
-    const up = () => el.classList.remove("down");
+    const out = () => { shown = false; dot.style.opacity = 0; ring.style.opacity = 0; };
     const loop = () => {
-      cx += (x - cx) * 0.3; cy += (y - cy) * 0.3;
-      el.style.transform = `translate(${cx}px, ${cy}px) translate(-50%,-50%)`;
+      rx += (x - rx) * 0.14; ry += (y - ry) * 0.14;
+      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
       raf = requestAnimationFrame(loop);
     };
     window.addEventListener("mousemove", move, { passive: true });
-    window.addEventListener("mousedown", down);
-    window.addEventListener("mouseup", up);
     document.documentElement.addEventListener("mouseleave", out);
     raf = requestAnimationFrame(loop);
     return () => {
       window.removeEventListener("mousemove", move);
-      window.removeEventListener("mousedown", down);
-      window.removeEventListener("mouseup", up);
       document.documentElement.removeEventListener("mouseleave", out);
       cancelAnimationFrame(raf);
     };
   }, []);
-  return <div ref={ref} className="cur" aria-hidden="true" />;
+  return (
+    <>
+      <div ref={dotRef} className="cur-dot" aria-hidden="true" />
+      <div ref={ringRef} className="cur-ring" aria-hidden="true" />
+    </>
+  );
 });
 
 /* ── Confetti easter egg (clicking "This website") ── */
