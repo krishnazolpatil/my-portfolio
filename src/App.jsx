@@ -34,14 +34,13 @@ const Styles = memo(() => (
     .boot .nav, .boot .dock, .boot .content { opacity:0; }
     /* badge is BIGGER via real layout (avatar, type, padding), not transform scale —
        so size, width and position all interpolate in the same pipeline as one motion */
-    .pre .nav { top:50%; transform:translate(-50%,-50%); max-width:300px;
+    .pre .nav { top:calc(50% - 40px); max-width:300px;
                 padding:14px 16px 14px 18px;
                 animation:introPop 0.65s cubic-bezier(0.23,1,0.32,1) both; }
     .pre .nav-avatar { width:52px; height:52px; }
     .pre .nav-title { font-size:1.15rem; }
     .pre .nav-meta { font-size:0.66rem; }
     .ready .nav { transition:top 1.15s cubic-bezier(0.65,0,0.35,1),
-                             transform 1.15s cubic-bezier(0.65,0,0.35,1),
                              max-width 1.15s cubic-bezier(0.65,0,0.35,1),
                              padding 1.15s cubic-bezier(0.65,0,0.35,1); }
     .ready .nav-avatar { transition:width 1.15s cubic-bezier(0.65,0,0.35,1),
@@ -50,8 +49,8 @@ const Styles = memo(() => (
     /* solid pill while it travels — backdrop blur on a moving element is what lags */
     .pre .nav, .ready:not(.settled) .nav { background:var(--surface);
                 backdrop-filter:none; -webkit-backdrop-filter:none; }
-    @keyframes introPop { from{opacity:0; transform:translate(-50%,-50%) scale(0.94);}
-                          to{opacity:1; transform:translate(-50%,-50%) scale(1);} }
+    @keyframes introPop { from{opacity:0; transform:translateX(-50%) scale(0.94);}
+                          to{opacity:1; transform:translateX(-50%) scale(1);} }
     .pre .nav-right { display:none; }
     .ready .nav-right { animation:fadeIn 0.4s ease 1.15s both; }
     .pre .dock, .pre .content { opacity:0; }
