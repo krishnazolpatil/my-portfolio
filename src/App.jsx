@@ -43,15 +43,17 @@ const Styles = memo(() => (
     @keyframes drift2 { to{ transform:translate(-7vmax, -5vmax); } }
     .bg-canvas { position:fixed; inset:0; z-index:0; pointer-events:none; }
 
-    /* ── Custom cursor: blend-difference circle — inverts whatever it passes over ── */
+    /* ── Custom cursor: soft teal halo trailing the native cursor ── */
     @media (hover:hover) and (pointer:fine) {
-      html, body, a, button { cursor:none; }
-      .cur { position:fixed; left:0; top:0; width:20px; height:20px; border-radius:50%;
-             background:#fff; mix-blend-mode:difference; z-index:500; pointer-events:none;
-             opacity:0; transition:width 0.3s cubic-bezier(0.23,1,0.32,1),
-                                   height 0.3s cubic-bezier(0.23,1,0.32,1); }
-      .cur.on { width:54px; height:54px; }
-      .cur.down { width:14px; height:14px; }
+      .cur { position:fixed; left:0; top:0; width:26px; height:26px; border-radius:50%;
+             background:rgba(13,148,136,0.10); border:1px solid rgba(13,148,136,0.22);
+             z-index:500; pointer-events:none; opacity:0;
+             transition:width 0.3s cubic-bezier(0.23,1,0.32,1),
+                        height 0.3s cubic-bezier(0.23,1,0.32,1),
+                        background 0.3s ease, border-color 0.3s ease; }
+      .cur.on { width:44px; height:44px; background:rgba(13,148,136,0.14);
+                border-color:rgba(13,148,136,0.34); }
+      .cur.down { width:20px; height:20px; }
     }
     @media not ((hover:hover) and (pointer:fine)) { .cur { display:none; } }
 
