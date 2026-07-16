@@ -267,6 +267,8 @@ const Styles = memo(() => (
 
     /* ── Contact CTA: plain centered statement, no card chrome ── */
     .foot { margin:clamp(80px,13vh,140px) 0 clamp(72px,11vh,120px); text-align:center; }
+    .foot-kicker { font-size:0.6rem; letter-spacing:0.3em; color:var(--accent);
+                   display:block; margin-bottom:20px; }
     .foot-rule { height:1px; background:var(--bdr-c); border:none;
                  margin:clamp(36px,6vh,56px) auto clamp(26px,4vh,40px); }
     .foot-title { font-family:'Playfair Display',Georgia,serif; font-size:clamp(1.9rem,4.6vw,3.1rem);
@@ -981,7 +983,7 @@ export default function Portfolio() {
               <F>
                 <div className="sec-head">
                   <h2 className="f sec-title">Selected work</h2>
-                  <span className="m sec-sub" style={{ color: mid }}>2022 → 2026 · Naya Studio</span>
+                  <span className="m sec-sub" style={{ color: mid }}>Chapter 01 · Naya Studio · 2022 → 2026</span>
                 </div>
               </F>
               <div className="cards">
@@ -1015,18 +1017,18 @@ export default function Portfolio() {
             <section id="process" aria-label="How I work">
               <F>
                 <div className="sec-head">
-                  <h2 className="f sec-title">How I work</h2>
-                  <span className="m sec-sub" style={{ color: mid }}>six steps · feedback throughout</span>
+                  <h2 className="f sec-title">How a feature comes to life</h2>
+                  <span className="m sec-sub" style={{ color: mid }}>Chapter 02 · the same journey, 200+ times</span>
                 </div>
               </F>
               <div className="steps">
                 {[
-                  { t: "Prioritise", d: "Decide what's worth building next, with founders." },
-                  { t: "Write the PRD", d: "Problem and scope on paper before a pixel moves." },
-                  { t: "Precedence research", d: "How existing products already solve it." },
-                  { t: "Lo-fi → hi-fi", d: "Rough frames to working prototypes in code." },
-                  { t: "Hand off to devs", d: "Dev notes and a running preview to build from." },
-                  { t: "Feedback, always", d: "Loops between every stage, each round implemented." },
+                  { t: "It starts with a question", d: "What's worth building next? Founders and I decide together." },
+                  { t: "Then it goes on paper", d: "Problem and scope in a PRD, before a single pixel moves." },
+                  { t: "I study who's solved it", d: "Pattern research across the products that got it right." },
+                  { t: "Sketches become software", d: "Rough frames grow into working prototypes, in code." },
+                  { t: "Engineers take the baton", d: "Notes, decisions and a running preview to build from." },
+                  { t: "And we listen, always", d: "Feedback between every stage — every round implemented." },
                 ].map((s, i) => (
                   <div key={s.t} className="step">
                     <span className="step-n">0{i + 1}</span>
@@ -1041,8 +1043,8 @@ export default function Portfolio() {
             <section id="tools" aria-label="Tools I built">
               <F>
                 <div className="sec-head">
-                  <h2 className="f sec-title">Tools I built</h2>
-                  <span className="m sec-sub" style={{ color: mid }}>solo · end to end · shipped</span>
+                  <h2 className="f sec-title">Side quests</h2>
+                  <span className="m sec-sub" style={{ color: mid }}>Chapter 03 · tools I built solo, end to end</span>
                 </div>
               </F>
               <F d={90}>
@@ -1079,6 +1081,7 @@ export default function Portfolio() {
 
             {/* ── Contact CTA ── */}
             <section className="foot" id="contact" aria-label="Contact">
+              <span className="m foot-kicker">Chapter 04 · the next one</span>
               <h2 className="foot-title">Have an AI product to design?<br /><em>Let's talk.</em></h2>
               <p className="foot-note">
                 Open to senior roles, remote worldwide. I reply within a day.
