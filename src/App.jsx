@@ -433,6 +433,7 @@ const BENTO = ["b-big", "b-tall", "", "", "", "b-wide"];
 const BUILT = [
   {
     slug: "yoink", name: "Yoink", kind: "Chrome extension",
+    href: "https://chromewebstore.google.com/detail/yoink/lecfomokhlobahfkpojglfcigbbdckia",
     desc: "Pastes any website into Figma as editable layers.",
     about: "Rebuilding UI in Figma by hand is slow. Yoink captures any website — layout, text, images — and pastes it into Figma as fully editable layers instead of flat screenshots. Free forever, open source (MIT), 100% offline. Built solo as a Chrome extension, and actively used by designers today.",
     gallery: [1, 2, 3, 4, 5].map(i => `/work/yoink-${i}.png`),
@@ -729,7 +730,7 @@ export default function Portfolio() {
             </a>
             <a href="#tools" data-tab="tools" onClick={() => setActiveSec("tools")}
               className={`dock-item ${activeTab === "tools" ? "on" : ""}`}>
-              <Wrench /> Tools
+              <Wrench /> Built
             </a>
             <div className="cv-wrap dock-cv">
               <button data-tab="resume" className={`dock-item ${cvOpen ? "on" : ""}`} onClick={() => setCvOpen(o => !o)}
@@ -828,13 +829,14 @@ export default function Portfolio() {
             {/* ── Built ── */}
             <section id="tools" aria-label="Tools I built">
               <div className="sec-head">
-                <h2 className="f sec-title">I also build tools</h2>
-                <span className="m sec-sub" style={{ color: mid }}>solo · end to end</span>
+                <h2 className="f sec-title">Tools I built</h2>
+                <span className="m sec-sub" style={{ color: mid }}>solo · end to end · shipped</span>
               </div>
               <div className="glass list">
                 {BUILT.map(b => {
-                  const Row = b.href ? "a" : "button";
-                  const rowProps = b.href
+                  const external = b.href && !b.about;
+                  const Row = external ? "a" : "button";
+                  const rowProps = external
                     ? { href: b.href, target: "_blank", rel: "noopener noreferrer" }
                     : { type: "button", onClick: () => setTool(b) };
                   return (
