@@ -196,6 +196,8 @@ const Styles = memo(() => (
     section { scroll-margin-top:88px; }
     .sec-head { display:flex; justify-content:space-between; align-items:baseline; gap:12px;
                 flex-wrap:wrap; margin:clamp(56px,9vh,88px) 0 18px; }
+    .sec-kicker { display:block; font-size:0.56rem; letter-spacing:0.3em; color:var(--accent);
+                  margin-bottom:10px; }
     .sec-title { font-size:1.6rem; font-weight:600; letter-spacing:-0.01em; }
     .sec-title em { font-style:italic; font-weight:500; color:var(--accent); }
     .sec-sub { font-size:0.58rem; letter-spacing:0.22em; }
@@ -982,8 +984,11 @@ export default function Portfolio() {
             <section id="work" aria-label="Selected work">
               <F>
                 <div className="sec-head">
-                  <h2 className="f sec-title">Selected work</h2>
-                  <span className="m sec-sub" style={{ color: mid }}>Chapter 01 · Naya Studio · 2022 → 2026</span>
+                  <div>
+                    <span className="m sec-kicker">Chapter 01</span>
+                    <h2 className="f sec-title">Selected work</h2>
+                  </div>
+                  <span className="m sec-sub" style={{ color: mid }}>Naya Studio · 2022 → 2026</span>
                 </div>
               </F>
               <div className="cards">
@@ -1017,8 +1022,11 @@ export default function Portfolio() {
             <section id="process" aria-label="How I work">
               <F>
                 <div className="sec-head">
-                  <h2 className="f sec-title">How a feature comes to life</h2>
-                  <span className="m sec-sub" style={{ color: mid }}>Chapter 02 · the same journey, 200+ times</span>
+                  <div>
+                    <span className="m sec-kicker">Chapter 02</span>
+                    <h2 className="f sec-title">How a feature comes to life</h2>
+                  </div>
+                  <span className="m sec-sub" style={{ color: mid }}>the same journey · 200+ times</span>
                 </div>
               </F>
               <div className="steps">
@@ -1043,8 +1051,11 @@ export default function Portfolio() {
             <section id="tools" aria-label="Tools I built">
               <F>
                 <div className="sec-head">
-                  <h2 className="f sec-title">Side quests</h2>
-                  <span className="m sec-sub" style={{ color: mid }}>Chapter 03 · tools I built solo, end to end</span>
+                  <div>
+                    <span className="m sec-kicker">Chapter 03</span>
+                    <h2 className="f sec-title">Side quests</h2>
+                  </div>
+                  <span className="m sec-sub" style={{ color: mid }}>built solo · end to end</span>
                 </div>
               </F>
               <F d={90}>
