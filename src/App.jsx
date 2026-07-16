@@ -290,10 +290,11 @@ const Styles = memo(() => (
              margin-top:clamp(40px,6vh,64px); }
     .foot2 .wrap { padding-top:clamp(44px,7vw,72px); padding-bottom:130px; }
     .foot2-top { display:flex; justify-content:space-between; gap:44px; flex-wrap:wrap; }
-    .foot2-logo { font-size:clamp(1.5rem,2.6vw,2rem); font-weight:600; }
+    .foot2-id { display:flex; align-items:center; gap:14px; }
+    .foot2-avatar { width:44px; height:44px; border-radius:50%; object-fit:cover; }
+    .foot2-logo { font-size:clamp(1.5rem,2.6vw,1.9rem); font-weight:600; }
     .foot2-logo em { font-style:italic; font-weight:500; color:var(--accent); }
-    .foot2-tag { margin-top:12px; font-size:0.88rem; color:var(--mid); font-weight:300; }
-    .foot2-heart { margin-top:30px; font-size:0.78rem; color:var(--mid); }
+    .foot2-tag { margin-top:14px; font-size:0.86rem; color:var(--mid); font-weight:300; }
     .foot2-cols { display:flex; gap:clamp(44px,8vw,96px); }
     .foot2-col { display:flex; flex-direction:column; gap:13px; align-items:flex-start; }
     .foot2-lbl { font-size:0.54rem; letter-spacing:0.22em; color:var(--sub); margin-bottom:5px; }
@@ -1119,9 +1120,11 @@ export default function Portfolio() {
             <div className="wrap">
               <div className="foot2-top">
                 <div className="foot2-brand">
-                  <h2 className="f foot2-logo">Krishna Zolpatil<em>.</em></h2>
+                  <div className="foot2-id">
+                    <img src="/about-photo.jpg" alt="" className="foot2-avatar" />
+                    <h2 className="f foot2-logo">Krishna Zolpatil<em>.</em></h2>
+                  </div>
                   <p className="foot2-tag">Senior Product Designer · AI SaaS · remote, worldwide.</p>
-                  <p className="foot2-heart">Handcrafted with ♥ — React + Claude.</p>
                 </div>
                 <div className="foot2-cols">
                   <div className="foot2-col">
@@ -1144,6 +1147,7 @@ export default function Portfolio() {
               <hr className="foot2-rule" />
               <div className="m foot2-bottom">
                 <span>© 2026 Krishna Zolpatil. All rights reserved.</span>
+                <span>Handcrafted with ♥ — React + Claude</span>
                 <span>MUM {ist} · NYC {nyc}</span>
               </div>
             </div>
