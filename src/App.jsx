@@ -22,11 +22,37 @@ const Styles = memo(() => (
     .f    { font-family:'Playfair Display',Georgia,serif; font-weight:600; letter-spacing:-0.01em; }
     .m    { font-family:'Spline Sans',sans-serif; text-transform:uppercase; letter-spacing:0.18em; font-weight:500; }
 
-    @keyframes fadeUp  { from{opacity:0;transform:translateY(16px);} to{opacity:1;transform:translateY(0);} }
+    /* ReactBits FadeContent pattern — subtle blur-fade, barely-there lift */
+    @keyframes fadeUp  { from{opacity:0;transform:translateY(8px);filter:blur(5px);}
+                         to{opacity:1;transform:translateY(0);filter:blur(0);} }
     @keyframes fadeIn  { from{opacity:0;} to{opacity:1;} }
     @keyframes modalIn { from{opacity:0;transform:translateY(18px) scale(0.98);} to{opacity:1;transform:none;} }
     @keyframes blink   { 0%,100%{opacity:1;} 50%{opacity:0.2;} }
-    .fu { animation:fadeUp 0.6s ease both; }
+    .fu { animation:fadeUp 0.7s cubic-bezier(0.22,1,0.36,1) both; }
+
+    /* ── Ambient background: two slow-drifting warm/teal washes ── */
+    .bg { position:fixed; inset:0; z-index:0; pointer-events:none; overflow:hidden; }
+    .bg i { position:absolute; display:block; border-radius:50%; will-change:transform; }
+    .bg i:nth-child(1) { width:54vmax; height:54vmax; left:-20vmax; top:-22vmax;
+                         background:radial-gradient(circle, rgba(13,148,136,0.07), transparent 62%);
+                         animation:drift1 36s ease-in-out infinite alternate; }
+    .bg i:nth-child(2) { width:48vmax; height:48vmax; right:-18vmax; bottom:-20vmax;
+                         background:radial-gradient(circle, rgba(196,164,110,0.10), transparent 62%);
+                         animation:drift2 44s ease-in-out infinite alternate; }
+    @keyframes drift1 { to{ transform:translate(8vmax, 6vmax); } }
+    @keyframes drift2 { to{ transform:translate(-7vmax, -5vmax); } }
+
+    /* ── Custom cursor: teal dot + trailing ring (fine pointers only) ── */
+    @media (hover:hover) and (pointer:fine) {
+      html, body, a, button { cursor:none; }
+      .cur-dot, .cur-ring { position:fixed; left:0; top:0; z-index:500; pointer-events:none;
+                            border-radius:50%; opacity:0; }
+      .cur-dot { width:6px; height:6px; background:var(--accent); }
+      .cur-ring { width:30px; height:30px; border:1.5px solid rgba(13,148,136,0.3);
+                  transition:width 0.25s ease, height 0.25s ease, border-color 0.25s ease; }
+      .cur-ring.on { width:42px; height:42px; border-color:rgba(13,148,136,0.5); }
+    }
+    @media not ((hover:hover) and (pointer:fine)) { .cur-dot, .cur-ring { display:none; } }
 
     /* ── Opening: centered name badge; the page "scrolls" up with it as the
          badge glides to the top and expands into the full navbar.
@@ -54,7 +80,10 @@ const Styles = memo(() => (
     .pre .nav-right { display:none; }
     .ready .nav-right { animation:fadeIn 0.4s ease 1.15s both; }
     .pre .dock, .pre .content { opacity:0; }
-    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 1.35s both; }
+    /* dock keeps its own keyframes: fadeUp's fill would clobber translateX(-50%) */
+    .ready .dock { animation:dockUp 0.6s cubic-bezier(0.23,1,0.32,1) 1.35s both; }
+    @keyframes dockUp { from{opacity:0; transform:translate(-50%, 10px);}
+                        to{opacity:1; transform:translate(-50%, 0);} }
     .ready .content { animation:settleUp 1.15s cubic-bezier(0.65,0,0.35,1) both; }
     .ready:not(.settled) .content { will-change:transform; }
     @keyframes settleUp { from{opacity:0.3; transform:translateY(44vh);}
@@ -514,6 +543,42 @@ const HeroShot = memo(function HeroShot() {
   );
 });
 
+/* ── Custom cursor: teal dot follows exactly, ring trails with lerp ── */
+const Cursor = memo(function Cursor() {
+  const dotRef = useRef(null), ringRef = useRef(null);
+  useEffect(() => {
+    if (!window.matchMedia("(hover:hover) and (pointer:fine)").matches) return;
+    const dot = dotRef.current, ring = ringRef.current;
+    let x = -100, y = -100, rx = -100, ry = -100, raf, shown = false;
+    const move = (e) => {
+      x = e.clientX; y = e.clientY;
+      if (!shown) { shown = true; dot.style.opacity = 1; ring.style.opacity = 1; rx = x; ry = y; }
+      dot.style.transform = `translate(${x - 3}px, ${y - 3}px)`;
+      ring.classList.toggle("on", !!e.target.closest?.("a, button, [role='button']"));
+    };
+    const out = () => { shown = false; dot.style.opacity = 0; ring.style.opacity = 0; };
+    const loop = () => {
+      rx += (x - rx) * 0.14; ry += (y - ry) * 0.14;
+      ring.style.transform = `translate(${rx}px, ${ry}px) translate(-50%,-50%)`;
+      raf = requestAnimationFrame(loop);
+    };
+    window.addEventListener("mousemove", move, { passive: true });
+    document.documentElement.addEventListener("mouseleave", out);
+    raf = requestAnimationFrame(loop);
+    return () => {
+      window.removeEventListener("mousemove", move);
+      document.documentElement.removeEventListener("mouseleave", out);
+      cancelAnimationFrame(raf);
+    };
+  }, []);
+  return (
+    <>
+      <div ref={dotRef} className="cur-dot" aria-hidden="true" />
+      <div ref={ringRef} className="cur-ring" aria-hidden="true" />
+    </>
+  );
+});
+
 /* ── Confetti easter egg (clicking "This website") ── */
 const CONFETTI_COLORS = ["#0A84FF", "#30D158", "#FFD60A", "#FF9F0A", "#FF375F", "#BF5AF2"];
 const Confetti = memo(function Confetti({ onDone }) {
@@ -756,6 +821,9 @@ export default function Portfolio() {
           "--accent": T.accent, "--txt-c": txt,
         }}>
 
+        {/* ── Ambient background washes ── */}
+        <div className="bg" aria-hidden="true"><i /><i /></div>
+
         {/* ── Floating nav ── */}
         <header className="nav">
           <div className="nav-name">
@@ -957,6 +1025,7 @@ export default function Portfolio() {
           </div>
         </div>
 
+        <Cursor />
         {bursts.map(id => (
           <Confetti key={id} onDone={() => setBursts(b => b.filter(x => x !== id))} />
         ))}
