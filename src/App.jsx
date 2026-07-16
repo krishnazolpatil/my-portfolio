@@ -33,21 +33,23 @@ const Styles = memo(() => (
          badge glides to the top and expands into the full navbar.
          boot = assets still loading, everything hidden ── */
     .boot .nav, .boot .dock, .boot .content { opacity:0; }
-    .pre .nav { top:50%; transform:translate(-50%,-50%); max-width:286px;
-                animation:introPop 0.6s cubic-bezier(0.23,1,0.32,1) both; }
-    .ready .nav { transition:top 0.9s cubic-bezier(0.65,0.05,0.36,1),
-                             transform 0.9s cubic-bezier(0.65,0.05,0.36,1),
-                             max-width 0.9s cubic-bezier(0.65,0.05,0.36,1); }
+    .pre .nav { top:50%; transform:translate(-50%,-50%) scale(1.3); max-width:286px;
+                animation:introPop 0.65s cubic-bezier(0.23,1,0.32,1) both;
+                will-change:transform; }
+    .ready .nav { transition:top 1.05s cubic-bezier(0.4,0,0.12,1),
+                             transform 1.05s cubic-bezier(0.4,0,0.12,1),
+                             max-width 1.05s cubic-bezier(0.4,0,0.12,1); }
+    .ready:not(.settled) .nav { will-change:transform, max-width; }
     /* solid pill while it travels — backdrop blur on a moving element is what lags */
     .pre .nav, .ready:not(.settled) .nav { background:var(--surface);
                 backdrop-filter:none; -webkit-backdrop-filter:none; }
-    @keyframes introPop { from{opacity:0; transform:translate(-50%,-50%) scale(0.85);}
-                          to{opacity:1; transform:translate(-50%,-50%) scale(1);} }
+    @keyframes introPop { from{opacity:0; transform:translate(-50%,-50%) scale(1.12);}
+                          to{opacity:1; transform:translate(-50%,-50%) scale(1.3);} }
     .pre .nav-right { display:none; }
-    .ready .nav-right { animation:fadeIn 0.4s ease 0.85s both; }
+    .ready .nav-right { animation:fadeIn 0.4s ease 1s both; }
     .pre .dock, .pre .content { opacity:0; }
-    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 1.05s both; }
-    .ready .content { animation:settleUp 0.9s cubic-bezier(0.65,0.05,0.36,1) both; }
+    .ready .dock { animation:fadeUp 0.6s cubic-bezier(0.23,1,0.32,1) 1.2s both; }
+    .ready .content { animation:settleUp 1.05s cubic-bezier(0.4,0,0.12,1) both; }
     .ready:not(.settled) .content { will-change:transform; }
     @keyframes settleUp { from{opacity:0.3; transform:translateY(44vh);}
                           55%{opacity:1;}
@@ -138,8 +140,8 @@ const Styles = memo(() => (
           font-size:clamp(2.6rem,7vw,5.1rem); line-height:1.08; letter-spacing:-0.015em; }
     .h1 .line { overflow:hidden; display:block; padding-bottom:0.14em; margin-bottom:-0.14em; }
     .h1 .line > span { display:block; transform:translateY(110%); }
-    .ready .h1 .line > span { animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) 0.75s forwards; }
-    .ready .h1 .line:nth-child(2) > span { animation-delay:0.87s; }
+    .ready .h1 .line > span { animation:rise 0.9s cubic-bezier(0.23,1,0.32,1) 0.9s forwards; }
+    .ready .h1 .line:nth-child(2) > span { animation-delay:1.02s; }
     .h1 em { font-style:italic; font-weight:500; color:var(--accent); }
     .lede { margin:24px auto 0; max-width:44ch; font-size:clamp(1rem,1.4vw,1.14rem);
             line-height:1.7; font-weight:300; }
@@ -664,8 +666,8 @@ export default function Portfolio() {
     const begin = () => {
       if (cancelled) return;
       setBoot(false);
-      t1 = setTimeout(() => setReady(true), 950);
-      t2 = setTimeout(() => setSettled(true), 2100);
+      t1 = setTimeout(() => setReady(true), 1000);
+      t2 = setTimeout(() => setSettled(true), 2350);
     };
     const cap = new Promise(r => setTimeout(r, 2500));
     const fonts = document.fonts?.ready ?? Promise.resolve();
