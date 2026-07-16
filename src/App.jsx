@@ -592,6 +592,37 @@ const Particles = memo(function Particles() {
   return <canvas ref={ref} className="bg-canvas" aria-hidden="true" />;
 });
 
+/* ── Scroll motion blur: vertical-only gaussian scaled by scroll velocity ── */
+const ScrollBlur = memo(function ScrollBlur() {
+  useEffect(() => {
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+    const blurEl = document.getElementById("scrollblur-g");
+    const content = document.querySelector(".content");
+    if (!blurEl || !content) return;
+    let last = window.scrollY, b = 0, raf, active = false;
+    const loop = () => {
+      const y = window.scrollY;
+      const target = Math.min(Math.abs(y - last) * 0.1, 6);
+      last = y;
+      b += (target - b) * (target > b ? 0.35 : 0.16);
+      if (b > 0.08) {
+        blurEl.setAttribute("stdDeviation", `0 ${b.toFixed(2)}`);
+        if (!active) { content.style.filter = "url(#scrollblur)"; active = true; }
+      } else if (active) { content.style.filter = ""; active = false; }
+      raf = requestAnimationFrame(loop);
+    };
+    raf = requestAnimationFrame(loop);
+    return () => { cancelAnimationFrame(raf); content.style.filter = ""; };
+  }, []);
+  return (
+    <svg width="0" height="0" style={{ position: "absolute" }} aria-hidden="true">
+      <filter id="scrollblur" x="-5%" y="-5%" width="110%" height="110%">
+        <feGaussianBlur id="scrollblur-g" in="SourceGraphic" stdDeviation="0 0" />
+      </filter>
+    </svg>
+  );
+});
+
 /* ── Custom cursor: teal dot follows exactly, ring trails with lerp ── */
 const Cursor = memo(function Cursor() {
   const dotRef = useRef(null), ringRef = useRef(null);
@@ -1076,6 +1107,7 @@ export default function Portfolio() {
         </div>
 
         <Cursor />
+        <ScrollBlur />
         {bursts.map(id => (
           <Confetti key={id} onDone={() => setBursts(b => b.filter(x => x !== id))} />
         ))}
