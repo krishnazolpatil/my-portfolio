@@ -1023,12 +1023,12 @@ export default function Portfolio() {
               </F>
               <div className="steps">
                 {[
-                  { t: "It starts with a question", d: "What's worth building next? Founders and I decide together." },
-                  { t: "Then it goes on paper", d: "Problem and scope in a PRD, before a single pixel moves." },
-                  { t: "I study who's solved it", d: "Pattern research across the products that got it right." },
-                  { t: "Sketches become software", d: "Rough frames grow into working prototypes, in code." },
-                  { t: "Engineers take the baton", d: "Notes, decisions and a running preview to build from." },
-                  { t: "And we listen, always", d: "Feedback between every stage — every round implemented." },
+                  { t: "It starts with a question", d: "Product strategy with founders — roadmap prioritisation, grounded in user insights." },
+                  { t: "Then it goes on paper", d: "Problem, scope and success metrics in a PRD. Stakeholder alignment before pixels." },
+                  { t: "I study who's solved it", d: "UX research and competitive analysis across the products that got it right." },
+                  { t: "Sketches become software", d: "User flows, wireframes, interaction design — then high-fidelity prototypes in working code." },
+                  { t: "Engineers take the baton", d: "Design specs, developer handoff and design QA, with a running preview to build from." },
+                  { t: "And we listen, always", d: "Usability testing and cross-functional feedback between every stage — iterate, ship, repeat." },
                 ].map((s, i) => (
                   <div key={s.t} className="step">
                     <span className="step-n">0{i + 1}</span>
