@@ -981,6 +981,20 @@ export default function Portfolio() {
               </F>
             </section>
 
+            {/* ── Everyday stack ── */}
+            <section id="stack" aria-label="Everyday stack">
+              <div className="sec-head">
+                <h2 className="f sec-title">Everyday stack</h2>
+                <span className="m sec-sub" style={{ color: mid }}>design → code → ship</span>
+              </div>
+              <div className="stack">
+                {["Figma", "Claude", "Antigravity IDE", "GitHub", "Vercel", "Supabase", "Linear",
+                  "Notion", "Slack", "Google Docs", "Google Sheets", "Google Drive", "Pen & paper"]
+                  .map(t => <span key={t} className="stack-pill">{t}</span>)}
+                <a href="#tools" className="stack-pill mine" title="Built it myself — see Tools I built">Yoink · mine</a>
+              </div>
+            </section>
+
             {/* ── Work: app-style cards ── */}
             <section id="work" aria-label="Selected work">
               <F>
@@ -1082,20 +1096,6 @@ export default function Portfolio() {
                 </button>
               </div>
               </F>
-            </section>
-
-            {/* ── Everyday stack ── */}
-            <section id="stack" aria-label="Everyday stack">
-              <div className="sec-head">
-                <h2 className="f sec-title">Everyday stack</h2>
-                <span className="m sec-sub" style={{ color: mid }}>design → code → ship</span>
-              </div>
-              <div className="stack">
-                {["Figma", "Claude", "Antigravity IDE", "GitHub", "Vercel", "Supabase", "Linear",
-                  "Notion", "Slack", "Google Docs", "Google Sheets", "Google Drive", "Pen & paper"]
-                  .map(t => <span key={t} className="stack-pill">{t}</span>)}
-                <a href="#tools" className="stack-pill mine" title="Built it myself — see Tools I built">Yoink · mine</a>
-              </div>
             </section>
 
             {/* ── Contact CTA ── */}
