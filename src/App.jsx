@@ -975,15 +975,19 @@ export default function Portfolio() {
                   <a href="#contact" className="cta cta-line">Get in touch</a>
                 </div>
               </F>
-              <HeroShot />
+              <F d={140}>
+                <HeroShot />
+              </F>
             </section>
 
             {/* ── Work: app-style cards ── */}
             <section id="work" aria-label="Selected work">
-              <div className="sec-head">
-                <h2 className="f sec-title">Selected work</h2>
-                <span className="m sec-sub" style={{ color: mid }}>2022 → 2026 · Naya Studio</span>
-              </div>
+              <F>
+                <div className="sec-head">
+                  <h2 className="f sec-title">Selected work</h2>
+                  <span className="m sec-sub" style={{ color: mid }}>2022 → 2026 · Naya Studio</span>
+                </div>
+              </F>
               <div className="cards">
                 {PROJECTS.map((p, i) => (
                   <F key={p.id} d={(i % 3) * 80} className={`bcell ${BENTO[i] || ""}`}>
@@ -1004,17 +1008,21 @@ export default function Portfolio() {
                   </F>
                 ))}
               </div>
-              <p className="also" style={{ color: mid }}>
-                <b style={{ color: txt }}>+ 194 more shipped</b> — {ARCHIVE}…
-              </p>
+              <F d={80}>
+                <p className="also" style={{ color: mid }}>
+                  <b style={{ color: txt }}>+ 194 more shipped</b> — {ARCHIVE}…
+                </p>
+              </F>
             </section>
 
             {/* ── Process ── */}
             <section id="process" aria-label="How I work">
-              <div className="sec-head">
-                <h2 className="f sec-title">How I work</h2>
-                <span className="m sec-sub" style={{ color: mid }}>six steps · feedback throughout</span>
-              </div>
+              <F>
+                <div className="sec-head">
+                  <h2 className="f sec-title">How I work</h2>
+                  <span className="m sec-sub" style={{ color: mid }}>six steps · feedback throughout</span>
+                </div>
+              </F>
               <div className="steps">
                 {[
                   { t: "Prioritise", d: "Decide what's worth building next, with founders." },
@@ -1024,21 +1032,26 @@ export default function Portfolio() {
                   { t: "Hand off to devs", d: "Dev notes and a running preview to build from." },
                   { t: "Feedback, always", d: "Loops between every stage, each round implemented." },
                 ].map((s, i) => (
-                  <div key={s.t} className="glass step">
-                    <span className="m step-n">0{i + 1}</span>
-                    <p className="step-t">{s.t}</p>
-                    <p className="step-d">{s.d}</p>
-                  </div>
+                  <F key={s.t} d={(i % 3) * 90}>
+                    <div className="glass step">
+                      <span className="m step-n">0{i + 1}</span>
+                      <p className="step-t">{s.t}</p>
+                      <p className="step-d">{s.d}</p>
+                    </div>
+                  </F>
                 ))}
               </div>
             </section>
 
             {/* ── Built ── */}
             <section id="tools" aria-label="Tools I built">
-              <div className="sec-head">
-                <h2 className="f sec-title">Tools I built</h2>
-                <span className="m sec-sub" style={{ color: mid }}>solo · end to end · shipped</span>
-              </div>
+              <F>
+                <div className="sec-head">
+                  <h2 className="f sec-title">Tools I built</h2>
+                  <span className="m sec-sub" style={{ color: mid }}>solo · end to end · shipped</span>
+                </div>
+              </F>
+              <F d={90}>
               <div className="glass list">
                 {BUILT.map(b => {
                   const external = b.href && !b.about;
@@ -1067,14 +1080,17 @@ export default function Portfolio() {
                   <span className="m lrow-kind" style={{ color: sub }}>krishnazolpatil.com</span>
                 </button>
               </div>
+              </F>
             </section>
 
             {/* ── Footer ── */}
             <footer className="foot" id="contact">
-              <div className="sec-head">
-                <h2 className="f sec-title">One more thing…</h2>
-                <span className="m sec-sub" style={{ color: mid }}>open to senior remote roles</span>
-              </div>
+              <F>
+                <div className="sec-head">
+                  <h2 className="f sec-title">One more thing…</h2>
+                  <span className="m sec-sub" style={{ color: mid }}>open to senior remote roles</span>
+                </div>
+              </F>
               <F>
                 <div className="foot-card">
                   <h2 className="foot-title">Have an AI product to design?<br /><em>Let's talk.</em></h2>
