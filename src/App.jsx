@@ -314,7 +314,7 @@ const Styles = memo(() => (
     }
     @media(max-width:767px){
       .nav { width:min(980px, calc(100% - 28px)); padding:8px 8px 8px 12px; }
-      .nav-meta { display:none; }
+      .nav-meta { font-size:0.52rem; }
       .nav-status { padding:7px 11px; font-size:0.56rem; }
       .st-long { display:none; }
       .st-short { display:inline; }
