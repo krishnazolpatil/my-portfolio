@@ -530,15 +530,26 @@ const Styles = memo(() => (
     @keyframes fall { to { transform:translateY(112vh) rotate(680deg); } }
 
     /* ── Responsive ── */
-    /* Tablet: nav sheds its status line, billboard art recedes behind the type. */
+    /* Tablet: nav sheds its status line, and the hero art drops out entirely.
+       The orbit is right-anchored and its scrim is a left-to-right gradient, so
+       it only works while the type has a clean left third to sit in. Below this
+       the ring crosses the headline — shrinking it just made the tiles collide
+       with the words. So the orbit is a wide-viewport element, and narrower
+       screens get the type on a stronger wash instead. */
     @media (max-width:1080px) {
       .ott-avail { display:none; }
-      .ott-orbit { width:74%; opacity:0.8; }
-      .ott-bb { min-height:min(78vh, 680px); }
+      .ott-orbit { display:none; }
+      .ott-bb-wash { background:
+          radial-gradient(620px 460px at 74% 14%, rgba(0,168,225,0.28), transparent 68%),
+          radial-gradient(560px 440px at 4% 90%, rgba(0,168,225,0.10), transparent 72%); }
+      .ott-bb-scrim { background:linear-gradient(0deg, var(--bg) 4%, rgba(15,23,30,0.34) 42%, transparent 74%); }
+      /* 78vh was height held for the orbit; with the art gone the type would
+         sit at the bottom of an empty gradient, so the hero closes up. */
+      .ott-bb { min-height:auto; padding-top:clamp(122px,19vh,186px);
+                padding-bottom:clamp(44px,8vh,76px); }
     }
     @media (max-width:920px) {
       .ott-navlinks { display:none; }
-      .ott-orbit { width:92%; opacity:0.55; }
       /* Six columns of 12-word copy stop working here — go vertical. */
       .ott-tl { grid-template-columns:1fr; }
       .ott-tl-rail, .ott-tl-fill { top:14px; bottom:14px; left:13px; right:auto;
@@ -562,17 +573,7 @@ const Styles = memo(() => (
       .ott-track { padding:22px var(--edge) 34px; }
       .ott-arrow { display:none; }
       .ott-panel-actions .ott-btn { width:100%; }
-      /* Stacked layout: the orbit becomes a band above the headline rather than
-         a backdrop, and shrinks so six tiles still clear each other. */
-      .ott-orbit { position:relative; right:auto; left:auto; top:auto; bottom:auto;
-                   width:100%; height:230px; margin-bottom:14px; opacity:0.75; }
-      .ott-orbit-stage { width:200px; --r:95px; }
-      .ott-orbit-core { width:74px; height:74px; }
-      .ott-orbit-core span { font-size:0.5rem; }
-      .ott-orbit-node { width:58px; height:58px; margin:-29px 0 0 -29px; border-radius:14px; }
-      .ott-orbit-node svg, .ott-orbit-node img { width:20px; height:20px; }
-      .ott-orbit-node b { font-size:0.48rem; }
-      .ott-bb-scrim { background:linear-gradient(0deg, var(--bg) 8%, rgba(15,23,30,0.5) 46%, rgba(15,23,30,0.2)); }
+      /* Orbit and hero wash are already handled at 1080px. */
       .ott-rows { margin-top:12px; }
       .ott-card { flex:0 0 44vw; max-width:none; }
       .ott-card-wide { flex:0 0 72vw; max-width:none; }

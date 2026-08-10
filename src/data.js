@@ -160,15 +160,46 @@ export const PROJECTS = [
   },
   {
     id: "design-system", n: "05", tag: "Foundations", title: "Design System",
-    short: "One source of truth, in Figma and in code.",
+    short: "A Figma file nobody could keep current, rebuilt as a file Claude reads.",
     role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Design · Engineering",
-    overview: "Shipping fast erodes consistency. Every rushed feature drifts a little. The design system is the counterweight: tokens, components, and documented patterns that make the right thing the easy thing, in Figma and in code.",
-    outcomes: ["One source of truth shared by design and front-end", "Keeps AI-assisted prototyping on-brand by default", "Makes quality repeatable at startup pace"],
+    stack: ["Figma", "Claude Code"],
+    overview: "Naya had a design system file. What people actually took from it was colours and fonts — the rest of the decisions got made again on every screen. I spent two years adding the parts that were missing, starting with elevation and button states, then building a Blocks file to answer the question that was costing everyone the most time: which version of this component is the current one? Then design moved to Claude, and a Figma library stopped being the right container for any of it. The system now lives in nayadesign.md, written to be read by the thing that draws the interface.",
+    outcomes: [
+      "Elevation became a six-step ladder tied to what a surface is, not how important it is",
+      "Button hover and pressed states became a formula — a 4% and an 8% overlay — instead of a shade someone picked",
+      "One Blocks file replaced the guess about which of several Figma files held the current component",
+      "The system now ships as nayadesign.md, so prototypes built with Claude inherit the brand instead of approximating it",
+      "The four things that carry the brand — pill controls, the #FAFAFA page, Rand at medium, one icon stroke weight — are written down rather than passed on",
+    ],
     caseStudy: [
-      { label: "Problem", body: "At startup pace, design and code drift apart: three button variants, four greys that are almost the same, and every new feature reinventing patterns that already existed." },
-      { label: "Constraints", body: "A system for a small team can't demand ceremony. It has to be lighter to use than to ignore, and it has to serve two consumers at once: designers in Figma and components in code." },
-      { label: "Solution", body: "Tokenised foundations — primitives and tokens created with the dev team in Storybook — a component library mirrored between Figma and the codebase, and short pattern docs. Because the system lives in code too, design and dev stay in sync, and AI-assisted prototypes inherit it automatically. On-brand output by default." },
-      { label: "Interaction highlights", body: "Motion and micro-interaction standards are part of the system: durations, easings, and feedback patterns. So 'feels right' is documented, not tribal knowledge." },
+      {
+        label: "Problem",
+        body: "The design system file existed and everyone opened it, but only two things ever came out of it: the colours and the type. Everything past that was a decision each screen made on its own. There was no answer to how far a surface should lift off the page, so shadows were eyeballed and no two panels agreed. There was no answer to what a button does when you hover it, so every hover state was a purple somebody had picked once and nobody could re-derive. And as the product grew, so did the number of Figma files — which turned the library into a search problem. You would find a component, have no way to tell whether it was the latest one, and give up: detach the instance, change what you needed on top of it, move on. That is a rational thing to do under deadline, and it is also the thing that quietly ends a design system. Every detached copy is a component that will never receive another update.",
+      },
+      {
+        label: "Constraints",
+        body: "A small team at startup pace will not adopt a system that costs more to follow than to skip, so anything requiring ceremony was out — no approval step, no weekly library review. It also had to work retroactively: the product was already built, so any new standard had to be something existing screens could be moved onto gradually rather than a rewrite. And I was adding to someone else's foundation, not starting one, which meant the parts I contributed had to sit underneath what was already there without invalidating it.",
+      },
+      {
+        label: "Elevation, and the rule underneath it",
+        body: "The first gap I filled was elevation, and I went to Material Design 3 and Apple's Human Interface Guidelines for it rather than inventing a ladder. What Material gave me was the reason shadows look wrong when you guess: real elevation is two lights, not one. A key light casts a tight, offset, higher-opacity shadow, and an ambient light casts a wide, soft, faint one. Every level in our ladder is two layers for that reason, which is why a Naya card looks seated rather than pasted on. I set six steps and tied each one to what a surface is, not to how much it matters — a resting card and a control island both sit at level one, a dropdown at three, a modal at five — because 'important' is the judgement call that had produced the mess in the first place. Two rules came with it: one step of change per interaction, so a card at rest goes up one on hover and never jumps to modal depth; and never a shadow and a border on the same edge, pick one. That last rule is what makes the #FAFAFA page background load-bearing — it is what lets a white surface read as a raised object without needing an outline.",
+      },
+      {
+        label: "Four percent and eight percent",
+        body: "The second gap was button states, and the fix was to stop treating hover as a colour and start treating it as a formula. Material 3's state layer model composites a translucent overlay over whatever the button's resting fill is: 4% for hover, 8% for pressed. Which colour overlays depends on the surface rather than the button — black on a light surface so it darkens, white on a dark or brand-filled one so it lifts. The whole point is that it generalises. A neutral button on white hovers to #F5F5F5 and presses to #EBEBEB, and those are not values anyone chose; they are white with 4% and 8% of black over it. Add a colour to the system tomorrow and its states already exist. I also specified that focus never changes the fill — it gets a ring instead, on :focus-visible, so keyboard users get a state that pointer users cannot accidentally trigger — and that disabled buttons get their own fill and text colour rather than reduced opacity, because fading the whole button takes the label below contrast.",
+      },
+      {
+        label: "Blocks: one file to look in",
+        body: "None of the above solves the detaching problem, because that was never about standards — it was about not knowing what is current. So I made a Figma file called Blocks component collection and gave it one job: be the place you look. Components that were finished went in as the canonical version. Components that were still moving went in as reference, marked as such, so the file could tell you 'this exists and it is not settled' instead of leaving you to infer it from silence. That distinction is most of the value. The failure mode before was not people choosing a stale component; it was people unable to tell a stale one from a current one, so they treated everything as stale and detached by default. One file with an honest status on each thing made the instance worth keeping.",
+      },
+      {
+        label: "Then design moved to Claude",
+        body: "We now design Claude-first: the interface gets built as working code in Claude Code rather than assembled from components by hand in Figma, and the prototype is what goes to engineering. That change makes a Figma library the wrong container for a design system. The consumer of the system is no longer a designer dragging in an instance — it is a model writing the markup, and a model cannot open a Figma file, read a shadow off a panel, or notice that a component is the outdated one. It will write something plausible instead, and plausible is exactly how drift starts. So the system had to become text.",
+      },
+      {
+        label: "nayadesign.md",
+        body: "The system is now a single markdown file, written to be read by Claude before it writes any interface. It carries typography — the Rand stack with its fallback, the four weights and what each is for, and a scale where every size is paired with a line height so nothing is left to the browser. It carries colour as two layers, primitives and semantic tokens, with the rule that components reference tokens and never the raw ramp. It carries the elevation ladder and the radius scale, including the one that gives Naya its shape: everything clickable that is not a card is a pill. It carries both button variants with their state layers resolved to flat hexes, the avatar sizes and the initials fallback, and Lucide as the icon library with a size and a stroke weight per context. It ends with working rules — never invent a value, match the file you are editing, prototypes are not the spec, this file is — and a note on the one place where shipped product still disagrees with the standard, named rather than hidden, because a system that pretends to be perfectly applied is a system nobody trusts twice.",
+      },
     ],
   },
   {
