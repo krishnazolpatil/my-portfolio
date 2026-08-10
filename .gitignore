@@ -22,3 +22,8 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# Raw source screenshots — working files, not build inputs.
+# Site imagery that ships lives in public/work/.
+# (Folder name has a trailing space; the backslash escapes it.)
+Assets\ /
