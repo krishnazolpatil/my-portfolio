@@ -1,7 +1,7 @@
 import { useState, useEffect, useRef, useCallback, memo, Component } from "react";
 import { X, Mail, ArrowUpRight, ChevronRight, ChevronLeft, Play, Download,
          Linkedin, Github, Twitter, Instagram,
-         Sparkles, Wrench } from "lucide-react";
+         Sparkles, Wrench, Chrome } from "lucide-react";
 import { PROJECTS, ARCHIVE, BUILT, PROCESS } from "./data.js";
 
 /* ─────────────────────────────────────────────────────────
@@ -37,6 +37,15 @@ const MAILTO = "mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20
    so they open the full sheet rather than the lighter tool sheet. */
 const WORK = PROJECTS.filter(p => !p.side);
 const SIDE = PROJECTS.filter(p => p.side);
+
+/* The hero orbit is the union of every tool a case study actually claims, plus
+   the platform Yoink ships on — derived rather than listed, so the headline
+   can't drift from what the work says. */
+const STACK = [...new Set(PROJECTS.flatMap(p => p.stack || []))].concat("Chrome Extensions");
+
+/* Full names belong in the case studies; a 74px tile needs the short one. */
+const SHORT = { "Google AI Studio": "AI Studio", "Antigravity IDE": "Antigravity",
+                "Chrome Extensions": "Chrome" };
 
 const Styles = memo(() => (
   <style>{`
@@ -90,13 +99,22 @@ const Styles = memo(() => (
     .ott-btn-sm { height:38px; padding:0 16px; font-size:0.86rem; }
 
     /* ── Nav: transparent over the billboard, solid once you scroll ── */
+    /* Glass from the start. The old top-down gradient faded to nothing partway
+       down the bar, so over bright artwork it ended in a hard horizontal seam —
+       a blur has no edge to show. */
     .ott-nav { position:fixed; top:0; left:0; right:0; z-index:300; display:flex; align-items:center;
                justify-content:space-between; gap:22px; padding:14px var(--edge);
-               background:linear-gradient(180deg, rgba(15,23,30,0.85), rgba(15,23,30,0));
-               transition:background 0.35s ease, border-color 0.35s ease;
-               border-bottom:1px solid transparent; }
-    .ott-nav.solid { background:rgba(15,23,30,0.94); border-bottom-color:var(--line-2);
-                     backdrop-filter:blur(16px) saturate(150%); -webkit-backdrop-filter:blur(16px) saturate(150%); }
+               background:rgba(15,23,30,0.52);
+               backdrop-filter:blur(18px) saturate(165%);
+               -webkit-backdrop-filter:blur(18px) saturate(165%);
+               border-bottom:1px solid rgba(255,255,255,0.07);
+               transition:background 0.35s ease, border-color 0.35s ease; }
+    .ott-nav.solid { background:rgba(15,23,30,0.82); border-bottom-color:var(--line-2); }
+    /* Safari and Firefox without backdrop-filter fall back to a solid bar rather
+       than a translucent one you can read the page through. */
+    @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
+      .ott-nav { background:rgba(15,23,30,0.93); }
+    }
     .ott-navleft { display:flex; align-items:center; gap:clamp(14px,2.4vw,34px); min-width:0; }
     .ott-mark { display:flex; align-items:center; gap:9px; flex-shrink:0; }
     .ott-mark img { width:30px; height:30px; border-radius:50%; object-fit:cover; flex-shrink:0;
@@ -135,10 +153,56 @@ const Styles = memo(() => (
     .ott-bb-art { position:absolute; inset:0; z-index:0; }
     .ott-bb-art > * { position:absolute; }
     /* Product art lives right of centre; type gets the clean left third. */
-    .ott-bb-shot { right:-6%; top:6%; width:min(72%, 1080px); height:84%;
-                   border-radius:16px; overflow:hidden; transform:perspective(1600px) rotateY(-11deg) rotateX(3deg);
-                   box-shadow:0 60px 140px -40px rgba(0,0,0,0.95); opacity:0.9; }
-    .ott-bb-shot img, .ott-bb-shot svg { width:100%; height:100%; object-fit:cover; object-position:left top; }
+    /* ── Hero: the stack in orbit ──────────────────────────────────
+       Each mark carries its own orbit animation with a negative delay rather
+       than a rotating parent — one keyframe, no counter-rotating wrapper, and
+       the inner rotate(-360deg) keeps every logo upright the whole way round. */
+    /* Right-anchored, where the screenshot used to sit: the scrim is a
+       left-to-right gradient built to darken behind the headline and clear
+       over the subject, so it only works if the subject stays on the right. */
+    .ott-orbit { right:0; top:0; bottom:0; left:auto; width:min(64%, 940px);
+                 display:grid; place-items:center; pointer-events:none; }
+    /* Radius lives on the stage, not inline on each node — an inline custom
+       property outranks any stylesheet rule, so the responsive sizes below
+       could never take hold. */
+    .ott-orbit-stage { position:relative; width:min(58vh, 46vw, 540px); aspect-ratio:1;
+                       --r:min(29vh, 23vw, 270px); }
+    .ott-orbit-stage::before, .ott-orbit-stage::after {
+      content:""; position:absolute; left:50%; top:50%; translate:-50% -50%;
+      border-radius:50%; border:1px dashed rgba(255,255,255,0.10); }
+    .ott-orbit-stage::before { width:62%; height:62%; }
+    .ott-orbit-stage::after { width:100%; height:100%; }
+    .ott-orbit-core { position:absolute; left:50%; top:50%; translate:-50% -50%;
+                      width:104px; height:104px; border-radius:50%;
+                      display:grid; place-items:center; text-align:center;
+                      background:radial-gradient(circle at 50% 42%, rgba(0,168,225,0.30), rgba(15,23,30,0.9) 68%);
+                      box-shadow:0 0 0 1px rgba(0,168,225,0.32), 0 0 60px rgba(0,168,225,0.28); }
+    .ott-orbit-core span { font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+                           font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase;
+                           line-height:1.6; color:#9FD9EF; }
+    .ott-orbit-node { position:absolute; left:50%; top:50%; width:74px; height:74px;
+                      margin:-37px 0 0 -37px; display:grid; place-items:center; gap:5px;
+                      border-radius:18px; background:rgba(19,29,38,0.82);
+                      border:1px solid rgba(255,255,255,0.10);
+                      box-shadow:0 14px 34px -14px rgba(0,0,0,0.85);
+                      backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px);
+                      animation:ottOrbit 54s linear infinite;
+                      animation-delay:var(--d); }
+    .ott-orbit-node i { display:grid; place-items:center; }
+    .ott-orbit-node svg, .ott-orbit-node img { width:25px; height:25px; }
+    .ott-orbit-node b { font-size:0.56rem; font-weight:600; letter-spacing:0.02em;
+                        color:#B7C6D2; white-space:nowrap; }
+    @keyframes ottOrbit {
+      from { transform:rotate(0deg) translateX(var(--r)) rotate(0deg); }
+      to   { transform:rotate(360deg) translateX(var(--r)) rotate(-360deg); }
+    }
+    /* A 0.01ms duration would land every node on the same final frame, stacking
+       them in the centre — so reduced motion gets the static ring instead. */
+    @media (prefers-reduced-motion:reduce) {
+      .ott-orbit-node { animation:none !important;
+        transform:rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); }
+    }
+
     .ott-bb-wash { inset:0; background:
         radial-gradient(900px 620px at 78% 34%, rgba(0,168,225,0.26), transparent 66%),
         radial-gradient(700px 520px at 12% 78%, rgba(0,168,225,0.08), transparent 70%); }
@@ -469,12 +533,12 @@ const Styles = memo(() => (
     /* Tablet: nav sheds its status line, billboard art recedes behind the type. */
     @media (max-width:1080px) {
       .ott-avail { display:none; }
-      .ott-bb-shot { right:-14%; width:82%; opacity:0.7; }
+      .ott-orbit { width:74%; opacity:0.8; }
       .ott-bb { min-height:min(78vh, 680px); }
     }
     @media (max-width:920px) {
       .ott-navlinks { display:none; }
-      .ott-bb-shot { right:-20%; width:92%; opacity:0.5; }
+      .ott-orbit { width:92%; opacity:0.55; }
       /* Six columns of 12-word copy stop working here — go vertical. */
       .ott-tl { grid-template-columns:1fr; }
       .ott-tl-rail, .ott-tl-fill { top:14px; bottom:14px; left:13px; right:auto;
@@ -498,8 +562,16 @@ const Styles = memo(() => (
       .ott-track { padding:22px var(--edge) 34px; }
       .ott-arrow { display:none; }
       .ott-panel-actions .ott-btn { width:100%; }
-      .ott-bb-shot { position:relative; right:auto; top:auto; width:100%; height:200px;
-                     transform:none; margin-bottom:20px; opacity:0.45; }
+      /* Stacked layout: the orbit becomes a band above the headline rather than
+         a backdrop, and shrinks so six tiles still clear each other. */
+      .ott-orbit { position:relative; right:auto; left:auto; top:auto; bottom:auto;
+                   width:100%; height:230px; margin-bottom:14px; opacity:0.75; }
+      .ott-orbit-stage { width:200px; --r:95px; }
+      .ott-orbit-core { width:74px; height:74px; }
+      .ott-orbit-core span { font-size:0.5rem; }
+      .ott-orbit-node { width:58px; height:58px; margin:-29px 0 0 -29px; border-radius:14px; }
+      .ott-orbit-node svg, .ott-orbit-node img { width:20px; height:20px; }
+      .ott-orbit-node b { font-size:0.48rem; }
       .ott-bb-scrim { background:linear-gradient(0deg, var(--bg) 8%, rgba(15,23,30,0.5) 46%, rgba(15,23,30,0.2)); }
       .ott-rows { margin-top:12px; }
       .ott-card { flex:0 0 44vw; max-width:none; }
@@ -613,6 +685,7 @@ const ToolIcon = memo(function ToolIcon({ name }) {
     <img className="ott-stack-i" src="/logos/antigravity.png" alt="" aria-hidden="true" />
   );
   if (k.includes("ai studio") || k.includes("gemini")) return <Sparkles className="ott-stack-i" aria-hidden="true" />;
+  if (k.includes("chrome")) return <Chrome className="ott-stack-i" aria-hidden="true" />;
   return <Wrench className="ott-stack-i" aria-hidden="true" />;
 });
 
@@ -968,11 +1041,6 @@ export default function PortfolioV2() {
   const [activeSec, setActiveSec] = useState("work");
   const [bursts, setBursts] = useState([]);
 
-  /* The billboard needs art that exists. Three projects have no poster file yet,
-     and PROJECTS[0] is one of them — a missing hero renders as the grey skeleton,
-     which is the first thing a visitor sees. Pick the first project that actually
-     shipped screenshots; it reverts to the running order once the rest have art. */
-  const featured = WORK.find(p => p.caseStudy?.some(s => s.shots?.length)) || WORK[0];
 
   useEffect(() => {
     const href = "https://fonts.googleapis.com/css2?family=Inter:wght@400;450;500;600;700&family=Inter+Tight:wght@600;700;800&display=swap";
@@ -1089,7 +1157,21 @@ export default function PortfolioV2() {
             {/* ── Billboard ── */}
             <section className="ott-bb" aria-label="Introduction">
               <div className="ott-bb-art" aria-hidden="true">
-                <div className="ott-bb-shot"><Art src={`/work/${featured.id}.png`} alt="" /></div>
+                <div className="ott-orbit">
+                  <div className="ott-orbit-stage">
+                    <div className="ott-orbit-core"><span>Design<br />in code</span></div>
+                    {STACK.map((s, i) => {
+                      const a = (360 / STACK.length) * i;
+                      return (
+                        <span key={s} className="ott-orbit-node"
+                          style={{ "--a": `${a}deg`, "--d": `${-(54 / STACK.length) * i}s` }}>
+                          <i><ToolIcon name={s} /></i>
+                          <b>{SHORT[s] || s}</b>
+                        </span>
+                      );
+                    })}
+                  </div>
+                </div>
                 <div className="ott-bb-wash" />
                 <div className="ott-bb-scrim" />
               </div>
