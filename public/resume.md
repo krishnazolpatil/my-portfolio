@@ -13,7 +13,7 @@ Senior Product Designer — 5 years in design, 4+ as a product designer taking A
 ### Senior Product Designer — Naya Studio (Remote)
 *Jun 2023 → Present*
 
-- Shipped 19 high-impact features in 2024 — before adopting the AI workflow — contributing to a 40% NPS improvement within one year.
+- Shipped 19 high-impact features in 2024 — before adopting the AI workflow — contributing to a clear NPS improvement within one year.
 - **Adapted fast to the 2026 AI shift:** learned a Claude-first design workflow in weeks — divergent directions explored as working code prototypes with real states, motion and micro-interactions instead of static mocks — cutting design time on rapid prototyping by ~50%.
 - **Rebuilt design→dev handoff** around GitHub and Vercel: plug-and-play, click-through prototypes reduced the time engineers need to understand major features by 40–50%.
 - Designed 30 features in Apr–May 2026 (20 released to users, 10+ build-ready) at sustained quality.
@@ -29,7 +29,7 @@ Senior Product Designer — 5 years in design, 4+ as a product designer taking A
 *Jun 2022 → Jun 2023*
 
 - Implemented responsive designs across platforms; built reusable style guides and UI components that seeded the later design system.
-- Improved usability through user research and shipped iterations; contributed to the 40% NPS improvement.
+- Improved usability through user research and shipped iterations; contributed to the NPS improvement.
 - Promoted to Senior Product Designer after one year.
 
 ### Graphic Design Intern — Vruksh Ecosystem (Nagpur)
