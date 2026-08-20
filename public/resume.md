@@ -1,12 +1,12 @@
 # Krishna Zolpatil
 
-**Senior Product Designer — AI SaaS** · *I design AI products, then I build them.*
+**Senior Product Designer** · *I design AI products, then I build them.*
 India · Remote (global) · +91 70200 73891 · krishna.zolpatil@gmail.com
 Portfolio: [krishnazolpatil.com](https://krishnazolpatil.com) · [linkedin.com/in/krishnazolpatil](https://www.linkedin.com/in/krishnazolpatil/)
 
 ## Summary
 
-Senior Product Designer with 4+ years taking AI products zero-to-one at Naya Studio, a B2B AI-SaaS startup based in Brooklyn, NYC. AI-native, end-to-end workflow: frame in Figma, prototype in working code with Claude, hand off through GitHub and Vercel — cutting design time ~50% on rapid prototyping and the time developers need to understand major-feature handoffs by 40–50%. 200+ features shipped across agentic AI, core product, design systems and monetisation.
+Senior Product Designer — 5 years in design, 4+ as a product designer taking AI products zero-to-one at Naya Studio, a digital platform for physical products based in Brooklyn, NYC. I turn complex, multi-step workflows into flows that feel obvious. AI-native, end-to-end: frame in Figma, prototype in working code with Claude Code, hand off through GitHub and Vercel — cutting design time ~50% on rapid prototyping and the time developers need to understand major-feature handoffs by 40–50%. 200+ features shipped across agentic AI, core product, design systems and monetisation.
 
 ## Experience
 
@@ -18,11 +18,12 @@ Senior Product Designer with 4+ years taking AI products zero-to-one at Naya Stu
 - **Rebuilt design→dev handoff** around GitHub and Vercel: plug-and-play, click-through prototypes reduced the time engineers need to understand major features by 40–50%.
 - Designed 30 features in Apr–May 2026 (20 released to users, 10+ build-ready) at sustained quality.
 - Own flagship **agentic AI** end to end: AI Workflow Builder (template-first, progressive disclosure so teams trust and reuse AI workflows) and Estimation AI (explainability-first human-AI interaction — every AI output auditable, full state design).
-- Designed **Group Sharing & Nested Groups** (web + mobile): built the permission-inheritance logic with live previews of who gains access, and replaced person-by-person invites with 1-click bulk sharing to entire nested orgs — collapsing 10s of manual shares into a single action.
+- Designed **Group Sharing & Nested Groups** (web + mobile): permission-inheritance logic with live previews of who gains access, replacing person-by-person invites with 1-click sharing to entire nested orgs.
 - Redesigned Projects & Homebase, the surface every user lands on daily, from a wall of competing actions to a clear next step.
 - Built and own the **design system**: created primitives and tokens with the dev team in Storybook, mirrored between Figma and code — design and dev stay in sync, and AI-assisted prototyping is on-brand by default.
-- Designed Subscriptions, Teams & Stripe monetisation UX; evaluated 3,000+ user insights to drive iterative improvement.
-- **Beyond design:** shape roadmap prioritisation and product strategy with founders; ran influencer partnerships (100+ profiles researched across 10 industries; landed a collaboration with Reid Schlegel); own content end to end — motion graphics, video editing, AI voice-overs and copywriting, incl. Onshape App Store marketing.
+- Invited onto a design review panel alongside **RISD professors** to critique student work.
+- Designed Subscriptions, Teams & **Stripe checkout UX** — plan comparison, upgrade paths, billing states; ran research and usability testing across 3,000+ user insights to drive iteration.
+- **Beyond design:** shape roadmap prioritisation and product strategy with founders; ran influencer partnerships (100+ profiles researched across 10 industries, rate benchmarking, landed a collaboration); own content end to end — motion graphics, video, AI voice-overs, copywriting and Onshape App Store marketing.
 
 ### Product Designer — Naya Studio (Remote)
 *Jun 2022 → Jun 2023*
@@ -44,9 +45,9 @@ Senior Product Designer with 4+ years taking AI products zero-to-one at Naya Stu
 
 ## Skills
 
-**Craft** — End-to-end product design · UI & interaction design · Design systems · Motion & micro-interactions · Responsive design · Storytelling
-**AI-native workflow** — Agentic UX · Human-AI interaction · Rapid prototyping in code with Claude · Figma · React · GitHub · Vercel · Design-to-dev handoff
-**Product & growth** — Zero-to-one · PRDs · User & competitive research · Cross-functional collaboration · Stakeholder alignment · Copywriting · Video & motion graphics
+**Craft** — End-to-end product design · Wireframing & interaction design · UI & visual design · Design systems · Motion & micro-interactions · Responsive design · Storytelling
+**AI-native workflow** — Agentic UX · Human-AI interaction · Rapid prototyping in code with Claude Code · Figma · GitHub · Vercel · Design-to-dev handoff
+**Product & growth** — Zero-to-one · PRDs · User research & usability testing · Competitive research · Cross-functional collaboration · Stakeholder alignment · Copywriting · Video & motion graphics
 
 ## Education
 
