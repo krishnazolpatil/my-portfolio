@@ -29,7 +29,7 @@ Senior Product Designer — 5 years in design, 4+ as a product designer taking A
 *Jun 2022 → Jun 2023*
 
 - Implemented responsive designs across platforms; built reusable style guides and UI components that seeded the later design system.
-- Improved usability through user research and shipped iterations; contributed to the NPS improvement.
+- Improved usability through user research and usability testing, shipping iterations that contributed to the NPS improvement.
 - Promoted to Senior Product Designer after one year.
 
 ### Graphic Design Intern — Vruksh Ecosystem (Nagpur)
