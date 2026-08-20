@@ -6,7 +6,7 @@ Portfolio: [krishnazolpatil.com](https://krishnazolpatil.com) · [linkedin.com/i
 
 ## Summary
 
-Senior Product Designer — 5 years in design, 4+ as a product designer taking AI products zero-to-one at Naya Studio, a digital platform for physical products based in Brooklyn, NYC. I turn complex, multi-step workflows into flows that feel obvious. AI-native, end-to-end: frame in Figma, prototype in working code with Claude Code, hand off through GitHub and Vercel — cutting design time ~50% on rapid prototyping and the time developers need to understand major-feature handoffs by 40–50%. 200+ features shipped across agentic AI, core product, design systems and monetisation.
+Senior Product Designer — 5 years in design, 4+ as a product designer taking AI products zero-to-one at Naya Studio, a B2B/B2C SaaS startup based in Brooklyn, NYC — a digital platform for physical products. I simplify complex, multi-step workflows into flows that feel obvious. AI-native, end-to-end: frame in Figma, prototype in working code with Claude Code, hand off through GitHub and Vercel — cutting design time ~50% on rapid prototyping and the time developers need to understand major-feature handoffs by 40–50%. 200+ features shipped across agentic AI, core product, design systems and monetisation.
 
 ## Experience
 
@@ -45,7 +45,7 @@ Senior Product Designer — 5 years in design, 4+ as a product designer taking A
 
 ## Skills
 
-**Craft** — End-to-end product design · Wireframing & interaction design · UI & visual design · Design systems · Motion & micro-interactions · Responsive design · Storytelling
+**Craft** — End-to-end product design · Wireframes, high-fidelity mockups & prototypes · Interaction design · Pixel-perfect UI & visual design · Design systems · Motion & micro-interactions · Responsive design · Storytelling
 **AI-native workflow** — Agentic UX · Human-AI interaction · Rapid prototyping in code with Claude Code · Figma · GitHub · Vercel · Design-to-dev handoff
 **Product & growth** — Zero-to-one · PRDs · User research & usability testing · Competitive research · Cross-functional collaboration · Stakeholder alignment · Copywriting · Video & motion graphics
 
