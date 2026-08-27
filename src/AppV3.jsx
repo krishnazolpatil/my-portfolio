@@ -158,14 +158,18 @@ const Styles = memo(() => (
     .v4-navlink.on:hover { color:var(--ink); }
     /* Resume stays on the rail because it is the one thing a recruiter looks
        for; everything else the rail used to carry lives in the footer. */
-    .v4-railbtn { display:flex; flex-direction:column; align-items:center; gap:7px;
-                  padding:13px 5px; border-radius:0;
-                  background:var(--cream); color:var(--ink); text-align:center;
-                  font-size:0.66rem; font-weight:650; letter-spacing:0.03em;
-                  line-height:1.25; border:1px solid var(--cream);
-                  transition:background 0.18s; }
-    .v4-railbtn svg { width:19px; height:19px; flex:0 0 auto; }
-    .v4-railbtn:hover { background:#FFFFFF; }
+    /* Sized down and outlined rather than filled. At the links' proportions a
+       solid cream block carried far more weight than they did, so the rail
+       ended on a slab. The fill arrives on hover, where it belongs. */
+    .v4-railbtn { display:flex; flex-direction:column; align-items:center; gap:5px;
+                  padding:9px 5px; border-radius:0;
+                  background:transparent; color:var(--cream); text-align:center;
+                  font-size:0.62rem; font-weight:600; letter-spacing:0.03em;
+                  line-height:1.25; border:1px solid var(--line);
+                  transition:background 0.18s, color 0.18s, border-color 0.18s; }
+    .v4-railbtn svg { width:17px; height:17px; flex:0 0 auto; }
+    .v4-railbtn:hover { background:var(--cream); color:var(--ink);
+                        border-color:var(--cream); }
 
     /* ── Hero ── */
     /* No tall top inset: the rail is beside the page, not over it. */
@@ -253,17 +257,24 @@ const Styles = memo(() => (
     .v4-proc-d { font-size:0.94rem; line-height:1.6; color:var(--cream-2); }
 
     /* ── Contact ── */
-    /* One column. As a two-column grid the social squares floated in the top
-       right with nothing to align to, reading as strays rather than a set. */
-    .v4-contact { max-width:64ch; }
+    /* The footer is the last page of the site, so it is set like one. Held to
+       64ch it stacked in the first third and left half the sheet empty; the
+       statement now takes the full measure at display size, and the small
+       matter splits to both edges instead of trailing under it.
+       The socials sit on the same line as the buttons, hard right: that gives
+       them an edge and a row to align to, which is what they lacked when they
+       floated in the top right of a two-column grid. */
+    .v4-contact { display:grid; gap:clamp(26px,4.6vh,54px); }
     .v4-contact-t { font-family:var(--font-display); font-weight:600;
-                    font-size:clamp(1.8rem,4vw,3.4rem); line-height:1.02;
-                    letter-spacing:-0.035em; text-wrap:balance; }
-    .v4-contact-d { margin-top:16px; max-width:46ch; font-size:1rem; line-height:1.62;
+                    font-size:clamp(1.9rem,7vw,6rem); line-height:0.98;
+                    letter-spacing:-0.042em; text-wrap:balance; max-width:22ch; }
+    .v4-contact-row { display:grid; grid-template-columns:minmax(0,1fr) auto;
+                      gap:clamp(24px,4vw,64px); align-items:end; }
+    .v4-contact-say { min-width:0; }
+    .v4-contact-d { max-width:44ch; font-size:1.02rem; line-height:1.62;
                     color:var(--cream-2); }
     .v4-contact-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; }
-    .v4-socials { display:flex; flex-wrap:wrap; gap:10px;
-                  margin-top:clamp(24px,3.6vh,38px); }
+    .v4-socials { display:flex; flex-wrap:wrap; gap:10px; justify-content:flex-end; }
     .v4-social { display:grid; place-items:center; width:48px; height:48px; border-radius:0;
                  border:1px solid var(--line); color:var(--cream-2);
                  transition:background 0.18s, color 0.18s, border-color 0.18s; }
@@ -395,6 +406,8 @@ const Styles = memo(() => (
       .v4-hero-inner { grid-template-columns:1fr; }
       .v4-proc-row { grid-template-columns:48px 1fr; }
       .v4-proc-d { grid-column:2; }
+      .v4-contact-row { grid-template-columns:1fr; align-items:start; }
+      .v4-socials { justify-content:flex-start; }
     }
     @media (max-width:760px) {
       .v4-navlinks { display:none; }
@@ -813,27 +826,31 @@ export default function AppV3() {
             </div>
             <div className="v4-contact">
               <p className="v4-contact-t">Let&rsquo;s build something people trust.</p>
-              <p className="v4-contact-d">
-                I&rsquo;m open to senior product design roles. If you&rsquo;re working
-                on something hard and want it to feel simple, I&rsquo;d like to hear
-                about it.
-              </p>
-              <div className="v4-contact-actions">
-                <a className="v4-btn v4-btn-solid" href={MAILTO}>
-                  <Mail /> Email me
-                </a>
-                <a className="v4-btn v4-btn-ghost" href="/resume.pdf"
-                  download="Krishna-Zolpatil-Resume.pdf">
-                  <Download /> Resume
-                </a>
-              </div>
-              <div className="v4-socials">
-                {SOCIALS.map(s => (
-                  <a key={s.label} className="v4-social" href={s.href} aria-label={s.label}
-                    target="_blank" rel="noopener noreferrer">
-                    <s.Icon />
-                  </a>
-                ))}
+              <div className="v4-contact-row">
+                <div className="v4-contact-say">
+                  <p className="v4-contact-d">
+                    I&rsquo;m open to senior product design roles. If you&rsquo;re working
+                    on something hard and want it to feel simple, I&rsquo;d like to hear
+                    about it.
+                  </p>
+                  <div className="v4-contact-actions">
+                    <a className="v4-btn v4-btn-solid" href={MAILTO}>
+                      <Mail /> Email me
+                    </a>
+                    <a className="v4-btn v4-btn-ghost" href="/resume.pdf"
+                      download="Krishna-Zolpatil-Resume.pdf">
+                      <Download /> Resume
+                    </a>
+                  </div>
+                </div>
+                <div className="v4-socials">
+                  {SOCIALS.map(s => (
+                    <a key={s.label} className="v4-social" href={s.href} aria-label={s.label}
+                      target="_blank" rel="noopener noreferrer">
+                      <s.Icon />
+                    </a>
+                  ))}
+                </div>
               </div>
             </div>
             <div className="v4-foot-fine">
