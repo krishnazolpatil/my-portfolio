@@ -136,9 +136,11 @@ const Styles = memo(() => (
     /* ── Hero ── */
     .v4-hero { padding:clamp(132px,20vh,208px) var(--edge) clamp(56px,9vh,104px); }
     .v4-hero-inner { display:grid; grid-template-columns:auto 1fr; gap:clamp(20px,3vw,40px);
-                     align-items:start; }
-    .v4-hero-photo { width:clamp(96px,11vw,164px); height:clamp(96px,11vw,164px);
-                     border-radius:0; object-fit:cover; object-position:33% 28%;
+                     align-items:stretch; }
+    /* The photo is a column, not an avatar: the text side sets the row height
+       and the image fills it top to bottom, ending level with the buttons. */
+    .v4-hero-photo { width:clamp(180px,26vw,430px); height:100%;
+                     border-radius:0; object-fit:cover; object-position:33% 22%;
                      border:1px solid var(--line); }
     .v4-hi { display:block; font-size:clamp(0.95rem,1.1vw,1.15rem); font-weight:550;
              letter-spacing:0.02em; color:var(--cream-2); margin-bottom:clamp(10px,1.4vh,16px); }
@@ -151,10 +153,13 @@ const Styles = memo(() => (
 
     /* ── Section furniture ── */
     .v4-sec { padding:clamp(40px,6vh,80px) var(--edge); }
+    /* No rules on the ruled ground: the background grid already draws
+       horizontals, and a second set at a different pitch and weight reads as
+       two grids fighting. Borders here are reserved for objects — cards,
+       buttons, the sheet — not for dividing open space. */
     .v4-sec-head { display:flex; align-items:baseline; justify-content:space-between;
                    gap:16px; flex-wrap:wrap;
-                   padding-bottom:14px; margin-bottom:clamp(22px,3vh,34px);
-                   border-bottom:1px solid var(--line); }
+                   margin-bottom:clamp(22px,3vh,34px); }
     .v4-sec-title { font-family:var(--font-display); font-weight:600;
                     font-size:clamp(1.5rem,2.6vw,2.4rem); letter-spacing:-0.03em; }
     .v4-sec-note { font-size:0.86rem; color:var(--cream-3); letter-spacing:0.06em;
@@ -190,11 +195,12 @@ const Styles = memo(() => (
     .v4-card:hover .v4-card-arrow { transform:translate(2px,-2px); color:var(--cream); }
 
     /* ── Process: a ruled ledger, numbered ── */
-    .v4-proc { display:grid; gap:0; border-top:1px solid var(--line-2); }
+    .v4-proc { display:grid; gap:2px; }
+    /* Rows separate by their own filled block on hover and by rhythm at rest,
+       rather than by rules that would cross the background grid. */
     .v4-proc-row { display:grid; grid-template-columns:64px minmax(0,1fr) minmax(0,1.5fr);
                    gap:clamp(12px,2vw,28px); align-items:baseline;
-                   padding:clamp(16px,2.4vh,24px) 4px;
-                   border-bottom:1px solid var(--line-2);
+                   padding:clamp(14px,2.2vh,22px) 14px;
                    transition:background 0.18s; }
     .v4-proc-row:hover { background:rgba(15,36,28,0.4); }
     .v4-proc-n { font-size:0.78rem; font-weight:600; letter-spacing:0.12em;
@@ -221,7 +227,7 @@ const Styles = memo(() => (
 
     /* ── Footer ── */
     .v4-foot { padding:clamp(24px,4vh,44px) var(--edge) clamp(28px,4vh,48px);
-               border-top:1px solid var(--line); display:flex; flex-wrap:wrap;
+               display:flex; flex-wrap:wrap;
                gap:12px; align-items:center; justify-content:space-between;
                font-size:0.85rem; color:var(--cream-3); }
 
@@ -288,7 +294,10 @@ const Styles = memo(() => (
     }
     @media (max-width:920px) {
       .v4-navlinks { display:none; }
+      /* Stacked, there is no sibling column to take height from, so the photo
+         goes back to a square of its own. */
       .v4-hero-inner { grid-template-columns:1fr; }
+      .v4-hero-photo { width:clamp(150px,34vw,260px); height:auto; aspect-ratio:1/1; }
       .v4-proc-row { grid-template-columns:48px 1fr; }
       .v4-proc-d { grid-column:2; }
     }
@@ -537,8 +546,10 @@ export default function AppV3() {
       <div className={`v4${ready ? " ready" : ""}`}>
 
         <div className="v4-grid" aria-hidden="true">
+          {/* A translucent wash rather than a solid ink cell — at full opacity
+              the square read as a black hole punched in the ground. */}
           <ShapeGrid direction="down" speed={0.35} squareSize={52}
-            borderColor="rgba(240,233,217,0.10)" hoverFillColor="#0F241C" />
+            borderColor="rgba(240,233,217,0.10)" hoverFillColor="rgba(15,36,28,0.38)" />
         </div>
 
         <header className={`v4-nav${solid ? " solid" : ""}`}>
@@ -593,7 +604,7 @@ export default function AppV3() {
               </div>
             </section>
 
-            <Section id="work" title="Selected work" note={`${WORK.length} projects`}>
+            <Section id="work" title="Selected work" note="Tip of the iceberg">
               <div className="v4-grid-work">
                 {WORK.map(p => (
                   <Card key={p.id} id={p.id} n={p.n} tag={p.tag} title={p.title}
