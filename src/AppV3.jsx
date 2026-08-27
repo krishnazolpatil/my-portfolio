@@ -135,6 +135,9 @@ const Styles = memo(() => (
     @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
       .v4-nav { background:rgba(25,60,45,0.97); }
     }
+    /* The links sit up under the mark, not adrift in the middle of the rail —
+       only Resume is pushed to the foot. */
+    .v4-navtop { display:flex; flex-direction:column; align-items:stretch; gap:18px; }
     /* Square avatar, not a circle — the face sits high and left in the frame. */
     .v4-mark { display:flex; align-items:center; justify-content:center; }
     .v4-mark img { width:36px; height:36px; border-radius:0; object-fit:cover;
@@ -380,6 +383,7 @@ const Styles = memo(() => (
                 left:var(--gut); right:var(--gut); width:auto;
                 overflow:visible; padding:9px 9px 9px 12px; gap:14px; }
       /* Lying down there is width to spare, so icon and word sit side by side. */
+      .v4-navtop { flex-direction:row; align-items:center; gap:14px; }
       .v4-navlinks { flex-direction:row; align-items:center; gap:2px; }
       .v4-navlink, .v4-railbtn { flex-direction:row; gap:9px; white-space:nowrap;
                                  font-size:0.84rem; letter-spacing:0.01em; }
@@ -714,18 +718,20 @@ export default function AppV3() {
         </div>
 
         <header className={`v4-nav${solid ? " solid" : ""}`}>
-          <a href="#top" className="v4-mark" aria-label="Krishna Zolpatil">
-            <img src="/about-photo.jpg" alt="" width="36" height="36" />
-          </a>
-          <nav className="v4-navlinks" aria-label="Sections">
-            {NAV_LINKS.map(l => (
-              <a key={l.id} href={`#${l.id}`} onClick={() => setActiveSec(l.id)}
-                className={`v4-navlink${activeSec === l.id ? " on" : ""}`}>
-                <l.Icon aria-hidden="true" />
-                <span>{l.label}</span>
-              </a>
-            ))}
-          </nav>
+          <div className="v4-navtop">
+            <a href="#top" className="v4-mark" aria-label="Krishna Zolpatil">
+              <img src="/about-photo.jpg" alt="" width="36" height="36" />
+            </a>
+            <nav className="v4-navlinks" aria-label="Sections">
+              {NAV_LINKS.map(l => (
+                <a key={l.id} href={`#${l.id}`} onClick={() => setActiveSec(l.id)}
+                  className={`v4-navlink${activeSec === l.id ? " on" : ""}`}>
+                  <l.Icon aria-hidden="true" />
+                  <span>{l.label}</span>
+                </a>
+              ))}
+            </nav>
+          </div>
           <a className="v4-railbtn" href="/resume.pdf"
             download="Krishna-Zolpatil-Resume.pdf">
             <Download aria-hidden="true" />
