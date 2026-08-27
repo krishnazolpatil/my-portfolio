@@ -136,11 +136,12 @@ const Styles = memo(() => (
     /* ── Hero ── */
     .v4-hero { padding:clamp(132px,20vh,208px) var(--edge) clamp(56px,9vh,104px); }
     .v4-hero-inner { display:grid; grid-template-columns:auto 1fr; gap:clamp(20px,3vw,40px);
-                     align-items:stretch; }
-    /* The photo is a column, not an avatar: the text side sets the row height
-       and the image fills it top to bottom, ending level with the buttons. */
-    .v4-hero-photo { width:clamp(180px,26vw,430px); height:100%;
-                     border-radius:0; object-fit:cover; object-position:33% 22%;
+                     align-items:start; }
+    /* Square, like every other cell on the page — filling the column height
+       instead made it a tall rectangle, which is the one shape this design
+       does not use. */
+    .v4-hero-photo { width:clamp(160px,20vw,300px); aspect-ratio:1/1; height:auto;
+                     border-radius:0; object-fit:cover; object-position:33% 26%;
                      border:1px solid var(--line); }
     .v4-hi { display:block; font-size:clamp(0.95rem,1.1vw,1.15rem); font-weight:550;
              letter-spacing:0.02em; color:var(--cream-2); margin-bottom:clamp(10px,1.4vh,16px); }
@@ -232,13 +233,17 @@ const Styles = memo(() => (
                font-size:0.85rem; color:var(--cream-3); }
 
     /* ── Case study sheet ── */
-    .v4-scrim { position:fixed; inset:0; z-index:400; background:rgba(9,22,17,0.82);
-                backdrop-filter:blur(6px); -webkit-backdrop-filter:blur(6px);
-                display:flex; align-items:flex-start; justify-content:center;
-                padding:clamp(12px,4vh,52px) clamp(12px,3vw,32px); overflow-y:auto;
+    /* Flat ink, no blur: the ground is a drawn grid, and blurring it turns a
+       crisp ruled page into mush behind the sheet. Opacity does the covering. */
+    .v4-scrim { position:fixed; inset:0; z-index:400; background:rgba(9,22,17,0.93);
+                display:flex; align-items:center; justify-content:center;
+                padding:clamp(12px,4vh,52px) clamp(12px,3vw,32px); overflow:hidden;
                 animation:v4fade 0.22s ease; }
     @keyframes v4fade { from { opacity:0; } to { opacity:1; } }
-    .v4-sheet { position:relative; width:min(1080px,100%); border-radius:0;
+    /* The sheet scrolls, not the scrim. While the scrim scrolled, its padding
+       sat above the sticky bar and case-study art showed through that gap. */
+    .v4-sheet { position:relative; width:min(1080px,100%); max-height:100%;
+                overflow-y:auto; overscroll-behavior:contain; border-radius:0;
                 background:var(--green); border:1px solid var(--cream);
                 animation:v4rise 0.26s cubic-bezier(0.23,1,0.32,1); }
     @keyframes v4rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
@@ -294,10 +299,7 @@ const Styles = memo(() => (
     }
     @media (max-width:920px) {
       .v4-navlinks { display:none; }
-      /* Stacked, there is no sibling column to take height from, so the photo
-         goes back to a square of its own. */
       .v4-hero-inner { grid-template-columns:1fr; }
-      .v4-hero-photo { width:clamp(150px,34vw,260px); height:auto; aspect-ratio:1/1; }
       .v4-proc-row { grid-template-columns:48px 1fr; }
       .v4-proc-d { grid-column:2; }
     }
