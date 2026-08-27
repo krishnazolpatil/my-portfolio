@@ -11,7 +11,7 @@ export default function ComingSoon() {
              headline overflows a phone instead of wrapping. */
           min-height:100svh; display:flex; align-items:center; justify-content:center;
           padding:clamp(24px,6vw,64px); background:var(--bg); color:var(--txt);
-          font-family:'Spline Sans','Inter',system-ui,-apple-system,sans-serif;
+          font-family:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
           text-align:center; position:relative; overflow:hidden;
         }
         /* A soft cyan wash keeps the empty page from reading as a 404. */
@@ -36,8 +36,9 @@ export default function ComingSoon() {
           100% { box-shadow:0 0 0 0 rgba(0,168,225,0); }
         }
         .soon h1 {
-          margin:0; font-family:'Playfair Display',Georgia,serif; font-weight:500;
-          font-size:clamp(2rem,7vw,4rem); line-height:1.1; letter-spacing:-0.01em;
+          margin:0; font-family:'Inter Tight','Inter',system-ui,-apple-system,sans-serif;
+          font-weight:600;
+          font-size:clamp(2rem,7vw,4rem); line-height:1.1; letter-spacing:-0.03em;
           text-wrap:balance;
         }
         .soon p { margin:14px 0 0; color:var(--dim);

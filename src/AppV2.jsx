@@ -3,6 +3,7 @@ import { X, Mail, ArrowUpRight, ChevronRight, ChevronLeft, Play, Download,
          Linkedin, Github, Twitter, Instagram,
          Sparkles, Wrench, Chrome } from "lucide-react";
 import { PROJECTS, ARCHIVE, BUILT, PROCESS } from "./data.js";
+import MoltenMetal from "./MoltenMetal.jsx";
 
 /* ─────────────────────────────────────────────────────────
    v2 — STREAMING. The portfolio as an OTT platform: a
@@ -38,20 +39,21 @@ const MAILTO = "mailto:krishna.zolpatil@gmail.com?subject=Hello%20Krishna%20-%20
 const WORK = PROJECTS.filter(p => !p.side);
 const SIDE = PROJECTS.filter(p => p.side);
 
-/* The hero orbit is the union of every tool a case study actually claims, plus
-   the platform Yoink ships on — derived rather than listed, so the headline
-   can't drift from what the work says. */
-const STACK = [...new Set(PROJECTS.flatMap(p => p.stack || []))].concat("Chrome Extensions");
-
-/* Full names belong in the case studies; a 74px tile needs the short one. */
-const SHORT = { "Google AI Studio": "AI Studio", "Antigravity IDE": "Antigravity",
-                "Chrome Extensions": "Chrome" };
-
 const Styles = memo(() => (
   <style>{`
     html, body { background:#0F171E; }
-    html { scroll-behavior:smooth; overflow-x:clip; }
-    body { font-family:'Inter','Inter Tight',system-ui,-apple-system,sans-serif;
+    /* The floating nav overlaps whatever an anchor lands on, so jumps stop
+       short of it rather than tucking the section title underneath. */
+    html { scroll-behavior:smooth; overflow-x:clip; scroll-padding-top:96px; }
+    /* Two families, no more: Inter Tight sets every heading, Inter sets every
+       run of text. Both are declared once here so a third can't creep in.
+       They must stay in step with the Google Fonts link in index.html — when
+       they drifted apart, headings silently fell back to Helvetica while body
+       copy fell back to system SF, which read as three different typefaces. */
+    :root { --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
+            --font-display:'Inter Tight','Inter',system-ui,-apple-system,sans-serif; }
+
+    body { font-family:var(--font-sans);
            -webkit-font-smoothing:antialiased; overflow-x:clip; }
 
     .ott {
@@ -66,8 +68,10 @@ const Styles = memo(() => (
          left a 2560px screen mostly empty. */
       --maxw:clamp(1180px, 86vw, 2040px);
       --edge:max(var(--gut), calc((100vw - var(--maxw)) / 2));
+      /* isolation makes .ott the stacking context, so the fixed molten layer
+         at z-index:-1 paints above this background but under all content. */
       background:var(--bg); color:var(--txt); min-height:100vh; position:relative;
-      font-size:16px; line-height:1.5;
+      isolation:isolate; font-size:16px; line-height:1.5;
     }
     .ott *, .ott *::before, .ott *::after { box-sizing:border-box; margin:0; padding:0; }
     .ott img, .ott svg { display:block; max-width:100%; }
@@ -85,7 +89,7 @@ const Styles = memo(() => (
 
     /* ── Buttons ── */
     .ott-btn { display:inline-flex; align-items:center; justify-content:center; gap:9px;
-               height:46px; padding:0 22px; border-radius:var(--r-sm); font-size:0.95rem;
+               height:46px; padding:0 24px; border-radius:999px; font-size:0.95rem;
                font-weight:600; white-space:nowrap;
                transition:background 0.2s, border-color 0.2s, color 0.2s, transform 0.18s; }
     .ott-btn:active { transform:translateY(1px); }
@@ -98,18 +102,25 @@ const Styles = memo(() => (
     .ott-btn-glass:hover { background:rgba(140,150,170,0.4); }
     .ott-btn-sm { height:38px; padding:0 16px; font-size:0.86rem; }
 
-    /* ── Nav: transparent over the billboard, solid once you scroll ── */
+    /* ── Nav: a floating island, not a full-width bar ── */
     /* Glass from the start. The old top-down gradient faded to nothing partway
        down the bar, so over bright artwork it ended in a hard horizontal seam —
-       a blur has no edge to show. */
-    .ott-nav { position:fixed; top:0; left:0; right:0; z-index:300; display:flex; align-items:center;
-               justify-content:space-between; gap:22px; padding:14px var(--edge);
+       a blur has no edge to show. Detached from the top edge, the island is
+       ringed rather than underlined, and depth comes from a shadow. */
+    .ott-nav { position:fixed; top:clamp(10px,1.6vh,20px); z-index:300;
+               left:var(--edge); right:var(--edge);
+               display:flex; align-items:center;
+               justify-content:space-between; gap:22px; padding:11px 12px 11px 16px;
+               border-radius:999px;
                background:rgba(15,23,30,0.52);
                backdrop-filter:blur(18px) saturate(165%);
                -webkit-backdrop-filter:blur(18px) saturate(165%);
-               border-bottom:1px solid rgba(255,255,255,0.07);
-               transition:background 0.35s ease, border-color 0.35s ease; }
-    .ott-nav.solid { background:rgba(15,23,30,0.82); border-bottom-color:var(--line-2); }
+               border:1px solid rgba(255,255,255,0.09);
+               box-shadow:0 18px 44px -20px rgba(0,0,0,0.85);
+               transition:background 0.35s ease, border-color 0.35s ease,
+                          box-shadow 0.35s ease; }
+    .ott-nav.solid { background:rgba(15,23,30,0.82); border-color:var(--line);
+                     box-shadow:0 22px 52px -20px rgba(0,0,0,0.95); }
     /* Safari and Firefox without backdrop-filter fall back to a solid bar rather
        than a translucent one you can read the page through. */
     @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
@@ -117,24 +128,25 @@ const Styles = memo(() => (
     }
     .ott-navleft { display:flex; align-items:center; gap:clamp(14px,2.4vw,34px); min-width:0; }
     .ott-mark { display:flex; align-items:center; gap:9px; flex-shrink:0; }
-    .ott-mark img { width:30px; height:30px; border-radius:50%; object-fit:cover; flex-shrink:0;
+    .ott-mark img { width:30px; height:30px; border-radius:50%; object-fit:cover;
+                    object-position:33% 28%; flex-shrink:0;
                     border:1px solid var(--line-2); }
     .ott-mark span { font-size:1.02rem; font-weight:650; letter-spacing:-0.02em; white-space:nowrap; }
     .ott-navlinks { display:flex; align-items:center; gap:3px; }
-    .ott-navlink { position:relative; padding:8px 12px; border-radius:var(--r-sm);
+    .ott-navlink { position:relative; padding:8px 14px; border-radius:999px;
                    font-size:0.88rem; font-weight:450; color:var(--mid);
                    transition:color 0.18s, background 0.18s; }
     .ott-navlink:hover { color:var(--txt); background:rgba(255,255,255,0.06); }
     .ott-navlink.on { color:var(--txt); font-weight:550; }
-    .ott-navlink.on::after { content:""; position:absolute; left:12px; right:12px; bottom:2px;
+    .ott-navlink.on::after { content:""; position:absolute; left:14px; right:14px; bottom:2px;
                              height:2px; border-radius:2px; background:var(--acc); }
     .ott-navright { display:flex; align-items:center; gap:10px; flex-shrink:0; }
     .ott-avail { display:inline-flex; align-items:center; gap:7px; font-size:0.82rem; color:var(--mid);
                  white-space:nowrap; }
     .ott-avail i { width:6px; height:6px; border-radius:50%; background:#34D399;
                    box-shadow:0 0 0 3px rgba(52,211,153,0.16); flex-shrink:0; }
-    .ott-linkbtn { font-size:0.88rem; font-weight:450; color:var(--mid); padding:8px 10px;
-                   border-radius:var(--r-sm); transition:color 0.18s, background 0.18s; }
+    .ott-linkbtn { font-size:0.88rem; font-weight:450; color:var(--mid); padding:8px 14px;
+                   border-radius:999px; transition:color 0.18s, background 0.18s; }
     .ott-linkbtn:hover { color:var(--txt); background:rgba(255,255,255,0.06); }
     .ott-cv { position:relative; }
     .ott-menu { position:absolute; top:calc(100% + 9px); right:0; min-width:250px; z-index:310;
@@ -148,80 +160,49 @@ const Styles = memo(() => (
     @keyframes pop { from{opacity:0; transform:translateY(-6px);} to{opacity:1; transform:none;} }
 
     /* ── Billboard ── */
-    .ott-bb { position:relative; min-height:min(86vh, 780px); display:flex; align-items:flex-end;
-              padding:0 var(--edge) clamp(60px,11vh,120px); overflow:hidden; }
-    .ott-bb-art { position:absolute; inset:0; z-index:0; }
-    .ott-bb-art > * { position:absolute; }
-    /* Product art lives right of centre; type gets the clean left third. */
-    /* ── Hero: the stack in orbit ──────────────────────────────────
-       Each mark carries its own orbit animation with a negative delay rather
-       than a rotating parent — one keyframe, no counter-rotating wrapper, and
-       the inner rotate(-360deg) keeps every logo upright the whole way round. */
-    /* Right-anchored, where the screenshot used to sit: the scrim is a
-       left-to-right gradient built to darken behind the headline and clear
-       over the subject, so it only works if the subject stays on the right. */
-    .ott-orbit { right:0; top:0; bottom:0; left:auto; width:min(64%, 940px);
-                 display:grid; place-items:center; pointer-events:none; }
-    /* Radius lives on the stage, not inline on each node — an inline custom
-       property outranks any stylesheet rule, so the responsive sizes below
-       could never take hold. */
-    .ott-orbit-stage { position:relative; width:min(58vh, 46vw, 540px); aspect-ratio:1;
-                       --r:min(29vh, 23vw, 270px); }
-    .ott-orbit-stage::before, .ott-orbit-stage::after {
-      content:""; position:absolute; left:50%; top:50%; translate:-50% -50%;
-      border-radius:50%; border:1px dashed rgba(255,255,255,0.10); }
-    .ott-orbit-stage::before { width:62%; height:62%; }
-    .ott-orbit-stage::after { width:100%; height:100%; }
-    .ott-orbit-core { position:absolute; left:50%; top:50%; translate:-50% -50%;
-                      width:104px; height:104px; border-radius:50%;
-                      display:grid; place-items:center; text-align:center;
-                      background:radial-gradient(circle at 50% 42%, rgba(0,168,225,0.30), rgba(15,23,30,0.9) 68%);
-                      box-shadow:0 0 0 1px rgba(0,168,225,0.32), 0 0 60px rgba(0,168,225,0.28); }
-    .ott-orbit-core span { font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
-                           font-size:0.58rem; letter-spacing:0.16em; text-transform:uppercase;
-                           line-height:1.6; color:#9FD9EF; }
-    .ott-orbit-node { position:absolute; left:50%; top:50%; width:74px; height:74px;
-                      margin:-37px 0 0 -37px; display:grid; place-items:center; gap:5px;
-                      border-radius:18px; background:rgba(19,29,38,0.82);
-                      border:1px solid rgba(255,255,255,0.10);
-                      box-shadow:0 14px 34px -14px rgba(0,0,0,0.85);
-                      backdrop-filter:blur(7px); -webkit-backdrop-filter:blur(7px);
-                      animation:ottOrbit 54s linear infinite;
-                      animation-delay:var(--d); }
-    .ott-orbit-node i { display:grid; place-items:center; }
-    .ott-orbit-node svg, .ott-orbit-node img { width:25px; height:25px; }
-    .ott-orbit-node b { font-size:0.56rem; font-weight:600; letter-spacing:0.02em;
-                        color:#B7C6D2; white-space:nowrap; }
-    @keyframes ottOrbit {
-      from { transform:rotate(0deg) translateX(var(--r)) rotate(0deg); }
-      to   { transform:rotate(360deg) translateX(var(--r)) rotate(-360deg); }
-    }
-    /* A 0.01ms duration would land every node on the same final frame, stacking
-       them in the centre — so reduced motion gets the static ring instead. */
-    @media (prefers-reduced-motion:reduce) {
-      .ott-orbit-node { animation:none !important;
-        transform:rotate(var(--a)) translateX(var(--r)) rotate(calc(-1 * var(--a))); }
-    }
-
-    .ott-bb-wash { inset:0; background:
-        radial-gradient(900px 620px at 78% 34%, rgba(0,168,225,0.26), transparent 66%),
-        radial-gradient(700px 520px at 12% 78%, rgba(0,168,225,0.08), transparent 70%); }
-    .ott-bb-scrim { inset:0; background:
-        linear-gradient(90deg, var(--bg) 6%, rgba(15,23,30,0.86) 34%, rgba(15,23,30,0.12) 74%),
-        linear-gradient(0deg, var(--bg) 2%, rgba(15,23,30,0.34) 34%, transparent 62%); }
-    .ott-bb-body { position:relative; z-index:2; max-width:min(660px, 92%); }
-    .ott-bb-title { font-family:'Inter Tight','Inter',sans-serif; font-weight:600;
-                    font-size:clamp(2.5rem,5.6vw,5.6rem); line-height:0.98; letter-spacing:-0.042em; }
-    .ott-bb-desc { margin-top:20px; max-width:44ch; font-size:clamp(1rem,1.2vw,1.3rem);
+    /* Centred hero: the copy sits on the mid-axis over the site backdrop, so
+       the hero closes up around the type instead of holding height for art. */
+    .ott-bb { position:relative; display:flex; justify-content:center;
+              padding:clamp(122px,19vh,186px) var(--edge) clamp(44px,8vh,76px);
+              overflow:hidden; }
+    /* Site-wide molten backdrop: fixed behind the whole page. The cyan wash is
+       baked underneath the canvas so a browser without WebGL2 still gets a
+       composed ground instead of flat ink. */
+    .ott-molten-bg { position:fixed; inset:0; z-index:-1; pointer-events:none; }
+    .ott-molten-bg::before { content:""; position:absolute; inset:0; background:
+        radial-gradient(620px 460px at 74% 14%, rgba(0,168,225,0.22), transparent 68%),
+        radial-gradient(560px 440px at 4% 90%, rgba(0,168,225,0.08), transparent 72%); }
+    /* 900px is wide enough that the headline breaks to two lines and narrow
+       enough that it can never collapse to one, at any size in the clamp. */
+    .ott-bb-body { position:relative; z-index:2; max-width:min(900px, 92%);
+                   margin-inline:auto; text-align:center; }
+    /* The face sits high and left of centre in the source frame, so the circular
+       crop is pulled off-centre to land the face inside the ring. */
+    .ott-bb-photo { width:clamp(84px,8.4vw,120px); height:clamp(84px,8.4vw,120px);
+                    margin:0 auto clamp(18px,2.4vh,26px);
+                    border-radius:50%; object-fit:cover; object-position:33% 28%;
+                    border:1px solid rgba(255,255,255,0.16);
+                    box-shadow:0 20px 44px -20px rgba(0,0,0,0.9),
+                               0 0 0 6px rgba(0,168,225,0.10); }
+    .ott-bb-hi { display:block; margin-bottom:clamp(10px,1.4vh,16px);
+                 font-size:clamp(1rem,1.15vw,1.22rem); font-weight:550;
+                 letter-spacing:-0.012em; color:var(--acc-text);
+                 text-shadow:0 1px 18px rgba(0,0,0,0.55); }
+    .ott-bb-title { font-family:var(--font-display); font-weight:600;
+                    font-size:clamp(2.5rem,5.6vw,5.6rem); line-height:0.98; letter-spacing:-0.042em;
+                    text-wrap:balance; }
+    .ott-bb-desc { margin-top:20px; max-width:44ch; margin-inline:auto;
+                   font-size:clamp(1rem,1.2vw,1.3rem);
                    line-height:1.62; color:#D2D8E4; text-shadow:0 1px 20px rgba(0,0,0,0.6); }
-    .ott-bb-actions { display:flex; flex-wrap:wrap; gap:11px; margin-top:28px; }
+    .ott-bb-actions { display:flex; flex-wrap:wrap; justify-content:center;
+                      gap:11px; margin-top:28px; }
 
     /* ── Rows ── */
     .ott-rows { position:relative; z-index:3; margin-top:clamp(-90px,-7vh,-40px); padding-bottom:20px; }
     .ott-row { position:relative; }
     .ott-row-head { display:flex; align-items:baseline; gap:12px; padding:0 var(--edge);
                     margin-bottom:2px; }
-    .ott-row-title { font-family:'Inter Tight','Inter',sans-serif; font-size:clamp(1.05rem,1.5vw,1.6rem);
+    .ott-row-title { font-family:var(--font-display); font-size:clamp(1.05rem,1.5vw,1.6rem);
                      font-weight:600; letter-spacing:-0.025em; }
     .ott-row-sub { font-size:0.86rem; color:var(--dim); opacity:0; transform:translateX(-6px);
                    transition:opacity 0.3s, transform 0.3s; white-space:nowrap; }
@@ -245,31 +226,34 @@ const Styles = memo(() => (
     .ott-row:hover .ott-arrow, .ott-arrow:focus-visible { opacity:1; }
     .ott-arrow svg { width:26px; height:26px; }
 
-    /* ── Poster: 2:3 portrait, caption always visible beneath ── */
+    /* ── Poster: square tile, title set into the art ── */
     .ott-card { flex:1 0 clamp(150px,13.5vw,260px); max-width:370px; scroll-snap-align:start; position:relative;
                 display:block; width:100%; text-align:left;
                 transition:transform 0.34s cubic-bezier(0.23,1,0.32,1); }
-    .ott-poster { position:relative; aspect-ratio:2/3; overflow:hidden; border-radius:var(--r-md);
+    .ott-poster { position:relative; aspect-ratio:1/1; overflow:hidden; border-radius:var(--r-md);
                   border:1px solid var(--line-2);
                   background:radial-gradient(130% 62% at 70% 96%, rgba(0,168,225,0.32), transparent 66%),
                              linear-gradient(168deg, #1D2E3A 0%, #0E151B 100%);
                   transition:border-color 0.3s, box-shadow 0.3s; }
-    /* The shot sits square across the top of the poster rather than tilted on it.
-       A tilted card worked while the art was dark; a bright light screenshot at an
-       angle just reads as a stray sheet of paper. */
-    .ott-key { position:absolute; left:0; top:0; width:100%; height:62%; overflow:hidden;
-               border-bottom:1px solid rgba(255,255,255,0.12);
+    /* The shot fills the whole poster — a half-height band left the bottom of
+       the card reading as dead space. The ::after gradient carries the title. */
+    .ott-key { position:absolute; inset:0; overflow:hidden;
                transition:transform 0.55s cubic-bezier(0.23,1,0.32,1); }
     .ott-key img, .ott-key svg { width:100%; height:100%; object-fit:cover; object-position:top center; }
     /* The placeholder is layered under the shot, never beside it. */
     .ott-skel { position:absolute; left:0; top:0; width:100%; height:100%; }
     .ott-art { display:block; position:relative; z-index:1; transition:opacity 0.4s ease; }
-    .ott-poster::after { content:""; position:absolute; inset:0; pointer-events:none;
-                         background:linear-gradient(180deg, transparent 46%, rgba(10,16,21,0.55) 78%,
-                                    rgba(10,16,21,0.9)); }
+    /* Full-bleed art means the title can land on a bright white screenshot, so
+       the foot of the tile is darkened hard enough to hold white type there.
+       It must outrank .ott-art's z-index:1, or the image paints over the scrim
+       and the title is left sitting on bare white. */
+    .ott-poster::after { content:""; position:absolute; inset:0; pointer-events:none; z-index:2;
+                         background:linear-gradient(180deg, transparent 40%, rgba(10,16,21,0.62) 68%,
+                                    rgba(10,16,21,0.93)); }
     /* Title lives in the art, Apple-TV style — nothing beneath the card. */
-    .ott-poster-title { position:absolute; left:14px; right:14px; bottom:13px; z-index:2;
-                        font-family:'Inter Tight','Inter',sans-serif;
+    .ott-poster-title { position:absolute; left:14px; right:14px; bottom:13px; z-index:3;
+                        text-align:center;
+                        font-family:var(--font-display);
                         font-size:clamp(0.95rem,0.85vw,1.2rem); font-weight:600;
                         letter-spacing:-0.022em; line-height:1.2;
                         text-shadow:0 2px 16px rgba(0,0,0,0.75); }
@@ -289,15 +273,12 @@ const Styles = memo(() => (
        the tile flat instead of being composed as tilted portrait key art. */
     .ott-card-wide { flex:1 0 clamp(240px,22vw,430px); max-width:560px; }
     .ott-card-wide .ott-poster { aspect-ratio:16/9; }
-    .ott-card-wide .ott-key { inset:0; left:0; top:0; width:100%; height:100%;
-                              border:none; border-radius:0; box-shadow:none;
-                              transform:none; transform-origin:center; }
     .ott-card-wide .ott-key img, .ott-card-wide .ott-key svg { object-position:top left; }
 
     /* Key art for posters with nothing to photograph — numeral over the gradient. */
     .ott-tile { position:absolute; inset:0; display:flex; flex-direction:column;
                 align-items:center; justify-content:center; gap:10px; padding:18px; }
-    .ott-tile b { font-family:'Inter Tight','Inter',sans-serif; font-size:3.2rem; font-weight:600;
+    .ott-tile b { font-family:var(--font-display); font-size:3.2rem; font-weight:600;
                   letter-spacing:-0.06em; color:rgba(255,255,255,0.26); line-height:1; }
     .ott-tile span { font-size:0.9rem; font-weight:600; letter-spacing:-0.015em; line-height:1.3;
                      text-align:center; color:#DCE6ED; }
@@ -321,11 +302,11 @@ const Styles = memo(() => (
                    justify-content:center; width:28px; height:28px; border-radius:50%;
                    margin-bottom:20px; background:var(--bg);
                    border:2px solid rgba(255,255,255,0.18); font-size:0.66rem; font-weight:700;
-                   color:var(--mid); font-family:'Inter Tight','Inter',sans-serif;
+                   color:var(--mid); font-family:var(--font-display);
                    transition:background 0.3s, border-color 0.3s, color 0.3s, transform 0.3s; }
     .ott-tl-step:hover .ott-tl-node { background:var(--acc); border-color:var(--acc);
                                       color:var(--acc-ink); transform:scale(1.14); }
-    .ott-tl-title { font-family:'Inter Tight','Inter',sans-serif; font-size:1rem; font-weight:600;
+    .ott-tl-title { font-family:var(--font-display); font-size:1rem; font-weight:600;
                     letter-spacing:-0.02em; line-height:1.28; }
     .ott-tl-desc { margin-top:9px; font-size:0.86rem; line-height:1.56; color:var(--mid); }
 
@@ -337,7 +318,7 @@ const Styles = memo(() => (
                  background:
                    radial-gradient(700px 380px at 50% -10%, rgba(0,168,225,0.22), transparent 68%),
                    linear-gradient(180deg, var(--raise-2), var(--raise)); }
-    .ott-panel h2 { font-family:'Inter Tight','Inter',sans-serif; font-weight:700;
+    .ott-panel h2 { font-family:var(--font-display); font-weight:700;
                     font-size:clamp(1.9rem,4.2vw,3rem); letter-spacing:-0.035em; line-height:1.06; }
     .ott-panel p { margin:18px auto 0; max-width:46ch; font-size:1rem; line-height:1.68; color:var(--mid); }
     .ott-panel-actions { display:flex; flex-wrap:wrap; justify-content:center; gap:11px; margin-top:30px; }
@@ -398,13 +379,13 @@ const Styles = memo(() => (
     .ott-sheet-hero img, .ott-sheet-hero svg { width:100%; height:100%; object-fit:cover;
                                                object-position:top center; }
     .ott-sheet-htitle { position:absolute; z-index:4; left:clamp(22px,4vw,38px); right:64px; bottom:14px;
-                        font-family:'Inter Tight','Inter',sans-serif;
+                        font-family:var(--font-display);
                         font-size:clamp(1.3rem,2.6vw,1.8rem); font-weight:600;
                         letter-spacing:-0.03em; line-height:1.15; color:#fff;
                         text-shadow:0 1px 12px rgba(0,0,0,0.55); }
     /* The case sheet opens on the writing, not on a screenshot — the work has
        its own shots further down where they carry an argument. */
-    .ott-sheet-h2 { padding-right:52px; font-family:'Inter Tight','Inter',sans-serif;
+    .ott-sheet-h2 { padding-right:52px; font-family:var(--font-display);
                     font-size:clamp(1.45rem,3vw,2.05rem); font-weight:600;
                     letter-spacing:-0.035em; line-height:1.12; color:var(--txt); }
     .ott-close { position:absolute; top:14px; right:14px; z-index:20; display:flex; padding:9px;
@@ -414,7 +395,7 @@ const Styles = memo(() => (
     .ott-sheet-bar { position:sticky; top:0; z-index:6; display:flex; align-items:center;
                      min-height:68px; padding:12px clamp(22px,4vw,38px);
                      background:var(--raise); border-bottom:1px solid var(--line); }
-    .ott-sheet-bar h2 { font-family:'Inter Tight','Inter',sans-serif;
+    .ott-sheet-bar h2 { font-family:var(--font-display);
                         font-size:clamp(1.15rem,2.2vw,1.55rem); font-weight:600;
                         letter-spacing:-0.03em; line-height:1.2; padding-right:48px; }
     .ott-sheet-body { padding:clamp(20px,3.4vw,32px) clamp(22px,4vw,38px) clamp(28px,4vw,40px); }
@@ -452,8 +433,10 @@ const Styles = memo(() => (
                             border-radius:50%; background:var(--well);
                             border:1.5px solid rgba(255,255,255,0.28); }
     .ott-proc-step.loop::after { background:var(--accent); border-color:var(--accent); }
-    .ott-proc-day { font-family:ui-monospace,SFMono-Regular,Menlo,monospace; font-size:0.64rem;
-                    letter-spacing:0.12em; text-transform:uppercase; color:var(--dim); }
+    /* Was monospace — a third family for one date stamp. The wide tracking
+       and caps carry the same stamped feel without it. */
+    .ott-proc-day { font-size:0.64rem; font-weight:550;
+                    letter-spacing:0.14em; text-transform:uppercase; color:var(--dim); }
     .ott-proc-step.loop .ott-proc-day { color:var(--accent); }
     .ott-proc-t { margin-top:4px; font-size:0.9rem; font-weight:600; letter-spacing:-0.01em; color:var(--txt); }
     .ott-proc-b { margin-top:4px; font-size:0.8rem; line-height:1.5; color:var(--dim); }
@@ -482,7 +465,7 @@ const Styles = memo(() => (
     .ott-sheet-try svg { width:15px; height:15px; }
     .ott-eps-head { display:flex; align-items:center; justify-content:space-between; gap:14px;
                     flex-wrap:wrap; margin-top:30px; padding-top:24px; border-top:1px solid var(--line); }
-    .ott-eps-head h3 { font-family:'Inter Tight','Inter',sans-serif; font-size:1.14rem; font-weight:600; letter-spacing:-0.02em; }
+    .ott-eps-head h3 { font-family:var(--font-display); font-size:1.14rem; font-weight:600; letter-spacing:-0.02em; }
     .ott-seasons { display:flex; gap:6px; flex-wrap:wrap; }
     .ott-season { padding:7px 15px; border-radius:99px; font-size:0.84rem; font-weight:500;
                   color:var(--mid); border:1px solid var(--line);
@@ -496,7 +479,7 @@ const Styles = memo(() => (
               transition:background 0.2s; }
     .ott-ep:last-child { border-bottom:none; }
     .ott-ep:hover { background:rgba(255,255,255,0.04); }
-    .ott-ep-n { font-family:'Inter Tight','Inter',sans-serif; font-size:1.1rem; font-weight:500; color:var(--dim);
+    .ott-ep-n { font-family:var(--font-display); font-size:1.1rem; font-weight:500; color:var(--dim);
                 text-align:center; padding-top:3px; }
     .ott-ep-title { font-size:0.98rem; font-weight:600; letter-spacing:-0.015em; line-height:1.35; }
     /* align-items:start, or a grid row sizes to its tallest shot and every
@@ -530,23 +513,9 @@ const Styles = memo(() => (
     @keyframes fall { to { transform:translateY(112vh) rotate(680deg); } }
 
     /* ── Responsive ── */
-    /* Tablet: nav sheds its status line, and the hero art drops out entirely.
-       The orbit is right-anchored and its scrim is a left-to-right gradient, so
-       it only works while the type has a clean left third to sit in. Below this
-       the ring crosses the headline — shrinking it just made the tiles collide
-       with the words. So the orbit is a wide-viewport element, and narrower
-       screens get the type on a stronger wash instead. */
+    /* Tablet: nav sheds its status line. */
     @media (max-width:1080px) {
       .ott-avail { display:none; }
-      .ott-orbit { display:none; }
-      .ott-bb-wash { background:
-          radial-gradient(620px 460px at 74% 14%, rgba(0,168,225,0.28), transparent 68%),
-          radial-gradient(560px 440px at 4% 90%, rgba(0,168,225,0.10), transparent 72%); }
-      .ott-bb-scrim { background:linear-gradient(0deg, var(--bg) 4%, rgba(15,23,30,0.34) 42%, transparent 74%); }
-      /* 78vh was height held for the orbit; with the art gone the type would
-         sit at the bottom of an empty gradient, so the hero closes up. */
-      .ott-bb { min-height:auto; padding-top:clamp(122px,19vh,186px);
-                padding-bottom:clamp(44px,8vh,76px); }
     }
     @media (max-width:920px) {
       .ott-navlinks { display:none; }
@@ -564,7 +533,7 @@ const Styles = memo(() => (
       .ott-tl-desc { max-width:56ch; }
     }
     @media (max-width:760px) {
-      .ott-bb { min-height:auto; padding-top:104px; padding-bottom:clamp(34px,6vh,56px); }
+      .ott-bb { padding-top:104px; padding-bottom:clamp(34px,6vh,56px); }
       .ott-brand-hide { display:none; }
       .ott-mark span { display:none; }
       .ott-btn { height:44px; padding:0 18px; font-size:0.9rem; }
@@ -573,7 +542,6 @@ const Styles = memo(() => (
       .ott-track { padding:22px var(--edge) 34px; }
       .ott-arrow { display:none; }
       .ott-panel-actions .ott-btn { width:100%; }
-      /* Orbit and hero wash are already handled at 1080px. */
       .ott-rows { margin-top:12px; }
       .ott-card { flex:0 0 44vw; max-width:none; }
       .ott-card-wide { flex:0 0 72vw; max-width:none; }
@@ -690,13 +658,14 @@ const ToolIcon = memo(function ToolIcon({ name }) {
   return <Wrench className="ott-stack-i" aria-hidden="true" />;
 });
 
-const Art = memo(function Art({ src, alt }) {
+const Art = memo(function Art({ src, alt, onMissing }) {
   const [state, setState] = useState("loading");
   /* A cached image can finish decoding before React attaches onLoad, so settle
      it on attach rather than waiting for an event that has already fired. */
   const attach = useCallback(el => {
     if (el?.complete) setState(el.naturalWidth ? "ok" : "error");
   }, []);
+  useEffect(() => { if (state === "error") onMissing?.(); }, [state, onMissing]);
   return (
     <>
       {state !== "ok" && <SkeletonUI />}
@@ -789,11 +758,19 @@ const Row = memo(function Row({ id, title, sub, children }) {
 
 /* One poster: composed key art with the title set into it. Nothing sits below
    the card — the artwork is the whole card. */
-const Poster = memo(function Poster({ src, alt, name, wide, onOpen }) {
+const Poster = memo(function Poster({ src, alt, name, wide, n, tag, onOpen }) {
+  /* A project with no screenshot swaps to the numeral tile — the loading
+     skeleton left up forever reads as a broken page, not as key art. */
+  const [missing, setMissing] = useState(false);
+  const onMissing = useCallback(() => setMissing(true), []);
   return (
     <button type="button" className={`ott-card${wide ? " ott-card-wide" : ""}`} onClick={onOpen}>
       <div className="ott-poster">
-        <div className="ott-key"><Art src={src} alt={alt} /></div>
+        {missing ? (
+          <div className="ott-tile"><b>{n || name.charAt(0)}</b>{tag && <span>{tag}</span>}</div>
+        ) : (
+          <div className="ott-key"><Art src={src} alt={alt} onMissing={onMissing} /></div>
+        )}
         <p className="ott-poster-title">{name}</p>
       </div>
     </button>
@@ -1111,6 +1088,11 @@ export default function PortfolioV2() {
       <Styles />
       <div className={`ott${ready ? " ready" : ""}`}>
 
+        <div className="ott-molten-bg" aria-hidden="true">
+          <MoltenMetal color1="#0B3B52" color2="#00A8E1" color3="#DFF4FF"
+            speed={0.3} mouseStrength={0.18} opacity={0.6} />
+        </div>
+
         <header className={`ott-nav${solid ? " solid" : ""}`}>
           <div className="ott-navleft">
             <a href="#top" className="ott-mark">
@@ -1157,27 +1139,10 @@ export default function PortfolioV2() {
 
             {/* ── Billboard ── */}
             <section className="ott-bb" aria-label="Introduction">
-              <div className="ott-bb-art" aria-hidden="true">
-                <div className="ott-orbit">
-                  <div className="ott-orbit-stage">
-                    <div className="ott-orbit-core"><span>Design<br />in code</span></div>
-                    {STACK.map((s, i) => {
-                      const a = (360 / STACK.length) * i;
-                      return (
-                        <span key={s} className="ott-orbit-node"
-                          style={{ "--a": `${a}deg`, "--d": `${-(54 / STACK.length) * i}s` }}>
-                          <i><ToolIcon name={s} /></i>
-                          <b>{SHORT[s] || s}</b>
-                        </span>
-                      );
-                    })}
-                  </div>
-                </div>
-                <div className="ott-bb-wash" />
-                <div className="ott-bb-scrim" />
-              </div>
-
               <div className="ott-bb-body">
+                <img className="ott-bb-photo" src="/about-photo.jpg"
+                  alt="Krishna Zolpatil" width="120" height="120" />
+                <span className="ott-bb-hi">Hi, I&rsquo;m Krishna</span>
                 <h1 className="ott-bb-title">I design AI products people can trust.</h1>
                 <p className="ott-bb-desc">Four years at Naya Studio. 200+ features shipped.</p>
                 <div className="ott-bb-actions">
@@ -1195,7 +1160,7 @@ export default function PortfolioV2() {
                 {WORK.map(p => (
                   <Poster key={p.id}
                     src={`/work/${p.id}.png`} alt={`${p.title} screenshot`}
-                    name={p.title}
+                    name={p.title} n={p.n} tag={p.tag}
                     onOpen={() => setOpen(p.id)}
                   />
                 ))}
@@ -1205,7 +1170,7 @@ export default function PortfolioV2() {
                 {SIDE.map(p => (
                   <Poster key={p.id}
                     src={`/work/${p.id}.png`} alt={`${p.title} screenshot`}
-                    name={p.title} wide
+                    name={p.title} wide n={p.n} tag={p.tag}
                     onOpen={() => setOpen(p.id)}
                   />
                 ))}
