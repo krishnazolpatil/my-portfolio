@@ -1,6 +1,6 @@
 import { useState, useEffect, useRef, useCallback, memo, Component } from "react";
 import { X, Mail, ArrowUpRight, ArrowRight, Download,
-         LayoutGrid, Boxes, Route,
+         Layers, Hammer, Workflow,
          Linkedin, Github, Twitter, Instagram } from "lucide-react";
 import { PROJECTS, ARCHIVE, BUILT, PROCESS } from "./data.js";
 import ShapeGrid from "./ShapeGrid.jsx";
@@ -27,9 +27,9 @@ const WORK = PROJECTS.filter(p => !p.side);
 const SIDE = PROJECTS.filter(p => p.side);
 
 const NAV_LINKS = [
-  { id: "work", label: "Work", Icon: LayoutGrid },
-  { id: "side", label: "Side projects", Icon: Boxes },
-  { id: "process", label: "Process", Icon: Route },
+  { id: "work", label: "Work", Icon: Layers },
+  { id: "side", label: "Side projects", Icon: Hammer },
+  { id: "process", label: "Process", Icon: Workflow },
   { id: "contact", label: "Contact", Icon: Mail },
 ];
 
@@ -73,8 +73,7 @@ const Styles = memo(() => (
       /* The rail costs 68px at rest and only borrows the rest on hover, over
          the page rather than beside it — so labels are available without the
          layout paying for them or shifting when they appear. */
-      --rail:68px;
-      --rail-open:232px;
+      --rail:88px;
       --rail-gap:clamp(10px,1.4vh,18px);
       --gut:clamp(16px,2.8vw,46px);
       --edge:var(--gut);
@@ -118,9 +117,9 @@ const Styles = memo(() => (
     .v4-nav { position:fixed; z-index:300;
               top:var(--rail-gap); bottom:var(--rail-gap); left:var(--rail-gap);
               width:var(--rail); overflow-x:hidden; overflow-y:auto;
-              display:flex; flex-direction:column; align-items:stretch;
+              display:flex; flex-direction:column; align-items:center;
               justify-content:space-between;
-              gap:20px; padding:14px 10px; border-radius:0;
+              gap:24px; padding:12px 0; border-radius:0;
               background:rgba(28,66,50,0.72);
               backdrop-filter:blur(14px) saturate(150%);
               -webkit-backdrop-filter:blur(14px) saturate(150%);
@@ -136,44 +135,34 @@ const Styles = memo(() => (
     @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
       .v4-nav { background:rgba(25,60,45,0.97); }
     }
-    /* Opaque while open: expanded, the rail lies over the page rather than
-       beside it, and the labels have to read against whatever is under them. */
-    .v4-nav:hover, .v4-nav:focus-within { width:var(--rail-open);
-                                          background:rgba(24,58,44,0.96); }
-    /* Labels are clipped at rest by overflow-x rather than removed, so they
-       fade in place instead of reflowing the rail's contents. */
-    .v4-nav-label { opacity:0; white-space:nowrap;
-                    transition:opacity 0.18s ease; }
-    .v4-nav:hover .v4-nav-label, .v4-nav:focus-within .v4-nav-label { opacity:1; }
-
-    .v4-navtop { display:flex; flex-direction:column; align-items:stretch; gap:20px;
-                 min-width:0; }
     /* Square avatar, not a circle — the face sits high and left in the frame. */
-    .v4-mark { display:flex; align-items:center; gap:12px; min-width:0; padding:0 3px; }
-    .v4-mark img { width:32px; height:32px; border-radius:0; object-fit:cover;
+    .v4-mark { display:flex; align-items:center; justify-content:center; }
+    .v4-mark img { width:36px; height:36px; border-radius:0; object-fit:cover;
                    object-position:33% 28%; border:1px solid var(--line); flex-shrink:0; }
-    .v4-mark span { font-family:var(--font-display); font-size:0.96rem; font-weight:600;
-                    letter-spacing:-0.02em; line-height:1.2; }
-    .v4-navlinks { display:flex; flex-direction:column; align-items:stretch; gap:1px; }
-    .v4-navlink { position:relative; display:flex; align-items:center; gap:13px;
-                  padding:10px 9px; border-radius:0;
-                  font-size:0.9rem; font-weight:450; color:var(--cream-2);
+    /* Icon over its own word. The label is always there, so the glyph is
+       support rather than something to decode — and nothing has to unfold on
+       hover to tell you where a link goes. */
+    .v4-navlinks { display:flex; flex-direction:column; align-items:stretch; gap:2px; }
+    .v4-navlink { display:flex; flex-direction:column; align-items:center; gap:7px;
+                  padding:12px 5px; border-radius:0; text-align:center;
+                  font-size:0.66rem; font-weight:550; letter-spacing:0.03em;
+                  line-height:1.25; color:var(--cream-2);
                   transition:color 0.16s, background 0.16s; }
-    .v4-navlink svg { width:20px; height:20px; flex:0 0 auto; }
+    .v4-navlink svg { width:21px; height:21px; flex:0 0 auto; }
     .v4-navlink:hover { color:var(--ink); background:var(--cream); }
-    /* The marker moves to the leading edge — an underline reads as a rule
-       between stacked links rather than as a selection. */
-    .v4-navlink.on { color:var(--cream); font-weight:550;
+    .v4-navlink.on { color:var(--cream); font-weight:650;
                      box-shadow:inset 2px 0 0 var(--cream); }
     .v4-navlink.on:hover { color:var(--ink); }
-    .v4-navbottom { display:flex; flex-direction:column; align-items:stretch; gap:9px; }
-    .v4-navbottom .v4-btn { width:100%; justify-content:flex-start; gap:13px;
-                            padding:0 12px; }
-    .v4-navbottom .v4-btn svg { flex:0 0 auto; }
-    .v4-avail { display:inline-flex; align-items:center; gap:11px; font-size:0.8rem;
-                color:var(--cream-2); padding:0 12px 4px; }
-    .v4-avail i { width:8px; height:8px; border-radius:0; background:var(--cream);
-                  flex-shrink:0; }
+    /* Resume stays on the rail because it is the one thing a recruiter looks
+       for; everything else the rail used to carry lives in the footer. */
+    .v4-railbtn { display:flex; flex-direction:column; align-items:center; gap:7px;
+                  padding:13px 5px; border-radius:0;
+                  background:var(--cream); color:var(--ink); text-align:center;
+                  font-size:0.66rem; font-weight:650; letter-spacing:0.03em;
+                  line-height:1.25; border:1px solid var(--cream);
+                  transition:background 0.18s; }
+    .v4-railbtn svg { width:19px; height:19px; flex:0 0 auto; }
+    .v4-railbtn:hover { background:#FFFFFF; }
 
     /* ── Hero ── */
     /* No tall top inset: the rail is beside the page, not over it. */
@@ -386,19 +375,17 @@ const Styles = memo(() => (
        top island and the content reclaims the full width. */
     @media (max-width:920px) {
       html { scroll-padding-top:104px; }
-      .v4-avail { display:none; }
       .v4-nav { flex-direction:row; align-items:center; justify-content:space-between;
                 top:clamp(8px,1.4vh,16px); bottom:auto;
                 left:var(--gut); right:var(--gut); width:auto;
-                overflow:visible; padding:10px 10px 10px 14px; gap:14px; }
-      .v4-nav:hover, .v4-nav:focus-within { width:auto; }
-      /* Lying down there is room for the labels, and no hover on touch. */
-      .v4-nav-label { opacity:1; }
-      .v4-navtop { flex-direction:row; align-items:center; gap:16px; }
-      .v4-navlinks { display:none; }
-      .v4-navbottom { flex-direction:row; align-items:center; gap:8px; }
-      .v4-navbottom .v4-btn { width:auto; justify-content:center; gap:9px;
-                              padding:0 14px; }
+                overflow:visible; padding:9px 9px 9px 12px; gap:14px; }
+      /* Lying down there is width to spare, so icon and word sit side by side. */
+      .v4-navlinks { flex-direction:row; align-items:center; gap:2px; }
+      .v4-navlink, .v4-railbtn { flex-direction:row; gap:9px; white-space:nowrap;
+                                 font-size:0.84rem; letter-spacing:0.01em; }
+      .v4-navlink { padding:9px 12px; }
+      .v4-navlink.on { box-shadow:inset 0 -2px 0 var(--cream); }
+      .v4-railbtn { padding:10px 15px; }
       .v4-page { padding-left:0; }
       .v4-hero { padding-top:clamp(112px,17vh,168px); }
       .v4-hero-inner { grid-template-columns:1fr; }
@@ -406,7 +393,7 @@ const Styles = memo(() => (
       .v4-proc-d { grid-column:2; }
     }
     @media (max-width:760px) {
-      .v4-mark span { display:none; }
+      .v4-navlinks { display:none; }
       .v4-btn { height:46px; padding:0 18px; font-size:0.9rem; }
       .v4-btn-sm { height:38px; padding:0 13px; font-size:0.82rem; }
       .v4-hero-actions .v4-btn { flex:1 1 auto; }
@@ -727,37 +714,23 @@ export default function AppV3() {
         </div>
 
         <header className={`v4-nav${solid ? " solid" : ""}`}>
-          <div className="v4-navtop">
-            <a href="#top" className="v4-mark" title="Krishna Zolpatil">
-              <img src="/about-photo.jpg" alt="" width="32" height="32" />
-              <span className="v4-nav-label">Krishna Zolpatil</span>
-            </a>
-            <nav className="v4-navlinks" aria-label="Sections">
-              {NAV_LINKS.map(l => (
-                <a key={l.id} href={`#${l.id}`} onClick={() => setActiveSec(l.id)}
-                  title={l.label} aria-label={l.label}
-                  className={`v4-navlink${activeSec === l.id ? " on" : ""}`}>
-                  <l.Icon aria-hidden="true" />
-                  <span className="v4-nav-label">{l.label}</span>
-                </a>
-              ))}
-            </nav>
-          </div>
-          <div className="v4-navbottom">
-            <span className="v4-avail" title="Available for work">
-              <i /><span className="v4-nav-label">Available for work</span>
-            </span>
-            <a className="v4-btn v4-btn-ghost v4-btn-sm" href="/resume.pdf"
-              download="Krishna-Zolpatil-Resume.pdf" title="Resume" aria-label="Resume">
-              <Download aria-hidden="true" />
-              <span className="v4-nav-label">Resume</span>
-            </a>
-            <a className="v4-btn v4-btn-solid v4-btn-sm" href={MAILTO}
-              title="Get in touch" aria-label="Get in touch">
-              <Mail aria-hidden="true" />
-              <span className="v4-nav-label">Get in touch</span>
-            </a>
-          </div>
+          <a href="#top" className="v4-mark" aria-label="Krishna Zolpatil">
+            <img src="/about-photo.jpg" alt="" width="36" height="36" />
+          </a>
+          <nav className="v4-navlinks" aria-label="Sections">
+            {NAV_LINKS.map(l => (
+              <a key={l.id} href={`#${l.id}`} onClick={() => setActiveSec(l.id)}
+                className={`v4-navlink${activeSec === l.id ? " on" : ""}`}>
+                <l.Icon aria-hidden="true" />
+                <span>{l.label}</span>
+              </a>
+            ))}
+          </nav>
+          <a className="v4-railbtn" href="/resume.pdf"
+            download="Krishna-Zolpatil-Resume.pdf">
+            <Download aria-hidden="true" />
+            <span>Resume</span>
+          </a>
         </header>
 
         <div className="v4-page">
