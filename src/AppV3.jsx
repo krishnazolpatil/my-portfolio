@@ -228,10 +228,20 @@ const Styles = memo(() => (
     .v4-social svg { width:19px; height:19px; }
 
     /* ── Footer ── */
-    .v4-foot { padding:clamp(24px,4vh,44px) var(--edge) clamp(28px,4vh,48px);
+    /* A sheet of paper laid on the grid: a cream wash thin enough that the
+       ruled ground still reads through it, with a grain so it sits as a
+       surface rather than a flat tint. The change in tone is its own edge —
+       no rule needed, and none wanted on this ground.
+       The grain is a background-image, not a ::before: an absolutely
+       positioned pseudo-element paints above static text, which would put the
+       noise on top of the type. */
+    .v4-foot { margin-top:clamp(30px,5vh,60px);
+               padding:clamp(30px,5vh,52px) var(--edge) clamp(32px,5vh,56px);
+               background-color:rgba(240,233,217,0.055);
+               background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)' opacity='0.07'/%3E%3C/svg%3E");
                display:flex; flex-wrap:wrap;
                gap:12px; align-items:center; justify-content:space-between;
-               font-size:0.85rem; color:var(--cream-3); }
+               font-size:0.85rem; color:var(--cream-2); }
 
     /* ── Case study sheet ── */
     /* Flat ink, no blur: the ground is a drawn grid, and blurring it turns a
