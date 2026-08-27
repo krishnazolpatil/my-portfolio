@@ -8,7 +8,7 @@
    Escape hatch on the live site: append ?preview to any URL —
    https://krishnazolpatil.com/?preview
 ───────────────────────────────────────────────────────── */
-const COMING_SOON = true;
+const COMING_SOON = false;
 
 const isPreview = () =>
   typeof window !== "undefined" &&
