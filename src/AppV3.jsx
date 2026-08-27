@@ -137,11 +137,10 @@ const Styles = memo(() => (
     .v4-hero { padding:clamp(132px,20vh,208px) var(--edge) clamp(56px,9vh,104px); }
     .v4-hero-inner { display:grid; grid-template-columns:auto 1fr; gap:clamp(20px,3vw,40px);
                      align-items:start; }
-    /* A square that reaches the buttons without passing them. It can't be
-       measured off the text column: the photo's width sets how much width the
-       text gets, which sets how tall the text is — feed that back into the
-       photo and it never settles. So it's sized in vw, tuned to stop at or
-       just above the buttons rather than run past them. */
+    /* The square is measured to the text column's height in JS so it lands
+       exactly on the buttons — see useHeroPhotoSize. This clamp is what shows
+       before that measurement lands, on stacked layouts, and if there is no
+       ResizeObserver. */
     .v4-hero-photo { width:clamp(160px,20vw,300px); aspect-ratio:1/1; height:auto;
                      border-radius:0; object-fit:cover; object-position:33% 26%;
                      border:1px solid var(--line); }
@@ -361,6 +360,49 @@ const Card = memo(function Card({ id, n, tag, title, onOpen }) {
   );
 });
 
+/* Match the hero photo to the height of the text beside it, so the square ends
+   level with the buttons at any width.
+
+   This is only safe because the headline is capped at 16ch and the lede at
+   52ch: the text wraps to its own measure rather than to whatever width the
+   photo leaves over, so growing the photo does not make the text taller. Were
+   that not true, photo → narrower text → taller text → bigger photo would
+   feed back on itself and never settle. The size cap and the 2px deadband are
+   belt and braces against exactly that. */
+function useHeroPhotoSize(textRef) {
+  const [size, setSize] = useState(null);
+
+  useEffect(() => {
+    const el = textRef.current;
+    if (!el || typeof ResizeObserver === "undefined") return;
+
+    /* Stacked, the photo has no column to match, so CSS takes it back. */
+    const stacked = window.matchMedia("(max-width:920px)");
+
+    const sync = () => {
+      if (stacked.matches) { setSize(null); return; }
+      /* Never take more than a third of the row. Past that the headline is
+         squeezed below its 16ch measure and starts wrapping to the column
+         instead — which is the condition that would restart the feedback. */
+      const room = el.parentElement ? el.parentElement.offsetWidth * 0.34 : Infinity;
+      const next = Math.round(Math.min(el.offsetHeight, room, 620));
+      setSize(prev => (prev !== null && Math.abs(prev - next) < 2 ? prev : next));
+    };
+
+    const ro = new ResizeObserver(sync);
+    ro.observe(el);
+    stacked.addEventListener("change", sync);
+    sync();
+
+    return () => {
+      ro.disconnect();
+      stacked.removeEventListener("change", sync);
+    };
+  }, [textRef]);
+
+  return size;
+}
+
 const Section = memo(function Section({ id, title, note, children }) {
   return (
     <section id={id} className="v4-sec" aria-label={title}>
@@ -515,6 +557,8 @@ export default function AppV3() {
   const [activeSec, setActiveSec] = useState("work");
   const [open, setOpen] = useState(null);
   const [tool, setTool] = useState(null);
+  const heroTextRef = useRef(null);
+  const photoSize = useHeroPhotoSize(heroTextRef);
 
   useEffect(() => {
     const t = setTimeout(() => setReady(true), 40);
@@ -587,8 +631,9 @@ export default function AppV3() {
             <section className="v4-hero" aria-label="Introduction">
               <div className="v4-hero-inner">
                 <img className="v4-hero-photo" src="/about-photo.jpg"
-                  alt="Krishna Zolpatil" width="164" height="164" />
-                <div>
+                  alt="Krishna Zolpatil" width="300" height="300"
+                  style={photoSize ? { width: photoSize, height: photoSize } : undefined} />
+                <div ref={heroTextRef}>
                   <span className="v4-hi">Hi, I&rsquo;m Krishna</span>
                   <h1 className="v4-title">I design AI products people can trust.</h1>
                   <p className="v4-lede">
