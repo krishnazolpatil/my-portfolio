@@ -99,16 +99,21 @@ const Styles = memo(() => (
     .v4-btn-ghost:hover { background:var(--cream); color:var(--ink); }
     .v4-btn-sm { height:40px; padding:0 16px; font-size:0.86rem; }
 
-    /* ── Nav: a sharp square bar, ruled off the page ── */
-    .v4-nav { position:fixed; top:0; left:0; right:0; z-index:300;
+    /* ── Nav: a floating island, square-cornered ── */
+    /* Detached from the edges but with no radius — it reads as one more cell
+       lifted off the grid rather than a bar welded to the top. */
+    .v4-nav { position:fixed; top:clamp(10px,1.6vh,20px); z-index:300;
+              left:var(--edge); right:var(--edge);
               display:flex; align-items:center; justify-content:space-between;
-              gap:20px; padding:12px var(--edge); border-radius:0;
-              background:rgba(28,66,50,0.78);
+              gap:20px; padding:11px 11px 11px 14px; border-radius:0;
+              background:rgba(28,66,50,0.8);
               backdrop-filter:blur(14px) saturate(150%);
               -webkit-backdrop-filter:blur(14px) saturate(150%);
-              border-bottom:1px solid var(--line);
-              transition:background 0.3s ease; }
-    .v4-nav.solid { background:rgba(15,36,28,0.94); }
+              border:1px solid var(--line);
+              box-shadow:0 18px 44px -22px rgba(9,22,17,0.95);
+              transition:background 0.3s ease, box-shadow 0.3s ease; }
+    .v4-nav.solid { background:rgba(15,36,28,0.94);
+                    box-shadow:0 22px 52px -22px rgba(9,22,17,1); }
     @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
       .v4-nav { background:rgba(15,36,28,0.96); }
     }
@@ -179,6 +184,12 @@ const Styles = memo(() => (
     .v4-shot img { width:100%; height:100%; object-fit:cover; object-position:top center;
                    transition:opacity 0.35s ease, transform 0.4s ease; }
     .v4-card:hover .v4-shot img { transform:scale(1.03); }
+    /* Side projects and tools are ~1.83:1 screenshots. Cropped square from the
+       top they showed a band of toolbar and read as empty tiles, so they are
+       matted whole instead of cropped. */
+    .v4-shot-wide { padding:clamp(14px,2vw,24px); background:var(--ink); }
+    .v4-shot-wide img { object-fit:contain; object-position:center;
+                        border:1px solid var(--line-2); }
     /* No screenshot: the numeral carries the cell instead of a dead frame. */
     .v4-shot-none { position:absolute; inset:0; display:flex; flex-direction:column;
                     align-items:center; justify-content:center; gap:8px; padding:18px; }
@@ -212,15 +223,17 @@ const Styles = memo(() => (
     .v4-proc-d { font-size:0.94rem; line-height:1.6; color:var(--cream-2); }
 
     /* ── Contact ── */
-    .v4-contact { display:grid; gap:clamp(20px,3vw,40px);
-                  grid-template-columns:minmax(0,1.4fr) minmax(0,1fr); align-items:start; }
+    /* One column. As a two-column grid the social squares floated in the top
+       right with nothing to align to, reading as strays rather than a set. */
+    .v4-contact { max-width:64ch; }
     .v4-contact-t { font-family:var(--font-display); font-weight:600;
                     font-size:clamp(1.8rem,4vw,3.4rem); line-height:1.02;
                     letter-spacing:-0.035em; text-wrap:balance; }
     .v4-contact-d { margin-top:16px; max-width:46ch; font-size:1rem; line-height:1.62;
                     color:var(--cream-2); }
     .v4-contact-actions { display:flex; flex-wrap:wrap; gap:12px; margin-top:26px; }
-    .v4-socials { display:flex; flex-wrap:wrap; gap:10px; }
+    .v4-socials { display:flex; flex-wrap:wrap; gap:10px;
+                  margin-top:clamp(24px,3.6vh,38px); }
     .v4-social { display:grid; place-items:center; width:48px; height:48px; border-radius:0;
                  border:1px solid var(--line); color:var(--cream-2);
                  transition:background 0.18s, color 0.18s, border-color 0.18s; }
@@ -301,6 +314,27 @@ const Styles = memo(() => (
                 grid-template-columns:repeat(auto-fit, minmax(min(320px,100%), 1fr)); }
     .v4-shots img { width:100%; height:auto; border:1px solid var(--line-2); border-radius:0;
                     background:var(--green-3); }
+    .v4-sheet-link { margin-top:20px; }
+    /* Day-by-day process. Steps the data flags as looping are the ones that
+       iterate — marked with a cream edge rather than a rule, since a rule here
+       would read as a divider between days. */
+    .v4-days { display:grid; gap:2px; margin-top:14px; }
+    .v4-day { list-style:none; display:grid;
+              grid-template-columns:78px minmax(0,160px) minmax(0,1fr);
+              gap:8px 18px; align-items:baseline; padding:13px 15px;
+              background:rgba(15,36,28,0.3); }
+    .v4-day.loop { background:rgba(240,233,217,0.06);
+                   box-shadow:inset 2px 0 0 var(--cream); }
+    .v4-day-n { font-size:0.72rem; font-weight:600; letter-spacing:0.1em;
+                text-transform:uppercase; color:var(--cream-2); }
+    .v4-day-t { font-family:var(--font-display); font-size:0.98rem; font-weight:600;
+                letter-spacing:-0.015em; color:var(--cream); }
+    .v4-day-b { font-size:0.92rem; line-height:1.6; color:var(--cream-2); }
+    @media (max-width:760px) {
+      .v4-day { grid-template-columns:70px minmax(0,1fr); }
+      .v4-day-b { grid-column:2; }
+    }
+
     .v4-stack { margin-top:16px; display:flex; flex-wrap:wrap; gap:8px; }
     .v4-stack span { display:inline-flex; align-items:center; padding:6px 12px;
                      border:1px solid var(--line); border-radius:0; font-size:0.82rem;
@@ -309,7 +343,6 @@ const Styles = memo(() => (
     /* ── Responsive ── */
     @media (max-width:1080px) {
       .v4-avail { display:none; }
-      .v4-contact { grid-template-columns:1fr; }
     }
     @media (max-width:920px) {
       .v4-navlinks { display:none; }
@@ -348,7 +381,7 @@ class ErrorBoundary extends Component {
 
 /* A project cell. A missing screenshot falls back to the numeral rather than
    leaving an empty frame — see the v3 note on the loading skeleton. */
-const Card = memo(function Card({ id, n, tag, title, onOpen }) {
+const Card = memo(function Card({ id, n, tag, title, wide, foot, onOpen }) {
   const [missing, setMissing] = useState(false);
   /* A cached image can finish decoding before React attaches onLoad, so settle
      it on attach rather than waiting for an event that has already fired. */
@@ -357,7 +390,7 @@ const Card = memo(function Card({ id, n, tag, title, onOpen }) {
   }, []);
   return (
     <button type="button" className="v4-card" onClick={onOpen}>
-      <div className="v4-shot">
+      <div className={`v4-shot${wide ? " v4-shot-wide" : ""}`}>
         {missing ? (
           <div className="v4-shot-none"><b>{n}</b><span>{tag}</span></div>
         ) : (
@@ -367,7 +400,7 @@ const Card = memo(function Card({ id, n, tag, title, onOpen }) {
       </div>
       <div className="v4-card-foot">
         <span className="v4-card-t">{title}</span>
-        <span className="v4-card-n">{n}</span>
+        {foot ?? <span className="v4-card-n">{n}</span>}
       </div>
     </button>
   );
@@ -475,6 +508,7 @@ const Sheet = memo(function Sheet({ project, onClose }) {
           <dl className="v4-meta">
             {project.role && <div><dt>Role</dt><dd>{project.role}</dd></div>}
             {project.timeline && <div><dt>Timeline</dt><dd>{project.timeline}</dd></div>}
+            {project.duration && <div><dt>Duration</dt><dd>{project.duration}</dd></div>}
             {project.team && <div><dt>Team</dt><dd>{project.team}</dd></div>}
           </dl>
 
@@ -484,10 +518,34 @@ const Sheet = memo(function Sheet({ project, onClose }) {
             </div>
           )}
 
+          {project.href && (
+            <div className="v4-sheet-link">
+              <a className="v4-btn v4-btn-solid" href={project.href}
+                target="_blank" rel="noopener noreferrer">
+                {project.hrefLabel || "Visit"} <ArrowUpRight />
+              </a>
+            </div>
+          )}
+
           {project.overview && (
             <div className="v4-block">
               <h3>Overview</h3>
               <p>{project.overview}</p>
+            </div>
+          )}
+
+          {project.process?.length > 0 && (
+            <div className="v4-block">
+              <h3>Process</h3>
+              <ol className="v4-days">
+                {project.process.map((s, i) => (
+                  <li key={`${s.day}-${i}`} className={`v4-day${s.loop ? " loop" : ""}`}>
+                    <span className="v4-day-n">{s.day}</span>
+                    <span className="v4-day-t">{s.t}</span>
+                    <span className="v4-day-b">{s.b}</span>
+                  </li>
+                ))}
+              </ol>
             </div>
           )}
 
@@ -678,21 +736,13 @@ export default function AppV3() {
             <Section id="side" title="Side projects" note="Shipped solo">
               <div className="v4-grid-work">
                 {SIDE.map(p => (
-                  <Card key={p.id} id={p.id} n={p.n} tag={p.tag} title={p.title}
+                  <Card key={p.id} id={p.id} n={p.n} tag={p.tag} title={p.title} wide
                     onOpen={() => openProject(p.id)} />
                 ))}
                 {BUILT.map(b => (
-                  <button type="button" key={b.slug} className="v4-card"
-                    onClick={() => setTool(b)}>
-                    <div className="v4-shot">
-                      <img src={`/work/${b.slug}.png`} alt={`${b.name} screenshot`}
-                        loading="lazy" />
-                    </div>
-                    <div className="v4-card-foot">
-                      <span className="v4-card-t">{b.name}</span>
-                      <ArrowUpRight className="v4-card-arrow" />
-                    </div>
-                  </button>
+                  <Card key={b.slug} id={b.slug} n="—" tag={b.kind} title={b.name} wide
+                    foot={<ArrowUpRight className="v4-card-arrow" />}
+                    onOpen={() => setTool(b)} />
                 ))}
               </div>
             </Section>
@@ -719,22 +769,20 @@ export default function AppV3() {
               <span className="v4-sec-note">Available for work</span>
             </div>
             <div className="v4-contact">
-              <div>
-                <p className="v4-contact-t">Let&rsquo;s build something people trust.</p>
-                <p className="v4-contact-d">
-                  I&rsquo;m open to senior product design roles. If you&rsquo;re working
-                  on something hard and want it to feel simple, I&rsquo;d like to hear
-                  about it.
-                </p>
-                <div className="v4-contact-actions">
-                  <a className="v4-btn v4-btn-solid" href={MAILTO}>
-                    <Mail /> Email me
-                  </a>
-                  <a className="v4-btn v4-btn-ghost" href="/resume.pdf"
-                    download="Krishna-Zolpatil-Resume.pdf">
-                    <Download /> Resume
-                  </a>
-                </div>
+              <p className="v4-contact-t">Let&rsquo;s build something people trust.</p>
+              <p className="v4-contact-d">
+                I&rsquo;m open to senior product design roles. If you&rsquo;re working
+                on something hard and want it to feel simple, I&rsquo;d like to hear
+                about it.
+              </p>
+              <div className="v4-contact-actions">
+                <a className="v4-btn v4-btn-solid" href={MAILTO}>
+                  <Mail /> Email me
+                </a>
+                <a className="v4-btn v4-btn-ghost" href="/resume.pdf"
+                  download="Krishna-Zolpatil-Resume.pdf">
+                  <Download /> Resume
+                </a>
               </div>
               <div className="v4-socials">
                 {SOCIALS.map(s => (
