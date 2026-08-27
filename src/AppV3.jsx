@@ -235,13 +235,16 @@ const Styles = memo(() => (
        The grain is a background-image, not a ::before: an absolutely
        positioned pseudo-element paints above static text, which would put the
        noise on top of the type. */
-    .v4-foot { margin-top:clamp(30px,5vh,60px);
-               padding:clamp(30px,5vh,52px) var(--edge) clamp(32px,5vh,56px);
+    .v4-foot { margin-top:clamp(40px,7vh,90px);
+               padding:clamp(40px,7vh,86px) var(--edge) clamp(30px,5vh,52px);
                background-color:rgba(240,233,217,0.055);
-               background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)' opacity='0.07'/%3E%3C/svg%3E");
-               display:flex; flex-wrap:wrap;
-               gap:12px; align-items:center; justify-content:space-between;
-               font-size:0.85rem; color:var(--cream-2); }
+               background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='p'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='160' height='160' filter='url(%23p)' opacity='0.07'/%3E%3C/svg%3E"); }
+    /* Small print sits off the bottom of the same sheet — separated by space
+       and weight, since this ground takes no rules. */
+    .v4-foot-fine { display:flex; flex-wrap:wrap; gap:10px 24px; align-items:baseline;
+                    justify-content:space-between;
+                    margin-top:clamp(38px,6vh,72px);
+                    font-size:0.82rem; line-height:1.6; color:var(--cream-2); }
 
     /* ── Case study sheet ── */
     /* Flat ink, no blur: the ground is a drawn grid, and blurring it turns a
@@ -706,40 +709,46 @@ export default function AppV3() {
               </div>
             </Section>
 
-            <Section id="contact" title="Get in touch" note="Available for work">
-              <div className="v4-contact">
-                <div>
-                  <p className="v4-contact-t">Let&rsquo;s build something people trust.</p>
-                  <p className="v4-contact-d">
-                    I&rsquo;m open to senior product design roles. If you&rsquo;re working
-                    on something hard and want it to feel simple, I&rsquo;d like to hear
-                    about it.
-                  </p>
-                  <div className="v4-contact-actions">
-                    <a className="v4-btn v4-btn-solid" href={MAILTO}>
-                      <Mail /> Email me
-                    </a>
-                    <a className="v4-btn v4-btn-ghost" href="/resume.pdf"
-                      download="Krishna-Zolpatil-Resume.pdf">
-                      <Download /> Resume
-                    </a>
-                  </div>
-                </div>
-                <div className="v4-socials">
-                  {SOCIALS.map(s => (
-                    <a key={s.label} className="v4-social" href={s.href} aria-label={s.label}
-                      target="_blank" rel="noopener noreferrer">
-                      <s.Icon />
-                    </a>
-                  ))}
-                </div>
-              </div>
-            </Section>
           </main>
 
-          <footer className="v4-foot">
-            <span>Also shipped: {ARCHIVE}</span>
-            <span>© {new Date().getFullYear()} Krishna Zolpatil</span>
+          {/* The footer is the contact block — they were the same request
+              twice, once as a section and once as small print. */}
+          <footer className="v4-foot" id="contact">
+            <div className="v4-sec-head">
+              <h2 className="v4-sec-title">Get in touch</h2>
+              <span className="v4-sec-note">Available for work</span>
+            </div>
+            <div className="v4-contact">
+              <div>
+                <p className="v4-contact-t">Let&rsquo;s build something people trust.</p>
+                <p className="v4-contact-d">
+                  I&rsquo;m open to senior product design roles. If you&rsquo;re working
+                  on something hard and want it to feel simple, I&rsquo;d like to hear
+                  about it.
+                </p>
+                <div className="v4-contact-actions">
+                  <a className="v4-btn v4-btn-solid" href={MAILTO}>
+                    <Mail /> Email me
+                  </a>
+                  <a className="v4-btn v4-btn-ghost" href="/resume.pdf"
+                    download="Krishna-Zolpatil-Resume.pdf">
+                    <Download /> Resume
+                  </a>
+                </div>
+              </div>
+              <div className="v4-socials">
+                {SOCIALS.map(s => (
+                  <a key={s.label} className="v4-social" href={s.href} aria-label={s.label}
+                    target="_blank" rel="noopener noreferrer">
+                    <s.Icon />
+                  </a>
+                ))}
+              </div>
+            </div>
+            <div className="v4-foot-fine">
+              <span>Also shipped: {ARCHIVE}</span>
+              <span>© {new Date().getFullYear()} Krishna Zolpatil</span>
+            </div>
           </footer>
         </div>
 
