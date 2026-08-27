@@ -1,5 +1,6 @@
 import { useState, useEffect, useRef, useCallback, memo, Component } from "react";
 import { X, Mail, ArrowUpRight, ArrowRight, Download,
+         LayoutGrid, Boxes, Route,
          Linkedin, Github, Twitter, Instagram } from "lucide-react";
 import { PROJECTS, ARCHIVE, BUILT, PROCESS } from "./data.js";
 import ShapeGrid from "./ShapeGrid.jsx";
@@ -26,10 +27,10 @@ const WORK = PROJECTS.filter(p => !p.side);
 const SIDE = PROJECTS.filter(p => p.side);
 
 const NAV_LINKS = [
-  { id: "work", label: "Work" },
-  { id: "side", label: "Side projects" },
-  { id: "process", label: "Process" },
-  { id: "contact", label: "Contact" },
+  { id: "work", label: "Work", Icon: LayoutGrid },
+  { id: "side", label: "Side projects", Icon: Boxes },
+  { id: "process", label: "Process", Icon: Route },
+  { id: "contact", label: "Contact", Icon: Mail },
 ];
 
 const SOCIALS = [
@@ -69,7 +70,11 @@ const Styles = memo(() => (
          beside it and gutters off its own edges rather than centring in the
          viewport — centring on 100vw would ignore the rail and push the page
          off balance. */
-      --rail:clamp(190px,15vw,250px);
+      /* The rail costs 68px at rest and only borrows the rest on hover, over
+         the page rather than beside it — so labels are available without the
+         layout paying for them or shifting when they appear. */
+      --rail:68px;
+      --rail-open:232px;
       --rail-gap:clamp(10px,1.4vh,18px);
       --gut:clamp(16px,2.8vw,46px);
       --edge:var(--gut);
@@ -112,10 +117,10 @@ const Styles = memo(() => (
        lifted off the grid rather than a bar welded to the side. */
     .v4-nav { position:fixed; z-index:300;
               top:var(--rail-gap); bottom:var(--rail-gap); left:var(--rail-gap);
-              width:var(--rail); overflow-y:auto;
+              width:var(--rail); overflow-x:hidden; overflow-y:auto;
               display:flex; flex-direction:column; align-items:stretch;
               justify-content:space-between;
-              gap:20px; padding:16px 14px; border-radius:0;
+              gap:20px; padding:14px 10px; border-radius:0;
               background:rgba(28,66,50,0.72);
               backdrop-filter:blur(14px) saturate(150%);
               -webkit-backdrop-filter:blur(14px) saturate(150%);
@@ -131,18 +136,30 @@ const Styles = memo(() => (
     @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
       .v4-nav { background:rgba(25,60,45,0.97); }
     }
-    .v4-navtop { display:flex; flex-direction:column; align-items:stretch; gap:22px;
+    /* Opaque while open: expanded, the rail lies over the page rather than
+       beside it, and the labels have to read against whatever is under them. */
+    .v4-nav:hover, .v4-nav:focus-within { width:var(--rail-open);
+                                          background:rgba(24,58,44,0.96); }
+    /* Labels are clipped at rest by overflow-x rather than removed, so they
+       fade in place instead of reflowing the rail's contents. */
+    .v4-nav-label { opacity:0; white-space:nowrap;
+                    transition:opacity 0.18s ease; }
+    .v4-nav:hover .v4-nav-label, .v4-nav:focus-within .v4-nav-label { opacity:1; }
+
+    .v4-navtop { display:flex; flex-direction:column; align-items:stretch; gap:20px;
                  min-width:0; }
     /* Square avatar, not a circle — the face sits high and left in the frame. */
-    .v4-mark { display:flex; align-items:center; gap:10px; min-width:0; }
-    .v4-mark img { width:34px; height:34px; border-radius:0; object-fit:cover;
+    .v4-mark { display:flex; align-items:center; gap:12px; min-width:0; padding:0 3px; }
+    .v4-mark img { width:32px; height:32px; border-radius:0; object-fit:cover;
                    object-position:33% 28%; border:1px solid var(--line); flex-shrink:0; }
-    .v4-mark span { font-family:var(--font-display); font-size:0.98rem; font-weight:600;
+    .v4-mark span { font-family:var(--font-display); font-size:0.96rem; font-weight:600;
                     letter-spacing:-0.02em; line-height:1.2; }
     .v4-navlinks { display:flex; flex-direction:column; align-items:stretch; gap:1px; }
-    .v4-navlink { position:relative; padding:9px 12px; border-radius:0;
+    .v4-navlink { position:relative; display:flex; align-items:center; gap:13px;
+                  padding:10px 9px; border-radius:0;
                   font-size:0.9rem; font-weight:450; color:var(--cream-2);
                   transition:color 0.16s, background 0.16s; }
+    .v4-navlink svg { width:20px; height:20px; flex:0 0 auto; }
     .v4-navlink:hover { color:var(--ink); background:var(--cream); }
     /* The marker moves to the leading edge — an underline reads as a rule
        between stacked links rather than as a selection. */
@@ -150,10 +167,12 @@ const Styles = memo(() => (
                      box-shadow:inset 2px 0 0 var(--cream); }
     .v4-navlink.on:hover { color:var(--ink); }
     .v4-navbottom { display:flex; flex-direction:column; align-items:stretch; gap:9px; }
-    .v4-navbottom .v4-btn { width:100%; }
-    .v4-avail { display:inline-flex; align-items:center; gap:8px; font-size:0.8rem;
-                color:var(--cream-2); padding:0 2px 4px; }
-    .v4-avail i { width:7px; height:7px; border-radius:0; background:var(--cream);
+    .v4-navbottom .v4-btn { width:100%; justify-content:flex-start; gap:13px;
+                            padding:0 12px; }
+    .v4-navbottom .v4-btn svg { flex:0 0 auto; }
+    .v4-avail { display:inline-flex; align-items:center; gap:11px; font-size:0.8rem;
+                color:var(--cream-2); padding:0 12px 4px; }
+    .v4-avail i { width:8px; height:8px; border-radius:0; background:var(--cream);
                   flex-shrink:0; }
 
     /* ── Hero ── */
@@ -372,10 +391,14 @@ const Styles = memo(() => (
                 top:clamp(8px,1.4vh,16px); bottom:auto;
                 left:var(--gut); right:var(--gut); width:auto;
                 overflow:visible; padding:10px 10px 10px 14px; gap:14px; }
+      .v4-nav:hover, .v4-nav:focus-within { width:auto; }
+      /* Lying down there is room for the labels, and no hover on touch. */
+      .v4-nav-label { opacity:1; }
       .v4-navtop { flex-direction:row; align-items:center; gap:16px; }
       .v4-navlinks { display:none; }
       .v4-navbottom { flex-direction:row; align-items:center; gap:8px; }
-      .v4-navbottom .v4-btn { width:auto; }
+      .v4-navbottom .v4-btn { width:auto; justify-content:center; gap:9px;
+                              padding:0 14px; }
       .v4-page { padding-left:0; }
       .v4-hero { padding-top:clamp(112px,17vh,168px); }
       .v4-hero-inner { grid-template-columns:1fr; }
@@ -705,25 +728,34 @@ export default function AppV3() {
 
         <header className={`v4-nav${solid ? " solid" : ""}`}>
           <div className="v4-navtop">
-            <a href="#top" className="v4-mark">
-              <img src="/about-photo.jpg" alt="" width="34" height="34" />
-              <span>Krishna Zolpatil</span>
+            <a href="#top" className="v4-mark" title="Krishna Zolpatil">
+              <img src="/about-photo.jpg" alt="" width="32" height="32" />
+              <span className="v4-nav-label">Krishna Zolpatil</span>
             </a>
             <nav className="v4-navlinks" aria-label="Sections">
-              {NAV_LINKS.map(({ id, label }) => (
-                <a key={id} href={`#${id}`} onClick={() => setActiveSec(id)}
-                  className={`v4-navlink${activeSec === id ? " on" : ""}`}>{label}</a>
+              {NAV_LINKS.map(l => (
+                <a key={l.id} href={`#${l.id}`} onClick={() => setActiveSec(l.id)}
+                  title={l.label} aria-label={l.label}
+                  className={`v4-navlink${activeSec === l.id ? " on" : ""}`}>
+                  <l.Icon aria-hidden="true" />
+                  <span className="v4-nav-label">{l.label}</span>
+                </a>
               ))}
             </nav>
           </div>
           <div className="v4-navbottom">
-            <span className="v4-avail"><i />Available for work</span>
+            <span className="v4-avail" title="Available for work">
+              <i /><span className="v4-nav-label">Available for work</span>
+            </span>
             <a className="v4-btn v4-btn-ghost v4-btn-sm" href="/resume.pdf"
-              download="Krishna-Zolpatil-Resume.pdf">
-              <Download /> Resume
+              download="Krishna-Zolpatil-Resume.pdf" title="Resume" aria-label="Resume">
+              <Download aria-hidden="true" />
+              <span className="v4-nav-label">Resume</span>
             </a>
-            <a className="v4-btn v4-btn-solid v4-btn-sm" href={MAILTO}>
-              <Mail /> Get in touch
+            <a className="v4-btn v4-btn-solid v4-btn-sm" href={MAILTO}
+              title="Get in touch" aria-label="Get in touch">
+              <Mail aria-hidden="true" />
+              <span className="v4-nav-label">Get in touch</span>
             </a>
           </div>
         </header>
