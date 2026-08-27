@@ -137,10 +137,11 @@ const Styles = memo(() => (
     .v4-hero { padding:clamp(132px,20vh,208px) var(--edge) clamp(56px,9vh,104px); }
     .v4-hero-inner { display:grid; grid-template-columns:auto 1fr; gap:clamp(20px,3vw,40px);
                      align-items:start; }
-    /* Square, like every other cell on the page — filling the column height
-       instead made it a tall rectangle, which is the one shape this design
-       does not use. */
-    .v4-hero-photo { width:clamp(160px,20vw,300px); aspect-ratio:1/1; height:auto;
+    /* A big square that runs down to the buttons. Sized in vw rather than
+       stretched to the row: the headline drives the column's height and also
+       scales with the viewport, so the two track each other, and the square
+       stays square instead of being pulled into a rectangle. */
+    .v4-hero-photo { width:clamp(200px,28vw,500px); aspect-ratio:1/1; height:auto;
                      border-radius:0; object-fit:cover; object-position:33% 26%;
                      border:1px solid var(--line); }
     .v4-hi { display:block; font-size:clamp(0.95rem,1.1vw,1.15rem); font-weight:550;
