@@ -106,16 +106,20 @@ const Styles = memo(() => (
               left:var(--edge); right:var(--edge);
               display:flex; align-items:center; justify-content:space-between;
               gap:20px; padding:11px 11px 11px 14px; border-radius:0;
-              background:rgba(28,66,50,0.8);
+              background:rgba(28,66,50,0.72);
               backdrop-filter:blur(14px) saturate(150%);
               -webkit-backdrop-filter:blur(14px) saturate(150%);
               border:1px solid var(--line);
-              box-shadow:0 18px 44px -22px rgba(9,22,17,0.95);
+              box-shadow:0 18px 44px -22px rgba(9,22,17,0.9);
               transition:background 0.3s ease, box-shadow 0.3s ease; }
-    .v4-nav.solid { background:rgba(15,36,28,0.94);
-                    box-shadow:0 22px 52px -22px rgba(9,22,17,1); }
+    /* Scrolled, the island firms up in the same green rather than switching to
+       ink. Going dark changed its hue and value at once, which read as a
+       different object appearing; it only needs to stay legible over whatever
+       passes beneath, and the border and shadow already hold it off the page. */
+    .v4-nav.solid { background:rgba(28,66,50,0.9);
+                    box-shadow:0 22px 52px -22px rgba(9,22,17,0.95); }
     @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
-      .v4-nav { background:rgba(15,36,28,0.96); }
+      .v4-nav { background:rgba(25,60,45,0.97); }
     }
     .v4-navleft { display:flex; align-items:center; gap:clamp(12px,2.2vw,30px); min-width:0; }
     /* Square avatar, not a circle — the face sits high and left in the frame. */
