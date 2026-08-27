@@ -47,7 +47,9 @@ const Styles = memo(() => (
     :root { --font-sans:'Inter',system-ui,-apple-system,'Segoe UI',sans-serif;
             --font-display:'Inter Tight','Inter',system-ui,-apple-system,sans-serif; }
 
-    html { scroll-behavior:smooth; overflow-x:clip; scroll-padding-top:104px; }
+    /* Beside a rail an anchor lands clear; only the stacked top bar overlaps
+       what it jumps to, so the offset is restored at that breakpoint. */
+    html { scroll-behavior:smooth; overflow-x:clip; scroll-padding-top:28px; }
     html, body { background:#2D634C; }
     body { font-family:var(--font-sans); -webkit-font-smoothing:antialiased;
            overflow-x:clip; }
@@ -63,9 +65,14 @@ const Styles = memo(() => (
       --line:rgba(240,233,217,0.22);
       --line-2:rgba(240,233,217,0.11);
 
-      --gut:clamp(16px,3.4vw,52px);
-      --maxw:clamp(1120px, 88vw, 1760px);
-      --edge:max(var(--gut), calc((100vw - var(--maxw)) / 2));
+      /* The nav is a rail down the left, so the content sits in the space
+         beside it and gutters off its own edges rather than centring in the
+         viewport — centring on 100vw would ignore the rail and push the page
+         off balance. */
+      --rail:clamp(190px,15vw,250px);
+      --rail-gap:clamp(10px,1.4vh,18px);
+      --gut:clamp(16px,2.8vw,46px);
+      --edge:var(--gut);
 
       background:var(--green); color:var(--cream); min-height:100vh;
       position:relative; isolation:isolate;
@@ -83,7 +90,8 @@ const Styles = memo(() => (
        so z-index:-1 sits above the flat green fill but under all content. */
     .v4-grid { position:fixed; inset:0; z-index:-1; pointer-events:none; }
 
-    .v4-page { opacity:0; transition:opacity 0.45s ease; }
+    .v4-page { opacity:0; transition:opacity 0.45s ease;
+               padding-left:calc(var(--rail) + var(--rail-gap) * 2); }
     .v4.ready .v4-page { opacity:1; }
 
     /* ── Buttons: square, no exceptions ── */
@@ -99,13 +107,15 @@ const Styles = memo(() => (
     .v4-btn-ghost:hover { background:var(--cream); color:var(--ink); }
     .v4-btn-sm { height:40px; padding:0 16px; font-size:0.86rem; }
 
-    /* ── Nav: a floating island, square-cornered ── */
+    /* ── Nav: a floating rail down the left, square-cornered ── */
     /* Detached from the edges but with no radius — it reads as one more cell
-       lifted off the grid rather than a bar welded to the top. */
-    .v4-nav { position:fixed; top:clamp(10px,1.6vh,20px); z-index:300;
-              left:var(--edge); right:var(--edge);
-              display:flex; align-items:center; justify-content:space-between;
-              gap:20px; padding:11px 11px 11px 14px; border-radius:0;
+       lifted off the grid rather than a bar welded to the side. */
+    .v4-nav { position:fixed; z-index:300;
+              top:var(--rail-gap); bottom:var(--rail-gap); left:var(--rail-gap);
+              width:var(--rail); overflow-y:auto;
+              display:flex; flex-direction:column; align-items:stretch;
+              justify-content:space-between;
+              gap:20px; padding:16px 14px; border-radius:0;
               background:rgba(28,66,50,0.72);
               backdrop-filter:blur(14px) saturate(150%);
               -webkit-backdrop-filter:blur(14px) saturate(150%);
@@ -121,29 +131,34 @@ const Styles = memo(() => (
     @supports not ((backdrop-filter:blur(1px)) or (-webkit-backdrop-filter:blur(1px))) {
       .v4-nav { background:rgba(25,60,45,0.97); }
     }
-    .v4-navleft { display:flex; align-items:center; gap:clamp(12px,2.2vw,30px); min-width:0; }
+    .v4-navtop { display:flex; flex-direction:column; align-items:stretch; gap:22px;
+                 min-width:0; }
     /* Square avatar, not a circle — the face sits high and left in the frame. */
-    .v4-mark { display:flex; align-items:center; gap:10px; flex-shrink:0; }
-    .v4-mark img { width:32px; height:32px; border-radius:0; object-fit:cover;
+    .v4-mark { display:flex; align-items:center; gap:10px; min-width:0; }
+    .v4-mark img { width:34px; height:34px; border-radius:0; object-fit:cover;
                    object-position:33% 28%; border:1px solid var(--line); flex-shrink:0; }
-    .v4-mark span { font-family:var(--font-display); font-size:1rem; font-weight:600;
-                    letter-spacing:-0.02em; white-space:nowrap; }
-    .v4-navlinks { display:flex; align-items:center; gap:2px; }
-    .v4-navlink { position:relative; padding:9px 14px; border-radius:0;
-                  font-size:0.88rem; font-weight:450; color:var(--cream-2);
+    .v4-mark span { font-family:var(--font-display); font-size:0.98rem; font-weight:600;
+                    letter-spacing:-0.02em; line-height:1.2; }
+    .v4-navlinks { display:flex; flex-direction:column; align-items:stretch; gap:1px; }
+    .v4-navlink { position:relative; padding:9px 12px; border-radius:0;
+                  font-size:0.9rem; font-weight:450; color:var(--cream-2);
                   transition:color 0.16s, background 0.16s; }
     .v4-navlink:hover { color:var(--ink); background:var(--cream); }
+    /* The marker moves to the leading edge — an underline reads as a rule
+       between stacked links rather than as a selection. */
     .v4-navlink.on { color:var(--cream); font-weight:550;
-                     box-shadow:inset 0 -2px 0 var(--cream); }
+                     box-shadow:inset 2px 0 0 var(--cream); }
     .v4-navlink.on:hover { color:var(--ink); }
-    .v4-navright { display:flex; align-items:center; gap:10px; flex-shrink:0; }
-    .v4-avail { display:inline-flex; align-items:center; gap:8px; font-size:0.82rem;
-                color:var(--cream-2); white-space:nowrap; }
+    .v4-navbottom { display:flex; flex-direction:column; align-items:stretch; gap:9px; }
+    .v4-navbottom .v4-btn { width:100%; }
+    .v4-avail { display:inline-flex; align-items:center; gap:8px; font-size:0.8rem;
+                color:var(--cream-2); padding:0 2px 4px; }
     .v4-avail i { width:7px; height:7px; border-radius:0; background:var(--cream);
                   flex-shrink:0; }
 
     /* ── Hero ── */
-    .v4-hero { padding:clamp(132px,20vh,208px) var(--edge) clamp(56px,9vh,104px); }
+    /* No tall top inset: the rail is beside the page, not over it. */
+    .v4-hero { padding:clamp(48px,9vh,110px) var(--edge) clamp(56px,9vh,104px); }
     .v4-hero-inner { display:grid; grid-template-columns:auto 1fr; gap:clamp(20px,3vw,40px);
                      align-items:start; }
     /* The square is measured to the text column's height in JS so it lands
@@ -346,10 +361,23 @@ const Styles = memo(() => (
 
     /* ── Responsive ── */
     @media (max-width:1080px) {
-      .v4-avail { display:none; }
+      .v4-grid-work { grid-template-columns:repeat(auto-fill, minmax(min(240px,100%), 1fr)); }
     }
+    /* Under 920px a rail would eat the page, so the nav lies back down as a
+       top island and the content reclaims the full width. */
     @media (max-width:920px) {
+      html { scroll-padding-top:104px; }
+      .v4-avail { display:none; }
+      .v4-nav { flex-direction:row; align-items:center; justify-content:space-between;
+                top:clamp(8px,1.4vh,16px); bottom:auto;
+                left:var(--gut); right:var(--gut); width:auto;
+                overflow:visible; padding:10px 10px 10px 14px; gap:14px; }
+      .v4-navtop { flex-direction:row; align-items:center; gap:16px; }
       .v4-navlinks { display:none; }
+      .v4-navbottom { flex-direction:row; align-items:center; gap:8px; }
+      .v4-navbottom .v4-btn { width:auto; }
+      .v4-page { padding-left:0; }
+      .v4-hero { padding-top:clamp(112px,17vh,168px); }
       .v4-hero-inner { grid-template-columns:1fr; }
       .v4-proc-row { grid-template-columns:48px 1fr; }
       .v4-proc-d { grid-column:2; }
@@ -676,9 +704,9 @@ export default function AppV3() {
         </div>
 
         <header className={`v4-nav${solid ? " solid" : ""}`}>
-          <div className="v4-navleft">
+          <div className="v4-navtop">
             <a href="#top" className="v4-mark">
-              <img src="/about-photo.jpg" alt="" width="32" height="32" />
+              <img src="/about-photo.jpg" alt="" width="34" height="34" />
               <span>Krishna Zolpatil</span>
             </a>
             <nav className="v4-navlinks" aria-label="Sections">
@@ -688,7 +716,7 @@ export default function AppV3() {
               ))}
             </nav>
           </div>
-          <div className="v4-navright">
+          <div className="v4-navbottom">
             <span className="v4-avail"><i />Available for work</span>
             <a className="v4-btn v4-btn-ghost v4-btn-sm" href="/resume.pdf"
               download="Krishna-Zolpatil-Resume.pdf">
