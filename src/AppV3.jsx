@@ -1,4 +1,5 @@
-import { useState, useEffect, useRef, useCallback, memo, Component } from "react";
+import { useState, useEffect, useLayoutEffect, useRef, useCallback, useMemo,
+         memo, Component } from "react";
 import { X, Mail, ArrowUpRight, ArrowRight, Download,
          Layers, Hammer, Workflow,
          Linkedin, Github, Twitter, Instagram } from "lucide-react";
@@ -146,12 +147,15 @@ const Styles = memo(() => (
        support rather than something to decode — and nothing has to unfold on
        hover to tell you where a link goes. */
     .v4-navlinks { display:flex; flex-direction:column; align-items:stretch; gap:2px; }
-    .v4-navlink { display:flex; flex-direction:column; align-items:center; gap:7px;
+    .v4-navlink { display:flex; flex-direction:column; align-items:center; gap:6px;
                   padding:12px 5px; border-radius:0; text-align:center;
-                  font-size:0.66rem; font-weight:550; letter-spacing:0.03em;
+                  font-size:0.68rem; font-weight:550; letter-spacing:0.03em;
                   line-height:1.25; color:var(--cream-2);
                   transition:color 0.16s, background 0.16s; }
-    .v4-navlink svg { width:21px; height:21px; flex:0 0 auto; }
+    /* Small and drawn thin. At 21px with Lucide's default 2px stroke the glyph
+       outweighed its own word, which reads as an icon nav that happens to have
+       captions; the word is the label and the icon is the aid. */
+    .v4-navlink svg { width:17px; height:17px; flex:0 0 auto; stroke-width:1.6; }
     .v4-navlink:hover { color:var(--ink); background:var(--cream); }
     .v4-navlink.on { color:var(--cream); font-weight:650;
                      box-shadow:inset 2px 0 0 var(--cream); }
@@ -167,7 +171,7 @@ const Styles = memo(() => (
                   font-size:0.62rem; font-weight:600; letter-spacing:0.03em;
                   line-height:1.25; border:1px solid var(--line);
                   transition:background 0.18s, color 0.18s, border-color 0.18s; }
-    .v4-railbtn svg { width:17px; height:17px; flex:0 0 auto; }
+    .v4-railbtn svg { width:15px; height:15px; flex:0 0 auto; stroke-width:1.6; }
     .v4-railbtn:hover { background:var(--cream); color:var(--ink);
                         border-color:var(--cream); }
 
@@ -231,10 +235,18 @@ const Styles = memo(() => (
                       letter-spacing:-0.06em; line-height:1; color:var(--line); }
     .v4-shot-none span { font-size:0.84rem; font-weight:550; letter-spacing:0.04em;
                          text-transform:uppercase; color:var(--cream-3); text-align:center; }
-    .v4-card-foot { display:flex; align-items:center; justify-content:space-between;
-                    gap:12px; padding:14px 16px; }
+    /* Title and number on one line, the sentence under it. A grid of names —
+       "Homebase", "Design System" — tells a stranger nothing, and the person
+       reading this is scanning six cells before deciding to open one. */
+    .v4-card-foot { display:grid; grid-template-columns:minmax(0,1fr) auto;
+                    align-items:baseline; gap:4px 12px; padding:14px 16px; }
     .v4-card-t { font-family:var(--font-display); font-size:1.05rem; font-weight:600;
                  letter-spacing:-0.02em; line-height:1.25; }
+    /* Two lines' worth of room whether the sentence needs them or not, so a
+       row of cards keeps one baseline and one bottom margin instead of
+       shuffling by a line. */
+    .v4-card-s { grid-column:1/-1; font-size:0.85rem; line-height:1.45;
+                 min-height:2.9em; color:var(--cream-2); }
     .v4-card-n { font-size:0.78rem; font-weight:600; letter-spacing:0.1em;
                  color:var(--cream-3); flex-shrink:0; }
     .v4-card-arrow { width:17px; height:17px; flex-shrink:0; color:var(--cream-2);
@@ -266,7 +278,7 @@ const Styles = memo(() => (
        floated in the top right of a two-column grid. */
     .v4-contact { display:grid; gap:clamp(26px,4.6vh,54px); }
     .v4-contact-t { font-family:var(--font-display); font-weight:600;
-                    font-size:clamp(1.9rem,7vw,6rem); line-height:0.98;
+                    font-size:clamp(1.9rem,7vw,6.8rem); line-height:0.97;
                     letter-spacing:-0.042em; text-wrap:balance; max-width:22ch; }
     .v4-contact-row { display:grid; grid-template-columns:minmax(0,1fr) auto;
                       gap:clamp(24px,4vw,64px); align-items:end; }
@@ -306,15 +318,27 @@ const Styles = memo(() => (
     .v4-scrim { position:fixed; inset:0; z-index:400; background:rgba(9,22,17,0.93);
                 display:flex; align-items:center; justify-content:center;
                 padding:clamp(12px,4vh,52px) clamp(12px,3vw,32px); overflow:hidden;
-                animation:v4fade 0.22s ease; }
+                animation:v4fade 0.26s ease; transition:opacity 0.24s ease; }
+    /* On the way out the ground clears before the sheet has finished
+       shrinking, so the card is uncovered as it arrives back. */
+    .v4-scrim.out { opacity:0; }
     @keyframes v4fade { from { opacity:0; } to { opacity:1; } }
     /* The sheet scrolls, not the scrim. While the scrim scrolled, its padding
        sat above the sticky bar and case-study art showed through that gap. */
     .v4-sheet { position:relative; width:min(1080px,100%); max-height:100%;
                 overflow-y:auto; overscroll-behavior:contain; border-radius:0;
                 background:var(--green); border:1px solid var(--cream);
-                animation:v4rise 0.26s cubic-bezier(0.23,1,0.32,1); }
+                will-change:transform; }
+    /* Only when there is no card to grow from — a deep link, or reduced
+       motion — does the sheet arrive on its own. */
+    .v4-sheet.plain { animation:v4rise 0.26s cubic-bezier(0.23,1,0.32,1); }
     @keyframes v4rise { from { opacity:0; transform:translateY(14px); } to { opacity:1; transform:none; } }
+    /* The frame carries the movement; its contents cross-fade across it.
+       Scaling a rectangle to the card's footprint stretches every line of type
+       inside it, and hiding that for a fifth of a second costs less than
+       counter-scaling each child. */
+    .v4-sheet-bar, .v4-sheet-body { transition:opacity 0.22s ease; }
+    .v4-sheet.hush .v4-sheet-bar, .v4-sheet.hush .v4-sheet-body { opacity:0; }
     .v4-sheet-bar { position:sticky; top:0; z-index:2; display:flex; align-items:center;
                     justify-content:space-between; gap:16px; padding:14px 16px 14px 22px;
                     background:var(--ink); border-bottom:1px solid var(--line); }
@@ -419,6 +443,7 @@ const Styles = memo(() => (
     @media (prefers-reduced-motion:reduce) {
       .v4-card:hover { transform:none; }
       .v4-scrim, .v4-sheet { animation:none; }
+      .v4-sheet-bar, .v4-sheet-body { transition:none; }
       html { scroll-behavior:auto; }
     }
   `}</style>
@@ -440,7 +465,14 @@ class ErrorBoundary extends Component {
 
 /* A project cell. A missing screenshot falls back to the numeral rather than
    leaving an empty frame — see the v3 note on the loading skeleton. */
-const Card = memo(function Card({ id, n, tag, title, wide, foot, onOpen }) {
+/* Where a thing is standing, as a plain object — a DOMRect read later would
+   be a rect of whatever the element has become. */
+const rectOf = el => {
+  const r = el.getBoundingClientRect();
+  return { top: r.top, left: r.left, width: r.width, height: r.height };
+};
+
+const Card = memo(function Card({ id, n, tag, title, short, wide, foot, onOpen }) {
   const [missing, setMissing] = useState(false);
   /* A cached image can finish decoding before React attaches onLoad, so settle
      it on attach rather than waiting for an event that has already fired. */
@@ -448,7 +480,8 @@ const Card = memo(function Card({ id, n, tag, title, wide, foot, onOpen }) {
     if (el?.complete && !el.naturalWidth) setMissing(true);
   }, []);
   return (
-    <button type="button" className="v4-card" onClick={onOpen}>
+    <button type="button" className="v4-card"
+      onClick={e => onOpen(rectOf(e.currentTarget))}>
       <div className={`v4-shot${wide ? " v4-shot-wide" : ""}`}>
         {missing ? (
           <div className="v4-shot-none"><b>{n}</b><span>{tag}</span></div>
@@ -460,6 +493,7 @@ const Card = memo(function Card({ id, n, tag, title, wide, foot, onOpen }) {
       <div className="v4-card-foot">
         <span className="v4-card-t">{title}</span>
         {foot ?? <span className="v4-card-n">{n}</span>}
+        {short && <span className="v4-card-s">{short}</span>}
       </div>
     </button>
   );
@@ -526,14 +560,99 @@ const Outcome = memo(function Outcome({ item }) {
   return <li>{text}</li>;
 });
 
-const Sheet = memo(function Sheet({ project, onClose }) {
+/* ── The sheet is the card, grown ──────────────────────────────────────────
+   A panel that fades in over the page reads as a second object arriving from
+   somewhere else. Handed the rect of the card that was clicked, the sheet
+   instead starts life scaled and translated onto that card and releases to
+   its own size, so the click and what follows are one movement.
+
+   FLIP, not width/height: the sheet holds a whole case study, and animating
+   its box would relayout that on every frame. Transform is composited and
+   costs nothing per frame — the price is a stretched interior, which the
+   contents' cross-fade covers.
+
+   Closing runs the same move backwards and only then tells the parent to
+   unmount, so the sheet is back on its card before it disappears. */
+const GROW_MS = 420;
+const SHRINK_MS = 260;
+
+const stillness = () =>
+  typeof window !== "undefined" &&
+  window.matchMedia("(prefers-reduced-motion:reduce)").matches;
+
+function useGrowFrom(origin, onClose) {
   const ref = useRef(null);
+  const box = useRef(null);
+  const spent = useRef(false);
+  const plain = useMemo(() => !origin || stillness(), [origin]);
+  /* Nothing to grow from means nothing to hide: the contents are up from the
+     first frame, and only the growing sheet starts them hushed. */
+  const [shown, setShown] = useState(plain);
+  const [closing, setClosing] = useState(false);
+
+  /* The sheet's own rect, measured untransformed. Taken once: the page behind
+     is locked while the sheet is open, so the card stays where it was and the
+     same pair of rects serves both directions. */
+  const onto = useCallback(() => {
+    const r = box.current;
+    if (!r || !origin || !r.width || !r.height) return null;
+    return `translate(${origin.left - r.left}px, ${origin.top - r.top}px)` +
+           ` scale(${origin.width / r.width}, ${origin.height / r.height})`;
+  }, [origin]);
+
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+    /* Clear first, then measure: StrictMode runs this twice in development,
+       and the second pass would otherwise measure the first pass's transform. */
+    el.style.transition = "none";
+    el.style.transform = "none";
+    box.current = el.getBoundingClientRect();
+    if (plain) return;
+    const from = onto();
+    if (from) {
+      el.style.transformOrigin = "top left";
+      el.style.transform = from;
+      el.getBoundingClientRect();        /* flush the start frame */
+    }
+    const id = requestAnimationFrame(() => {
+      if (from) el.style.transition = `transform ${GROW_MS}ms cubic-bezier(0.22,1,0.36,1)`;
+      el.style.transform = "none";
+      setShown(true);
+    });
+    return () => cancelAnimationFrame(id);
+  }, [plain, onto]);
+
+  const close = useCallback(() => {
+    if (spent.current) return;
+    spent.current = true;
+    const el = ref.current;
+    const back = plain ? null : onto();
+    if (!el || !back) { onClose(); return; }
+    setShown(false);
+    setClosing(true);
+    el.style.transition = `transform ${SHRINK_MS}ms cubic-bezier(0.4,0,0.2,1)`;
+    el.style.transform = back;
+    /* transitionend can be missed — a background tab, a transform that
+       resolves to no change — so a timer backs it up. */
+    let called = false;
+    const finish = () => { if (called) return; called = true; onClose(); };
+    el.addEventListener("transitionend", finish, { once: true });
+    setTimeout(finish, SHRINK_MS + 140);
+  }, [plain, onto, onClose]);
+
+  return { ref, close, closing, cls: `v4-sheet${plain ? " plain" : ""}${shown ? "" : " hush"}` };
+}
+
+const Sheet = memo(function Sheet({ project, origin, onClose }) {
+  const { ref, close, closing, cls } = useGrowFrom(origin, onClose);
 
   useEffect(() => {
-    const onKey = e => { if (e.key === "Escape") onClose(); };
+    const onKey = e => { if (e.key === "Escape") close(); };
     document.addEventListener("keydown", onKey);
     /* Lock the page behind the sheet, and restore exactly what was there —
-       the page may already have had an overflow set. */
+       the page may already have had an overflow set. Locked, the card that
+       opened this keeps its place, which is what the sheet grows back to. */
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
     ref.current?.focus();
@@ -541,20 +660,20 @@ const Sheet = memo(function Sheet({ project, onClose }) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [onClose]);
+  }, [close, ref]);
 
   const shotsOf = block => (block.shots || []).filter(Boolean);
   const outcomeShots = (project.outcomes || [])
     .flatMap(o => (typeof o === "string" ? [] : o.shots || []));
 
   return (
-    <div className="v4-scrim" onClick={onClose} role="presentation">
-      <div className="v4-sheet" role="dialog" aria-modal="true"
+    <div className={`v4-scrim${closing ? " out" : ""}`} onClick={close} role="presentation">
+      <div className={cls} role="dialog" aria-modal="true"
         aria-label={project.title} tabIndex={-1} ref={ref}
         onClick={e => e.stopPropagation()}>
         <div className="v4-sheet-bar">
           <h2>{project.title}</h2>
-          <button className="v4-close" onClick={onClose} aria-label="Close case study">
+          <button className="v4-close" onClick={close} aria-label="Close case study">
             <X />
           </button>
         </div>
@@ -586,6 +705,25 @@ const Sheet = memo(function Sheet({ project, onClose }) {
             </div>
           )}
 
+          {/* What came of it, before how it was made. Whoever opens this is
+              deciding in the first screenful whether to keep reading, and the
+              line above already says what the thing is. */}
+          {project.outcomes?.length > 0 && (
+            <div className="v4-block">
+              <h3>Outcomes</h3>
+              <ul className="v4-list">
+                {project.outcomes.map((o, i) => <Outcome key={i} item={o} />)}
+              </ul>
+              {outcomeShots.length > 0 && (
+                <div className="v4-shots">
+                  {outcomeShots.map(src => (
+                    <img key={src} src={src} alt="" loading="lazy" />
+                  ))}
+                </div>
+              )}
+            </div>
+          )}
+
           {project.overview && (
             <div className="v4-block">
               <h3>Overview</h3>
@@ -608,21 +746,6 @@ const Sheet = memo(function Sheet({ project, onClose }) {
             </div>
           )}
 
-          {project.outcomes?.length > 0 && (
-            <div className="v4-block">
-              <h3>Outcomes</h3>
-              <ul className="v4-list">
-                {project.outcomes.map((o, i) => <Outcome key={i} item={o} />)}
-              </ul>
-              {outcomeShots.length > 0 && (
-                <div className="v4-shots">
-                  {outcomeShots.map(src => (
-                    <img key={src} src={src} alt="" loading="lazy" />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
 
           {project.caseStudy?.map(block => (
             <div className="v4-block" key={block.label}>
@@ -643,10 +766,10 @@ const Sheet = memo(function Sheet({ project, onClose }) {
   );
 });
 
-const ToolSheet = memo(function ToolSheet({ tool, onClose }) {
-  const ref = useRef(null);
+const ToolSheet = memo(function ToolSheet({ tool, origin, onClose }) {
+  const { ref, close, closing, cls } = useGrowFrom(origin, onClose);
   useEffect(() => {
-    const onKey = e => { if (e.key === "Escape") onClose(); };
+    const onKey = e => { if (e.key === "Escape") close(); };
     document.addEventListener("keydown", onKey);
     const prev = document.body.style.overflow;
     document.body.style.overflow = "hidden";
@@ -655,15 +778,15 @@ const ToolSheet = memo(function ToolSheet({ tool, onClose }) {
       document.removeEventListener("keydown", onKey);
       document.body.style.overflow = prev;
     };
-  }, [onClose]);
+  }, [close, ref]);
 
   return (
-    <div className="v4-scrim" onClick={onClose} role="presentation">
-      <div className="v4-sheet" role="dialog" aria-modal="true" aria-label={tool.name}
+    <div className={`v4-scrim${closing ? " out" : ""}`} onClick={close} role="presentation">
+      <div className={cls} role="dialog" aria-modal="true" aria-label={tool.name}
         tabIndex={-1} ref={ref} onClick={e => e.stopPropagation()}>
         <div className="v4-sheet-bar">
           <h2>{tool.name}</h2>
-          <button className="v4-close" onClick={onClose} aria-label="Close">
+          <button className="v4-close" onClick={close} aria-label="Close">
             <X />
           </button>
         </div>
@@ -687,6 +810,8 @@ export default function AppV3() {
   const [activeSec, setActiveSec] = useState("work");
   const [open, setOpen] = useState(null);
   const [tool, setTool] = useState(null);
+  /* Where the sheet came from, so it knows where to go back to. */
+  const [origin, setOrigin] = useState(null);
   const heroTextRef = useRef(null);
   const photoSize = useHeroPhotoSize(heroTextRef);
 
@@ -712,7 +837,8 @@ export default function AppV3() {
     };
   }, []);
 
-  const openProject = useCallback(id => setOpen(id), []);
+  const openProject = useCallback((id, from) => { setOrigin(from); setOpen(id); }, []);
+  const openTool = useCallback((b, from) => { setOrigin(from); setTool(b); }, []);
   const closeProject = useCallback(() => setOpen(null), []);
   const closeTool = useCallback(() => setTool(null), []);
 
@@ -764,8 +890,9 @@ export default function AppV3() {
                   <span className="v4-hi">Hi, I&rsquo;m Krishna</span>
                   <h1 className="v4-title">I design AI products people can trust.</h1>
                   <p className="v4-lede">
-                    Senior Product Designer at Naya Studio. Four years, 200+ shipped
-                    features. I design in Figma and build the prototypes in code.
+                    Senior Product Designer at Naya Studio &mdash; a digital platform for
+                    physical products. Four years, 200+ shipped features. I design in
+                    Figma and build the prototypes in code.
                   </p>
                   <div className="v4-hero-actions">
                     <a href="#work" className="v4-btn v4-btn-solid">
@@ -784,7 +911,7 @@ export default function AppV3() {
               <div className="v4-grid-work">
                 {WORK.map(p => (
                   <Card key={p.id} id={p.id} n={p.n} tag={p.tag} title={p.title}
-                    onOpen={() => openProject(p.id)} />
+                    short={p.short} onOpen={r => openProject(p.id, r)} />
                 ))}
               </div>
             </Section>
@@ -793,12 +920,12 @@ export default function AppV3() {
               <div className="v4-grid-work">
                 {SIDE.map(p => (
                   <Card key={p.id} id={p.id} n={p.n} tag={p.tag} title={p.title} wide
-                    onOpen={() => openProject(p.id)} />
+                    short={p.short} onOpen={r => openProject(p.id, r)} />
                 ))}
                 {BUILT.map(b => (
                   <Card key={b.slug} id={b.slug} n="—" tag={b.kind} title={b.name} wide
-                    foot={<ArrowUpRight className="v4-card-arrow" />}
-                    onOpen={() => setTool(b)} />
+                    short={b.desc} foot={<ArrowUpRight className="v4-card-arrow" />}
+                    onOpen={r => openTool(b, r)} />
                 ))}
               </div>
             </Section>
@@ -860,8 +987,8 @@ export default function AppV3() {
           </footer>
         </div>
 
-        {current && <Sheet project={current} onClose={closeProject} />}
-        {tool && <ToolSheet tool={tool} onClose={closeTool} />}
+        {current && <Sheet project={current} origin={origin} onClose={closeProject} />}
+        {tool && <ToolSheet tool={tool} origin={origin} onClose={closeTool} />}
       </div>
     </ErrorBoundary>
   );

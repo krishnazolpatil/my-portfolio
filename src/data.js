@@ -2,20 +2,7 @@
 
 export const PROJECTS = [
   {
-    id: "workflow-builder", n: "01", tag: "AI · Flagship", title: "AI Workflow Builder",
-    short: "Composable AI workflows teams can trust. Zero to one.",
-    role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Founders · Engineering · Me · Design team for feedback",
-    overview: "Naya helps product teams take ideas to production. The Workflow Builder brings AI into that journey. Teams set up intelligent, repeatable workflows instead of managing every step by hand. I owned the design end to end, from early framing with the founders to prototypes and handoff.",
-    outcomes: ["Shipped as a flagship AI capability of the platform", "Template-first design made workflows reusable across teams", "Click-through code prototypes replaced static mocks in reviews"],
-    caseStudy: [
-      { label: "Problem", body: "Teams ran their product process manually. Repetitive setup, scattered steps, and no way to reuse what worked. AI could automate much of it, but only if people could see and trust what it was doing." },
-      { label: "Constraints", body: "Startup pace, no long research runway, and AI capabilities that kept evolving while we designed. The design had to flex as the models improved, without re-teaching users." },
-      { label: "Solution", body: "A builder organised around templates and progressive disclosure: start from a proven workflow, preview what the AI will do before it does it, and step in at any point. Complexity is available when you want it and hidden when you don't." },
-      { label: "Interaction highlights", body: "Prototypes were built in working code with Claude, so the team reviewed real behaviour — transitions, empty states, and AI 'thinking' states — instead of imagining them from static frames." },
-    ],
-  },
-  {
-    id: "estimation-ai", n: "02", tag: "AI Platform", title: "Estimation AI",
+    id: "estimation-ai", n: "01", tag: "AI Platform", title: "Estimation AI",
     short: "Upload your product images, get a costed estimate in minutes.",
     role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Founders · Engineering · Me · Design team for feedback",
     stack: ["Figma", "Google AI Studio"],
@@ -55,6 +42,19 @@ export const PROJECTS = [
         ],
       },
       { label: "Interaction highlights", body: "The export wait was solved with engineering, not with a spinner. We looked at three options: show a saving indicator on click, which is still a wait in nicer clothes; leave it alone, which fixes nothing; or start building the export in the background the moment the estimate is generated. We went with the third. By the time anyone presses Export the file already exists, so it opens straight away." },
+    ],
+  },
+  {
+    id: "workflow-builder", n: "02", tag: "AI · Flagship", title: "AI Workflow Builder",
+    short: "Composable AI workflows teams can trust. Zero to one.",
+    role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Founders · Engineering · Me · Design team for feedback",
+    overview: "Naya helps product teams take ideas to production. The Workflow Builder brings AI into that journey. Teams set up intelligent, repeatable workflows instead of managing every step by hand. I owned the design end to end, from early framing with the founders to prototypes and handoff.",
+    outcomes: ["Shipped as a flagship AI capability of the platform", "Template-first design made workflows reusable across teams", "Click-through code prototypes replaced static mocks in reviews"],
+    caseStudy: [
+      { label: "Problem", body: "Teams ran their product process manually. Repetitive setup, scattered steps, and no way to reuse what worked. AI could automate much of it, but only if people could see and trust what it was doing." },
+      { label: "Constraints", body: "Startup pace, no long research runway, and AI capabilities that kept evolving while we designed. The design had to flex as the models improved, without re-teaching users." },
+      { label: "Solution", body: "A builder organised around templates and progressive disclosure: start from a proven workflow, preview what the AI will do before it does it, and step in at any point. Complexity is available when you want it and hidden when you don't." },
+      { label: "Interaction highlights", body: "Prototypes were built in working code with Claude, so the team reviewed real behaviour — transitions, empty states, and AI 'thinking' states — instead of imagining them from static frames." },
     ],
   },
   {
