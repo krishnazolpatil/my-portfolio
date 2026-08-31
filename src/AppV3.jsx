@@ -285,7 +285,7 @@ const Styles = memo(() => (
     .v4-study + .v4-study { margin-top:clamp(38px,6vh,76px); }
 
     /* Lighter than a section head — the grid under it is still part of
-       "Selected work", not a new section. */
+       "My work at Naya Studio", not a new section. */
     .v4-subhead { display:flex; align-items:baseline; justify-content:space-between;
                   gap:16px; flex-wrap:wrap; margin-bottom:clamp(14px,2vh,22px); }
     .v4-subhead h3 { font-family:var(--font-display); font-weight:600;
@@ -1075,7 +1075,7 @@ export default function AppV3() {
               </div>
             </section>
 
-            <Section id="work" title="Selected work" note="Two case studies, four years">
+            <Section id="work" title="My work at Naya Studio" note="Two case studies, four years">
               {/* Each case study keeps its own pieces under it. Laid out flat,
                   Homebase and Group Sharing read as rival projects; they are
                   areas of the platform above them. */}
