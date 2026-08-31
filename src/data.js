@@ -2,10 +2,183 @@
 
 export const PROJECTS = [
   {
-    id: "estimation-ai", n: "01", tag: "AI Platform", title: "Estimation AI",
+  id: "naya-workflow",
+  n: "01",
+  tag: "Workflow Platform",
+  title: "Naya Workflow Platform",
+  short: "Shaping a workflow platform for physical product development over four years.",
+  role: "Senior Product Designer",
+  timeline: "Naya Studio · 2022–2026",
+  team: "Founders · Engineering · Product · Me · Design team for feedback",
+  stack: ["Figma", "Claude Code", "Vercel", "React"],
+
+  /* The lead of the work section rather than one cell in it. Every other
+     project below came out of this same four-year job, so the grid was
+     telling a stranger they were unrelated. */
+  feature: true,
+  lede: "Not two hundred separate features — one product, kept coherent while it grew. I shaped it from early foundations into a connected ecosystem: projects and references, workflow structure, collaboration, mobile, and the design system holding it together.",
+  figures: [
+    { v: "200+", l: "features shipped" },
+    { v: "5", l: "core platform areas" },
+    { v: "1", l: "coherent product" },
+  ],
+
+  overview: "Naya is a visual workspace for physical product teams. Over four years, I helped shape the workflow platform from early foundations into a connected ecosystem managing projects, references, 3D models, feedback, collaboration, and estimation. The work wasn't about designing 200 separate features. It was about helping the product evolve while maintaining a coherent experience as the platform grew increasingly complex.",
+
+  outcomes: [
+    "Shipped 200+ UI and UX features across the platform",
+    "Built and evolved a design system to maintain consistency as features compounded",
+    "Designed core platform areas: projects, workflows, collaboration, and mobile",
+    "Shifted from feature-driven design to systems thinking and product architecture",
+    "Rebuilt Homebase, the screen every user opens first, so cards say what they are before you click them",
+    "Established patterns for progressive disclosure that scale to new features without overwhelming users",
+  ],
+
+  caseStudy: [
+    {
+      label: "Overview",
+      body: "Senior Product Designer at Naya (2022–2026). I shaped a visual workflow platform for physical product teams from early foundations into a connected ecosystem. Over four years, I shipped 200+ UI and UX features while maintaining coherence and consistency. The work wasn't about volume — it was about helping a complex product evolve into something users understood and trusted.",
+      shots: [
+        "/naya/workflow-product-overview.png",
+      ],
+    },
+
+    {
+      label: "The Problem: Complexity Without Coherence",
+      body: "Physical product development is complex. Teams manage images, documents, product information, 3D models, feedback, and decisions that evolve over months. As Naya added capabilities to serve this work, every new feature introduced a question: Where does this fit? Does it feel like Naya? Will users understand where to find it? How can we add capability without making the product harder to understand? The core challenge was preventing features from becoming a disconnected collection instead of a coherent system.",
+      shots: [],
+    },
+
+    {
+      label: "Three Core Friction Points",
+      body: "Research and early usage revealed three problems: (1) Information was scattered and disorganized—teams had to think about storage instead of meaning. Projects were containers, not contexts. (2) Teams couldn't express their process—features were there, but no structure for how teams actually work through product development. (3) Collaboration was friction-heavy—sharing was one project, one person at a time, not matching how teams think about team access. Each problem required architectural thinking, not just feature design.",
+      shots: [],
+    },
+
+    {
+      label: "Design Approach: Systems, Constraints & Progressive Disclosure",
+      body: "I approached these problems through three principles: First, systems thinking — every new feature had to connect to what came before. Second, constraint-based design — we ruled out the 3-month workspace solution and designed Group Sharing instead, a smaller MVP. Third, progressive disclosure — complexity should surface only when needed. A simple user shouldn't see advanced features; they appear on demand. These principles guided every major design decision.",
+      shots: [],
+    },
+
+    {
+      label: "Solution 1: From Information Storage to Product Context",
+      body: "Before: Projects were file containers. References were images. Metadata was bureaucratic. Teams had to think about storage categories, not meaning. After: Projects became spaces where information is connected and purposeful. A project shows its cover, item count, status, and collaborators at a glance. References connect to the products they inform. Metadata tells a story about where work stands. The redesign reframed the model from 'where do I put this?' to 'what does this tell me about my product?'",
+      shots: [
+        "/naya/workflow-project-context.png",
+        "/naya/workflow-project-evolution.png",
+      ],
+    },
+
+    {
+      label: "Solution 2: Giving Teams Structure Without Forcing One Path",
+      body: "Before: Projects were flat containers. No way to express process or phases. After: Phases, Blocks, and Journey structures let teams organize work matching their actual process. Early exploration → concept selection → design refinement → manufacturing planning → feedback loops. The design challenge: make these structures invisible to users who don't need them. Simple organization stays simple. Advanced structure surfaces only when you want it. Progressive disclosure proved essential as the platform grew.",
+      shots: [
+        "/naya/workflow-phases-structure.png",
+        "/naya/workflow-blocks-hierarchy.png",
+      ],
+    },
+
+    {
+      label: "Solution 3: Group Sharing — MVP Thinking Under Constraint",
+      body: "Before: Sharing was one project, one person at a time. Fifty shares for ten projects across five people. After: Share a group, and everyone sees what's inside. Access is inherited; direct shares stack on top. Remove someone from the group, and you remove the team's access—not just one favor. The key constraint: we couldn't build a full workspace (3 months, engineering cost). So we designed something smaller that matched how teams actually think. It's narrower than Slack's workspace model but clearer and faster to execute.",
+      shots: [
+        "/naya/workflow-group-sharing.png",
+        "/naya/workflow-collaboration-inheritance.png",
+        "/naya/workflow-group-sharing-flow.png",
+      ],
+    },
+
+    {
+      label: "Solution 4: Extending Beyond Desktop",
+      body: "Before: Product work only happened at desks. Mobile had no first-class support. After: Teams can open projects on mobile, select 3D models, rotate them, review product information, and provide feedback. The design wasn't 'shrink the desktop app.' It was 'what matters when teams are away from computers?' The answer: quick access to projects and 3D viewing. On mobile, that flow is all that matters. Everything else is secondary.",
+      shots: [
+        "/naya/workflow-mobile-flow.png",
+        "/naya/workflow-3d-viewer-mobile.png",
+      ],
+    },
+
+    {
+      label: "Solution 5: Design System for Scale",
+      body: "Before: Every new feature risked inconsistency. Modals varied. Context menus followed different patterns. Sharing appeared in multiple ways. After: A design system emerged from what worked. Components, patterns, interaction models, and rules. The system wasn't invented—it was extracted from successful features and iterated. As new capabilities arrived (3D, AI, mobile), the system evolved to accommodate them while the foundation stayed consistent. This allowed features to ship faster because the system provided the structure.",
+      shots: [
+        "/naya/workflow-design-system-components.png",
+        "/naya/workflow-design-system-patterns.png",
+      ],
+    },
+
+    {
+      label: "200+ Features, One Coherent Product",
+      body: "The work added up to over 200 shipped UI and UX features. But users don't experience Naya as 200 features. They experience it as a product where things make sense, where actions are consistent, where complexity surfaces only when needed. This coherence didn't happen by accident. It came from constantly asking: 'Does this feel like Naya? Does the user understand where this is? Can they predict what happens next?' The number of features matters less than whether they feel like they belong.",
+      shots: [
+        "/naya/workflow-feature-gallery-1.png",
+        "/naya/workflow-feature-gallery-2.png",
+        "/naya/workflow-feature-gallery-3.png",
+      ],
+    },
+
+    {
+      label: "Four Years of Evolution",
+      body: "2022: Building Foundations. Projects, basic collaboration, the core structure. 2023: Expanding Workflows. Phases, blocks, journey structures. Users needed ways to express process. 2024: Increasing Complexity. Mobile access, 3D viewers, metadata systems, deeper collaboration. The platform served different contexts and devices. Consistency became critical. 2025–2026: Connecting the Ecosystem. Workflows fed into Estimation. Estimation fed back into projects. The platform became a system. My role shifted from designing features to thinking about the whole.",
+      shots: [
+        "/naya/workflow-evolution-2022.png",
+        "/naya/workflow-evolution-2023.png",
+        "/naya/workflow-evolution-2024.png",
+        "/naya/workflow-evolution-2025.png",
+      ],
+    },
+
+    {
+      label: "How My Process Evolved",
+      body: "Early: Research → Roadmap → Sketches → Design → Prototype → Handoff. As Naya needed to move faster, I adapted. Static Figma files couldn't communicate complex interactions — developers would interpret them differently. So I started building working prototypes in code, deployed to Vercel. Engineering could click through the real experience. I used Claude Code to build quickly, not as finished products but as communication tools. Better communication meant fewer misunderstandings and faster shipping.",
+      shots: [
+        "/naya/workflow-process-evolution.png",
+      ],
+    },
+
+    {
+      label: "Connecting Workflows & Estimation",
+      body: "Estimation AI is a separate product, but it's part of the Naya ecosystem. Teams work in Naya, gather product information, then upload to Estimation AI. The AI analyzes images and asks clarifying questions. It builds a costing plan. The estimate lands back in Naya as a PDF in a project. Every data source is a link block. Estimation isn't a separate tool — it's part of the workflow. Designing this connection showed how to integrate new capabilities into an existing system without breaking coherence.",
+      shots: [
+        "/naya/workflow-estimation-connection.png",
+      ],
+    },
+
+    {
+      label: "Key Learnings",
+      body: "Depth teaches more than breadth. Four years on one product teaches you what short-term projects never can: how products actually change over time, how today's decisions affect tomorrow's work, how constraints drive better solutions. Systems thinking scales. Individual features don't compound into product—they fall apart without a system. The system is the work. Constraints drive clarity. We couldn't build workspace, so we built Group Sharing instead. Better. Consistency isn't limitation—it's freedom. When the system is strong, new features don't require reinventing interaction design. Communication matters more than tools. Prototypes in code communicated better than static frames because the format matched the outcome.",
+      shots: [],
+    },
+
+    {
+      label: "Depth as Strength",
+      body: "I didn't design 200 separate features. I spent four years helping shape how those features evolved into a connected product experience. The hardest design work wasn't individual features — it was the system that holds them together. That's what matters at the senior level: thinking about the whole, maintaining coherence across complexity, understanding how products actually grow. Depth isn't limitation. It's the only way to learn this.",
+      shots: [
+        "/naya/workflow-final-reflection.png",
+      ],
+    },
+  ],
+}
+,
+
+
+  {
+    id: "estimation-ai", n: "02", tag: "AI Platform", title: "Estimation AI",
     short: "Upload your product images, get a costed estimate in minutes.",
-    role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Founders · Engineering · Me · Design team for feedback",
+    role: "Senior Product Designer", timeline: "Naya Studio · 2022–2026", team: "Founders · Engineering · Me · Design team for feedback",
     stack: ["Figma", "Google AI Studio"],
+
+    /* The second case study, not an example. It grew alongside the workflow
+       platform across the same four years and ends up inside it — an
+       estimate lands back in a Naya project as a PDF. */
+    feature: true,
+    lede: "It began inside the platform: working with the engineers on how a project's own memory could estimate what the product in it was worth. By 2025 it had become a standalone app — upload a photo, get a costed estimate — and I took on its interface, moving a generic AI build onto Naya's brand one layer at a time.",
+    figures: [
+      { v: "2", l: "lives: in the platform, then standalone" },
+      { v: "6", l: "production stages costed" },
+      { v: "0s", l: "wait when you press Export" },
+    ],
+
     overview: "Estimation AI turns product images into a costed estimate in minutes. You upload your photos, the AI asks a few clarifying questions, then works through a visible plan — machining, moulding, PCB assembly, final assembly, packaging, shipping — before returning a cost. I picked it up after a first version had already been generated in Google AI Studio. It worked, but it did not look like Naya, and the estimate it produced was a dead end: a number on a screen with nowhere to go.",
     outcomes: [
       "Shipped as an MVP that looks and behaves like the rest of Naya",
@@ -45,7 +218,8 @@ export const PROJECTS = [
     ],
   },
   {
-    id: "workflow-builder", n: "02", tag: "AI · Flagship", title: "AI Workflow Builder",
+    id: "workflow-builder", n: "03", tag: "AI · Flagship", title: "AI Workflow Builder",
+    partOf: "naya-workflow", archived: true,
     short: "Composable AI workflows teams can trust. Zero to one.",
     role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Founders · Engineering · Me · Design team for feedback",
     overview: "Naya helps product teams take ideas to production. The Workflow Builder brings AI into that journey. Teams set up intelligent, repeatable workflows instead of managing every step by hand. I owned the design end to end, from early framing with the founders to prototypes and handoff.",
@@ -58,7 +232,8 @@ export const PROJECTS = [
     ],
   },
   {
-    id: "homebase", n: "03", tag: "Core Product", title: "Projects & Homebase Redesign",
+    id: "homebase", n: "04", tag: "Core Product", title: "Projects & Homebase Redesign",
+    partOf: "naya-workflow", archived: true,
     short: "The surface every user starts their day on.",
     role: "Senior Product Designer", timeline: "Naya Studio", team: "Founders · Engineering · Me · Design team for feedback",
     stack: ["Claude Code", "Antigravity IDE", "Vercel"],
@@ -97,7 +272,8 @@ export const PROJECTS = [
     ],
   },
   {
-    id: "sharing", n: "04", tag: "Collaboration", title: "Group Sharing",
+    id: "sharing", n: "05", tag: "Collaboration", title: "Group Sharing",
+    partOf: "naya-workflow", archived: true,
     short: "Share the folder, not the file.",
     role: "Senior Product Designer", timeline: "Naya Studio", team: "Founders · Engineering · Me · Design team for feedback",
     duration: "1 week, research to handoff",
@@ -159,7 +335,8 @@ export const PROJECTS = [
     ],
   },
   {
-    id: "design-system", n: "05", tag: "Foundations", title: "Design System",
+    id: "design-system", n: "06", tag: "Foundations", title: "Design System",
+    partOf: "naya-workflow", archived: true,
     short: "A Figma file nobody could keep current, rebuilt as a file Claude reads.",
     role: "Senior Product Designer", timeline: "Naya Studio · ongoing", team: "Design · Engineering",
     stack: ["Figma", "Claude Code"],
@@ -203,7 +380,8 @@ export const PROJECTS = [
     ],
   },
   {
-    id: "monetisation", n: "06", tag: "Monetisation", title: "Subscriptions, Teams & Stripe",
+    id: "monetisation", n: "07", tag: "Monetisation", title: "Subscriptions, Teams & Stripe",
+    partOf: "naya-workflow", archived: true,
     short: "Subscriptions and payments, designed for trust.",
     role: "Senior Product Designer", timeline: "Naya Studio", team: "Founders · Engineering · Me · Design team for feedback",
     overview: "Enabling monetisation required designing for trust. Every step, from plan selection to payment confirmation, needed to feel safe, clear, and frictionless.",
@@ -218,7 +396,7 @@ export const PROJECTS = [
   {
     /* Lives in the Side projects row rather than Selected work, but carries a
        full case study — so it opens the same sheet the Naya projects do. */
-    id: "yoink", n: "07", side: true, tag: "Solo · Shipped", title: "Yoink",
+    id: "yoink", n: "08", side: true, tag: "Solo · Shipped", title: "Yoink",
     short: "Copy any UI on the web. Paste it in Figma as editable layers.",
     role: "Designer and sole builder", timeline: "Personal · shipped on the Chrome Web Store",
     team: "Me",
@@ -269,7 +447,11 @@ export const PROJECTS = [
   },
 ];
 
-export const ARCHIVE = "Saved Views · Comments · Notifications · Onboarding · Mobile PM";
+/* Archived, not deleted. These five are areas of the workflow platform and
+   their case studies stay written above — the page shows the two studies,
+   and this line keeps the scope of the work on the page. Setting
+   archived:false on any of them puts its card back under its parent. */
+export const ARCHIVE = "Homebase · Group Sharing · Design System · Subscriptions & Teams · AI Workflow Builder · Saved Views · Comments · Notifications · Onboarding · Mobile PM";
 
 export const BUILT = [
   {
@@ -293,3 +475,4 @@ export const PROCESS = [
   { t: "Engineers take the baton", d: "Design specs, developer handoff and design QA, with a running preview to build from." },
   { t: "And we listen, always", d: "Usability testing and cross-functional feedback between every stage — iterate, ship, repeat." },
 ];
+

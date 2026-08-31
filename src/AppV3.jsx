@@ -24,7 +24,16 @@ import ShapeGrid from "./ShapeGrid.jsx";
 ───────────────────────────────────────────────────────── */
 
 const MAILTO = "mailto:krishna.zolpatil@gmail.com";
-const WORK = PROJECTS.filter(p => !p.side);
+const WORK = PROJECTS.filter(p => !p.side && !p.archived);
+/* Every project here is the same four years at the same company. Two of them
+   are the case studies — the workflow platform and the estimation product,
+   which grew alongside each other and meet at the end. The rest are examples
+   of the work, and read as parts of it rather than as rivals. */
+const LEADS = WORK.filter(p => p.feature);
+const REST = WORK.filter(p => !p.feature);
+/* A piece whose parent is not itself a case study would otherwise vanish
+   from the page, so anything unclaimed is collected rather than dropped. */
+const ORPHANS = REST.filter(p => !LEADS.some(l => l.id === p.partOf));
 const SIDE = PROJECTS.filter(p => p.side);
 
 const NAV_LINKS = [
@@ -210,6 +219,78 @@ const Styles = memo(() => (
     .v4-sec-note { font-size:0.86rem; color:var(--cream-3); letter-spacing:0.06em;
                    text-transform:uppercase; font-weight:550; }
 
+    /* ── The lead: one platform, then the pieces of it ──────────────────
+       Every project in the grid below came out of the same four-year job,
+       so seven equal squares were claiming seven unrelated projects. The
+       lead states the true shape once, and it has to do it on type alone:
+       it is the only project with no screenshot to stand on.
+
+       Same object as a card, one step louder — the ink ground a card only
+       reaches on hover, and a warm trim edge where a card gets the dim
+       rule, leaving full cream free as the hover state. */
+    .v4-feature { position:relative; display:block; width:100%; text-align:left;
+                  border:1px solid var(--cream-3); border-radius:0;
+                  background:var(--ink);
+                  transition:border-color 0.2s, transform 0.2s;
+                  margin-bottom:clamp(26px,4.2vh,48px); }
+    .v4-feature:hover { border-color:var(--cream); transform:translateY(-3px); }
+    /* One column when the study has no poster — there is no single
+       screenshot of four years — and two when it has one, so a picture gets
+       used where it exists instead of being faked where it doesn't. */
+    .v4-feature-main { display:grid; grid-template-columns:minmax(0,1fr);
+                       align-items:center; gap:clamp(18px,2.8vw,40px);
+                       padding:clamp(22px,3.2vw,44px); }
+    .v4-feature-main.shot { grid-template-columns:minmax(0,1.1fr) minmax(0,0.9fr); }
+    .v4-feature-poster { align-self:stretch; min-height:180px;
+                         border:1px solid var(--line-2); background:var(--green-3);
+                         overflow:hidden; }
+    .v4-feature-poster img { width:100%; height:100%; object-fit:cover;
+                             object-position:top center; transition:transform 0.4s ease; }
+    .v4-feature:hover .v4-feature-poster img { transform:scale(1.03); }
+    .v4-feature-eyebrow { display:block; font-size:0.78rem; font-weight:600;
+                          letter-spacing:0.12em; text-transform:uppercase;
+                          color:var(--cream-3); }
+    .v4-feature-t { display:block;
+                    font-family:var(--font-display); font-weight:600;
+                    font-size:clamp(1.9rem,4.2vw,3.4rem); line-height:1.02;
+                    letter-spacing:-0.04em; text-wrap:balance;
+                    margin-top:clamp(10px,1.6vh,18px); }
+    .v4-feature-d { display:block; margin-top:clamp(12px,1.8vh,20px); max-width:58ch;
+                    font-size:clamp(0.95rem,1.05vw,1.1rem); line-height:1.6;
+                    color:var(--cream-2); }
+    .v4-feature-cta { display:inline-flex; align-items:center; gap:8px;
+                      margin-top:clamp(16px,2.2vh,24px); white-space:nowrap;
+                      font-size:0.86rem; font-weight:600; color:var(--cream); }
+    .v4-feature-cta svg { width:16px; height:16px; flex-shrink:0;
+                          transition:transform 0.2s; }
+    .v4-feature:hover .v4-feature-cta svg { transform:translateX(3px); }
+
+    /* A ruled ledger along the bottom edge — the device the process section
+       uses further down. 200+ then 5 then 1: the row narrows as you read
+       it, which is the argument the case study makes. */
+    /* Column count rides in as a custom property rather than an inline
+       grid-template, so the stacking rule at 760px can still win. */
+    .v4-figs { display:grid; grid-template-columns:repeat(var(--n,3),1fr);
+               border-top:1px solid var(--line); }
+    .v4-fig { padding:clamp(15px,2.2vw,26px) clamp(16px,2.4vw,28px); }
+    .v4-fig + .v4-fig { border-left:1px solid var(--line); }
+    .v4-fig b { display:block; font-family:var(--font-display); font-weight:600;
+                font-size:clamp(1.8rem,3.2vw,2.9rem); line-height:1;
+                letter-spacing:-0.05em; font-variant-numeric:tabular-nums; }
+    .v4-fig span { display:block; margin-top:7px; font-size:0.84rem;
+                   line-height:1.35; color:var(--cream-3); }
+
+    /* Two case studies on one page need air between them, or the second
+       lead reads as another row of the first one's grid. */
+    .v4-study + .v4-study { margin-top:clamp(38px,6vh,76px); }
+
+    /* Lighter than a section head — the grid under it is still part of
+       "Selected work", not a new section. */
+    .v4-subhead { display:flex; align-items:baseline; justify-content:space-between;
+                  gap:16px; flex-wrap:wrap; margin-bottom:clamp(14px,2vh,22px); }
+    .v4-subhead h3 { font-family:var(--font-display); font-weight:600;
+                     font-size:clamp(1.05rem,1.6vw,1.35rem); letter-spacing:-0.025em; }
+
     /* ── Work: a grid of square cells ── */
     .v4-grid-work { display:grid; gap:clamp(12px,1.6vw,20px);
                     grid-template-columns:repeat(auto-fill, minmax(min(280px,100%), 1fr)); }
@@ -228,27 +309,36 @@ const Styles = memo(() => (
     .v4-shot-wide { padding:clamp(14px,2vw,24px); background:var(--ink); }
     .v4-shot-wide img { object-fit:contain; object-position:center;
                         border:1px solid var(--line-2); }
-    /* No screenshot: the numeral carries the cell instead of a dead frame. */
-    .v4-shot-none { position:absolute; inset:0; display:flex; flex-direction:column;
-                    align-items:center; justify-content:center; gap:8px; padding:18px; }
-    .v4-shot-none b { font-family:var(--font-display); font-size:3.4rem; font-weight:600;
-                      letter-spacing:-0.06em; line-height:1; color:var(--line); }
-    .v4-shot-none span { font-size:0.84rem; font-weight:550; letter-spacing:0.04em;
-                         text-transform:uppercase; color:var(--cream-3); text-align:center; }
-    /* Title and number on one line, the sentence under it. A grid of names —
-       "Homebase", "Design System" — tells a stranger nothing, and the person
-       reading this is scanning six cells before deciding to open one. */
+    /* No screenshot: the cell sets its own name large, which is the rule
+       from the Homebase redesign in this very portfolio — a project with
+       no imagery yet should still look like something. The old numeral was
+       drawn in --line at 22%, which is what made those tiles read as dead
+       frames rather than as covers. */
+    .v4-shot-none { position:absolute; inset:0; display:flex;
+                    align-items:center; justify-content:center;
+                    padding:clamp(16px,2.4vw,28px); }
+    .v4-shot-none b { font-family:var(--font-display); font-weight:600;
+                      font-size:clamp(1.45rem,2.5vw,2rem); line-height:1.08;
+                      letter-spacing:-0.035em; color:var(--cream-2);
+                      text-wrap:balance; text-align:center; }
+    /* Kind, then name, then the sentence. A grid of names — "Homebase",
+       "Design System" — tells a stranger nothing, and the person reading
+       this is scanning six cells before deciding to open one.
+
+       The number that used to sit here said less than the kind does: these
+       six are areas of one platform, not a sequence, so counting them was
+       structure pretending to be information. */
     .v4-card-foot { display:grid; grid-template-columns:minmax(0,1fr) auto;
                     align-items:baseline; gap:4px 12px; padding:14px 16px; }
-    .v4-card-t { font-family:var(--font-display); font-size:1.05rem; font-weight:600;
-                 letter-spacing:-0.02em; line-height:1.25; }
+    .v4-card-tag { font-size:0.72rem; font-weight:600; letter-spacing:0.1em;
+                   text-transform:uppercase; color:var(--cream-3); }
+    .v4-card-t { grid-column:1/-1; font-family:var(--font-display); font-size:1.05rem;
+                 font-weight:600; letter-spacing:-0.02em; line-height:1.25; }
     /* Two lines' worth of room whether the sentence needs them or not, so a
        row of cards keeps one baseline and one bottom margin instead of
        shuffling by a line. */
     .v4-card-s { grid-column:1/-1; font-size:0.85rem; line-height:1.45;
                  min-height:2.9em; color:var(--cream-2); }
-    .v4-card-n { font-size:0.78rem; font-weight:600; letter-spacing:0.1em;
-                 color:var(--cream-3); flex-shrink:0; }
     .v4-card-arrow { width:17px; height:17px; flex-shrink:0; color:var(--cream-2);
                      transition:transform 0.2s, color 0.2s; }
     .v4-card:hover .v4-card-arrow { transform:translate(2px,-2px); color:var(--cream); }
@@ -430,6 +520,10 @@ const Styles = memo(() => (
       .v4-hero-inner { grid-template-columns:1fr; }
       .v4-proc-row { grid-template-columns:48px 1fr; }
       .v4-proc-d { grid-column:2; }
+      /* The poster drops below the prose rather than squeezing the headline
+         into a column too narrow for its measure. */
+      .v4-feature-main.shot { grid-template-columns:1fr; }
+      .v4-feature-poster { min-height:0; aspect-ratio:16/10; }
       .v4-contact-row { grid-template-columns:1fr; align-items:start; }
       .v4-socials { justify-content:flex-start; }
     }
@@ -439,9 +533,13 @@ const Styles = memo(() => (
       .v4-btn-sm { height:38px; padding:0 13px; font-size:0.82rem; }
       .v4-hero-actions .v4-btn { flex:1 1 auto; }
       .v4-title { max-width:none; }
+      /* Three figures across a phone leaves each one a word wide, so the
+         ledger stands up and the rules turn with it. */
+      .v4-figs { grid-template-columns:1fr; }
+      .v4-fig + .v4-fig { border-left:0; border-top:1px solid var(--line); }
     }
     @media (prefers-reduced-motion:reduce) {
-      .v4-card:hover { transform:none; }
+      .v4-card:hover, .v4-feature:hover { transform:none; }
       .v4-scrim, .v4-sheet { animation:none; }
       .v4-sheet-bar, .v4-sheet-body { transition:none; }
       html { scroll-behavior:auto; }
@@ -472,29 +570,82 @@ const rectOf = el => {
   return { top: r.top, left: r.left, width: r.width, height: r.height };
 };
 
-const Card = memo(function Card({ id, n, tag, title, short, wide, foot, onOpen }) {
+/* A cached image can finish decoding before React attaches onLoad, so settle
+   it on attach rather than waiting for an event that has already fired. */
+const useMissing = () => {
   const [missing, setMissing] = useState(false);
-  /* A cached image can finish decoding before React attaches onLoad, so settle
-     it on attach rather than waiting for an event that has already fired. */
   const attach = useCallback(el => {
     if (el?.complete && !el.naturalWidth) setMissing(true);
   }, []);
+  return [missing, attach, () => setMissing(true)];
+};
+
+/* A case-study shot that takes itself off the page when the file is not
+   there, rather than leaving the browser's broken-image frame. The Naya
+   study is written ahead of its screenshots, so its paths resolve to
+   nothing today and to pictures later without touching this file. */
+const Shot = memo(function Shot({ src, alt }) {
+  const [missing, attach, fail] = useMissing();
+  if (missing) return null;
+  return <img ref={attach} src={src} alt={alt} loading="lazy" onError={fail} />;
+});
+
+const Card = memo(function Card({ id, tag, title, short, wide, foot, onOpen }) {
+  const [missing, attach, fail] = useMissing();
   return (
     <button type="button" className="v4-card"
       onClick={e => onOpen(rectOf(e.currentTarget))}>
       <div className={`v4-shot${wide ? " v4-shot-wide" : ""}`}>
         {missing ? (
-          <div className="v4-shot-none"><b>{n}</b><span>{tag}</span></div>
+          <div className="v4-shot-none"><b>{title}</b></div>
         ) : (
           <img ref={attach} src={`/work/${id}.png`} alt={`${title} screenshot`}
-            loading="lazy" onError={() => setMissing(true)} />
+            loading="lazy" onError={fail} />
         )}
       </div>
       <div className="v4-card-foot">
+        <span className="v4-card-tag">{tag}</span>
+        {foot}
         <span className="v4-card-t">{title}</span>
-        {foot ?? <span className="v4-card-n">{n}</span>}
         {short && <span className="v4-card-s">{short}</span>}
       </div>
+    </button>
+  );
+});
+
+/* The lead cell. It carries the same click contract as a card — hand the
+   sheet the rect it grew from — but states the platform rather than
+   previewing it, because there is no screenshot of four years. */
+const Feature = memo(function Feature({ project, onOpen }) {
+  const { id, role, timeline, title, lede, short, figures = [] } = project;
+  const [missing, attach, fail] = useMissing();
+  return (
+    <button type="button" className="v4-feature"
+      aria-label={`${title} — read the case study`}
+      onClick={e => onOpen(rectOf(e.currentTarget))}>
+      <div className={`v4-feature-main${missing ? "" : " shot"}`}>
+        <div>
+          <span className="v4-feature-eyebrow">{role} &middot; {timeline}</span>
+          {/* A span, not a heading: the cards set their titles the same way,
+              and a heading sealed inside a button is not reachable as one. */}
+          <span className="v4-feature-t">{title}</span>
+          <span className="v4-feature-d">{lede || short}</span>
+          <span className="v4-feature-cta">Read the case study <ArrowRight /></span>
+        </div>
+        {!missing && (
+          <div className="v4-feature-poster">
+            <img ref={attach} src={`/work/${id}.png`} alt="" loading="lazy"
+              onError={fail} />
+          </div>
+        )}
+      </div>
+      {figures.length > 0 && (
+        <div className="v4-figs" style={{ "--n": figures.length }}>
+          {figures.map(f => (
+            <div className="v4-fig" key={f.l}><b>{f.v}</b><span>{f.l}</span></div>
+          ))}
+        </div>
+      )}
     </button>
   );
 });
@@ -666,6 +817,38 @@ const Sheet = memo(function Sheet({ project, origin, onClose }) {
   const outcomeShots = (project.outcomes || [])
     .flatMap(o => (typeof o === "string" ? [] : o.shots || []));
 
+  /* Naya is the case study; the rest are examples of the work — what the
+     problem was, what shipped, what it changed. The fuller blocks stay in
+     data.js untouched: this decides what to show, not what to keep, so a
+     constraint or an interaction note can come back by flipping a flag
+     rather than by being rewritten. */
+  const isLead = !!project.feature;
+  const blocks = project.caseStudy || [];
+  const shown = isLead ? blocks : [...new Set([
+    blocks.find(b => /^problem/i.test(b.label)),
+    /* The design system tells its resolution as a run of named moves and
+       never labels one "Solution", so its closing block stands in — in a
+       narrative sequence, the last block is the resolution. */
+    blocks.find(b => /^solution/i.test(b.label)) || blocks[blocks.length - 1],
+  ])].filter(Boolean);
+
+  /* Same list either way; only its billing changes. Leading a four-year
+     platform study, outcomes are the hook. Closing a short example, they
+     are the point. */
+  const impact = project.outcomes?.length > 0 && (
+    <div className="v4-block">
+      <h3>{isLead ? "Outcomes" : "Impact"}</h3>
+      <ul className="v4-list">
+        {project.outcomes.map((o, i) => <Outcome key={i} item={o} />)}
+      </ul>
+      {outcomeShots.length > 0 && (
+        <div className="v4-shots">
+          {outcomeShots.map(src => <Shot key={src} src={src} alt="" />)}
+        </div>
+      )}
+    </div>
+  );
+
   return (
     <div className={`v4-scrim${closing ? " out" : ""}`} onClick={close} role="presentation">
       <div className={cls} role="dialog" aria-modal="true"
@@ -705,33 +888,19 @@ const Sheet = memo(function Sheet({ project, origin, onClose }) {
             </div>
           )}
 
-          {/* What came of it, before how it was made. Whoever opens this is
-              deciding in the first screenful whether to keep reading, and the
-              line above already says what the thing is. */}
-          {project.outcomes?.length > 0 && (
-            <div className="v4-block">
-              <h3>Outcomes</h3>
-              <ul className="v4-list">
-                {project.outcomes.map((o, i) => <Outcome key={i} item={o} />)}
-              </ul>
-              {outcomeShots.length > 0 && (
-                <div className="v4-shots">
-                  {outcomeShots.map(src => (
-                    <img key={src} src={src} alt="" loading="lazy" />
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+          {/* What came of it, before how it was made. Whoever opens the lead
+              is deciding in the first screenful whether to keep reading, and
+              the line above already says what the thing is. */}
+          {isLead && impact}
 
-          {project.overview && (
+          {isLead && project.overview && (
             <div className="v4-block">
               <h3>Overview</h3>
               <p>{project.overview}</p>
             </div>
           )}
 
-          {project.process?.length > 0 && (
+          {isLead && project.process?.length > 0 && (
             <div className="v4-block">
               <h3>Process</h3>
               <ol className="v4-days">
@@ -746,20 +915,19 @@ const Sheet = memo(function Sheet({ project, origin, onClose }) {
             </div>
           )}
 
-
-          {project.caseStudy?.map(block => (
-            <div className="v4-block" key={block.label}>
+          {shown.map((block, i) => (
+            <div className="v4-block" key={`${block.label}-${i}`}>
               <h3>{block.label}</h3>
               <p>{block.body}</p>
               {shotsOf(block).length > 0 && (
                 <div className="v4-shots">
-                  {shotsOf(block).map(src => (
-                    <img key={src} src={src} alt="" loading="lazy" />
-                  ))}
+                  {shotsOf(block).map(src => <Shot key={src} src={src} alt="" />)}
                 </div>
               )}
             </div>
           ))}
+
+          {!isLead && impact}
         </div>
       </div>
     </div>
@@ -907,23 +1075,56 @@ export default function AppV3() {
               </div>
             </section>
 
-            <Section id="work" title="Selected work" note="Tip of the iceberg">
-              <div className="v4-grid-work">
-                {WORK.map(p => (
-                  <Card key={p.id} id={p.id} n={p.n} tag={p.tag} title={p.title}
-                    short={p.short} onOpen={r => openProject(p.id, r)} />
-                ))}
-              </div>
+            <Section id="work" title="Selected work" note="Two case studies, four years">
+              {/* Each case study keeps its own pieces under it. Laid out flat,
+                  Homebase and Group Sharing read as rival projects; they are
+                  areas of the platform above them. */}
+              {LEADS.map(lead => {
+                const parts = REST.filter(p => p.partOf === lead.id);
+                return (
+                  <div className="v4-study" key={lead.id}>
+                    <Feature project={lead} onOpen={r => openProject(lead.id, r)} />
+                    {parts.length > 0 && (
+                      <>
+                        <div className="v4-subhead">
+                          <h3>Inside it</h3>
+                          <span className="v4-sec-note">{parts.length} areas, up close</span>
+                        </div>
+                        <div className="v4-grid-work">
+                          {parts.map(p => (
+                            <Card key={p.id} id={p.id} tag={p.tag} title={p.title}
+                              short={p.short} onOpen={r => openProject(p.id, r)} />
+                          ))}
+                        </div>
+                      </>
+                    )}
+                  </div>
+                );
+              })}
+              {ORPHANS.length > 0 && (
+                <div className="v4-study">
+                  <div className="v4-subhead">
+                    <h3>Also at Naya</h3>
+                    <span className="v4-sec-note">{ORPHANS.length} more</span>
+                  </div>
+                  <div className="v4-grid-work">
+                    {ORPHANS.map(p => (
+                      <Card key={p.id} id={p.id} tag={p.tag} title={p.title}
+                        short={p.short} onOpen={r => openProject(p.id, r)} />
+                    ))}
+                  </div>
+                </div>
+              )}
             </Section>
 
             <Section id="side" title="Side projects" note="Shipped solo">
               <div className="v4-grid-work">
                 {SIDE.map(p => (
-                  <Card key={p.id} id={p.id} n={p.n} tag={p.tag} title={p.title} wide
+                  <Card key={p.id} id={p.id} tag={p.tag} title={p.title} wide
                     short={p.short} onOpen={r => openProject(p.id, r)} />
                 ))}
                 {BUILT.map(b => (
-                  <Card key={b.slug} id={b.slug} n="—" tag={b.kind} title={b.name} wide
+                  <Card key={b.slug} id={b.slug} tag={b.kind} title={b.name} wide
                     short={b.desc} foot={<ArrowUpRight className="v4-card-arrow" />}
                     onOpen={r => openTool(b, r)} />
                 ))}
