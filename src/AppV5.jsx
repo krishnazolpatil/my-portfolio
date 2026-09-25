@@ -706,7 +706,7 @@ const Lightbox = memo(function Lightbox({ shot, onClose }) {
   return (
     <div className={`v5-lb${zoomed ? " in" : ""}`} ref={box} onClick={onClose}
       role="dialog" aria-modal="true" aria-label={shot.alt || "Image"}>
-      <img src={shot.src} alt={shot.alt || ""} onClick={toggle} />
+      <img src={stamp(shot.src)} alt={shot.alt || ""} onClick={toggle} />
       <button type="button" className="v5-lb-x" onClick={onClose} aria-label="Close">ESC</button>
     </div>
   );
@@ -757,7 +757,7 @@ const Zoomable = memo(function Zoomable({ src, alt, attach, fail, className, i =
   return (
     <button type="button" className={`v5-zoom${className ? ` ${className}` : ""}`}
       onClick={() => open({ src, alt })} aria-label={alt ? `${alt} (open larger)` : "Open larger"}>
-      <img ref={attach} src={src} alt={alt} loading="lazy" onError={fail}
+      <img ref={attach} src={stamp(src)} alt={alt} loading="lazy" onError={fail}
         onLoad={e => {
           const el = e.currentTarget;
           if (el.naturalHeight > el.naturalWidth) el.classList.add("v5-tall");
@@ -808,7 +808,7 @@ const Card = memo(function Card({ id, tag, title, short, wide, foot, onOpen }) {
         {missing ? (
           <div className="v5-shot-none"><b>{title}</b></div>
         ) : (
-          <img ref={attach} src={`/work/${id}.png`} alt={`${title} screenshot`}
+          <img ref={attach} src={stamp(`/work/${id}.png`)} alt={`${title} screenshot`}
             loading="lazy" onError={fail} />
         )}
       </div>
@@ -843,7 +843,7 @@ const Feature = memo(function Feature({ project, onOpen }) {
         </div>
         {!missing && (
           <div className="v5-feature-poster">
-            <img ref={attach} src={`/work/${id}.png`} alt="" loading="lazy"
+            <img ref={attach} src={stamp(`/work/${id}.png`)} alt="" loading="lazy"
               onError={fail} />
           </div>
         )}
@@ -887,6 +887,11 @@ const NoOrphan = ({ text }) => {
   );
 };
 
+/* global __BUILD__ */
+/* The address a picture is fetched from: its path plus the build stamp, so
+   a file replaced under the same name is fetched again after a deploy. */
+const stamp = src => (src && !src.includes("?") ? `${src}?v=${__BUILD__}` : src);
+
 const paras = body => (Array.isArray(body) ? body : body ? [body] : []);
 
 const Cols = memo(function Cols({ items, wide = items.length > 3 }) {
@@ -911,7 +916,7 @@ const Cols = memo(function Cols({ items, wide = items.length > 3 }) {
 const Peep = memo(function Peep({ name, className }) {
   if (!name) return null;
   return <img className={`v5-peep${className ? ` ${className}` : ""}`}
-    src={`/peeps/${name}.svg`} alt="" aria-hidden="true" loading="lazy" />;
+    src={stamp(`/peeps/${name}.svg`)} alt="" aria-hidden="true" loading="lazy" />;
 });
 
 const Fig = memo(function Fig({ fig, className }) {
@@ -944,7 +949,7 @@ const OneClip = memo(function OneClip({ clip, i = 0 }) {
     if (!clip?.poster) return;
     const im = new Image();
     const done = () => { const c = cardColor(im, i); if (c) setBg(c); };
-    im.onload = done; im.src = clip.poster;
+    im.onload = done; im.src = stamp(clip.poster);
     if (im.complete && im.naturalWidth) done();
   }, [clip?.poster, i]);
   if (!clip?.src) return null;
@@ -958,7 +963,7 @@ const OneClip = memo(function OneClip({ clip, i = 0 }) {
       {/* React sets muted as a property, not an attribute, and browsers only
           autoplay what is muted in the markup; the ref makes sure of it. */}
       <video ref={el => { if (el) { el.muted = true; el.defaultMuted = true; } }}
-        src={clip.src} poster={clip.poster} autoPlay muted loop playsInline
+        src={stamp(clip.src)} poster={stamp(clip.poster)} autoPlay muted loop playsInline
         preload="metadata" aria-label={clip.alt || ""} onError={() => setMissing(true)}
         style={bg ? { background: bg } : undefined}
         onLoadedData={e => { const c = cardColor(e.currentTarget, i); if (c) setBg(c); }} />
@@ -1064,7 +1069,7 @@ const Block = memo(function Block({ block, shots }) {
    hero's portrait until it is. */
 const WithPhoto = memo(function WithPhoto() {
   const [src, setSrc] = useState("/working-with-me.jpg");
-  return <img className="v5-with-photo" src={src} alt="Krishna Zolpatil" loading="lazy"
+  return <img className="v5-with-photo" src={stamp(src)} alt="Krishna Zolpatil" loading="lazy"
     onError={() => setSrc(cur => (cur === "/about-photo.jpg" ? cur : "/about-photo.jpg"))} />;
 });
 
