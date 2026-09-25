@@ -1354,7 +1354,11 @@ export default function AppV3() {
                 {ABOUT_POINTS.map(pt => typeof pt === "string"
                   ? <li key={pt}><Brand text={pt} /></li>
                   : <li key={pt.t}><span><Brand text={pt.t} /><strong>
-                      {pt.href ? <a href={pt.href}><Brand text={pt.b} /></a> : <Brand text={pt.b} />}
+                      {pt.href
+                        ? <a href={pt.href} {...(pt.href.startsWith("http") ? { target: "_blank", rel: "noopener noreferrer" } : {})}>
+                            <Brand text={pt.b} />
+                          </a>
+                        : <Brand text={pt.b} />}
                     </strong></span></li>)}
               </ul>
               <div className="v5-hero-actions">

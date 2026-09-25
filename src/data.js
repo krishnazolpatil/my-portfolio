@@ -897,7 +897,7 @@ export const ABOUT_POINTS = [
   /* A point can be a string, or { t, b, href? }: the sentence, then a bold
      line under it, which links somewhere when href is set. */
   { t: "I design award-winning platforms: four years as Senior Product Designer at Naya Studio.",
-    b: "iF Design Award winner for UX." },
+    b: "iF Design Award winner for UX.", href: "https://ifdesign.com/en/winner-ranking/project/naya/643559" },
   { t: "A computer science graduate who started in graphic design and never stopped building.",
     b: "Designed for TEDxJNEC." },
   { t: "I design in Figma, then build the prototype in working code.",
