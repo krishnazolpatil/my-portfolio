@@ -11,6 +11,7 @@ export const PROJECTS = [
   timeline: "Naya Studio · 2022–2026",
   team: "Founders · Engineering · Product · Me · Design team for feedback",
   stack: ["Figma", "Claude Code", "Vercel", "React"],
+  award: { label: "iF Design Award 2024 · Product UX", href: "https://ifdesign.com/en/winner-ranking/project/naya/643559" },
 
   /* The lead of the work section rather than one cell in it. Every other
      project below came out of this same four-year job, so the grid was
@@ -25,45 +26,141 @@ export const PROJECTS = [
 
   overview: "Naya is a visual workspace for physical product teams. Over four years, I helped shape the workflow platform from early foundations into a connected ecosystem managing projects, references, 3D models, feedback, collaboration, and estimation. The work wasn't about designing 200 separate features. It was about helping the product evolve while maintaining a coherent experience as the platform grew increasingly complex.",
 
+  /* From the 2024–25 feature board: what was actually built, by area. The
+     delivery figure is the last quarter's, as the board records it. */
   outcomes: [
-    "Shipped 200+ UI and UX features across the platform",
-    "Built and evolved a design system to maintain consistency as features compounded",
-    "Designed core platform areas: projects, workflows, collaboration, and mobile",
-    "Shifted from feature-driven design to systems thinking and product architecture",
-    "Rebuilt Homebase, the screen every user opens first, so cards say what they are before you click them",
-    "Established patterns for progressive disclosure that scale to new features without overwhelming users",
+    "Mobile, in three phases: Studio, then Journey, then Preview",
+    "Comments as a system: comment on anything, threads, highlights, read and unread, an inbox, and the navigation logic that ties them together",
+    "Generate with AI from what the journey already holds: select a block, a group, the whole journey or a handful of assets, right-click, and get a product, a render or a summary",
+    "Grid view, Preview, and the expanded view rebuilt with pagination",
+    "Subscriptions, billing, payments and account management, and the pricing strategy behind them",
+    "A design system extracted from the shipped work, then applied back across it: pill buttons, one icon library, neutral colours, consistent modals and snackbars",
+    "The Workflow AI website: the copy, the motion and every asset on it",
+    "Last quarter on record: every assigned feature delivered, 28 of the 46 the team planned",
   ],
 
+  /* Told the way a stranger meets it: the week the product exists to fix,
+     what the product is, what I did there, then the platform walked through
+     as the questions a team asks of it. Chapter headings are those
+     questions. `body` is a string or a list of short paragraphs. */
   caseStudy: [
     {
-      label: "Overview",
-      body: "Senior Product Designer at Naya (2022–2026). I shaped a visual workflow platform for physical product teams from early foundations into a connected ecosystem. Over four years, I shipped 200+ UI and UX features while maintaining coherence and consistency. The work wasn't about volume — it was about helping a complex product evolve into something users understood and trusted.",
+      label: "Put yourself in the studio",
+      kind: "story",
+      figure: { src: "/naya/studio-journey.png", alt: "A product journey in Naya: a design brief, then inspiration, ideation, two concepts, design development and prototyping, each a column of blocks" },
+      lead: "Imagine you run a small furniture studio.",
+      sub: "One chair is on its way to a factory.",
+      pairs: [
+        { a: "The reference images are in a folder.", b: "The 3D model is in someone's email." },
+        { a: "The manufacturer's feedback is in a chat thread.", b: "The decision about the armrest was never written down." },
+        { a: "Now make it ten products and five people.", b: "Count it: 20 stages, 20 file types, 25 stakeholders, 15 platforms, per product." },
+      ],
+      close: "It is the week Naya exists to fix.",
+      peep: "arms",
+      shots: [],
+    },
+
+    {
+      label: "How Naya solves this",
+      kind: "points",
+      body: [
+        "A visual workspace for physical product teams: the designer, the project manager, the engineer or fabricator, and the client who needs to see progress and say what they think.",
+        "It holds three things in one place:",
+      ],
+      points: [
+        { t: "The material", b: "Images, documents, product information and 3D models, connected to the product they inform." },
+        { t: "The process", b: "Phases, blocks and journeys, so a project follows how the team actually works." },
+        { t: "The people", b: "Sharing, feedback and mobile access, so decisions happen where everyone can see them." },
+      ],
       shots: [
         "/naya/workflow-product-overview.png",
       ],
     },
 
     {
-      label: "The Problem: Complexity Without Coherence",
-      body: "Physical product development is complex. Teams manage images, documents, product information, 3D models, feedback, and decisions that evolve over months. As Naya added capabilities to serve this work, every new feature introduced a question: Where does this fit? Does it feel like Naya? Will users understand where to find it? How can we add capability without making the product harder to understand? The core challenge was preventing features from becoming a disconnected collection instead of a coherent system.",
+      label: "My role",
+      kind: "role",
+      peep: "sit",
+      body: [
+        "Senior Product Designer, 2022 to 2026. I joined at the early foundations and stayed as Naya became a connected ecosystem.",
+        "Over four years I shipped 200+ UI and UX features across projects, workflows, collaboration and mobile, and built the design system underneath them.",
+        "In 2024, the year I was promoted to Senior Product Designer, the platform won an iF Design Award for Product UX.",
+        "The work wasn't about volume. It was making sure that as Naya grew to hold all of it, it still felt like one product.",
+      ],
+      link: { href: "https://ifdesign.com/en/winner-ranking/project/naya/643559", label: "The award, on ifdesign.com" },
       shots: [],
     },
 
     {
-      label: "Three Core Friction Points",
-      body: "Research and early usage revealed three problems: (1) Information was scattered and disorganized—teams had to think about storage instead of meaning. Projects were containers, not contexts. (2) Teams couldn't express their process—features were there, but no structure for how teams actually work through product development. (3) Collaboration was friction-heavy—sharing was one project, one person at a time, not matching how teams think about team access. Each problem required architectural thinking, not just feature design.",
+      label: "So how does a product go from 37 features nobody loved to a platform teams at Google and MillerKnoll run on?",
+      kind: "pivot",
+      peep: "ease",
+      body: "Here's the platform, walked through the questions a team asks of it, and the one the company had to ask itself first.",
       shots: [],
     },
 
     {
-      label: "Design Approach: Systems, Constraints & Progressive Disclosure",
-      body: "I approached these problems through three principles: First, systems thinking — every new feature had to connect to what came before. Second, constraint-based design — we ruled out the 3-month workspace solution and designed Group Sharing instead, a smaller MVP. Third, progressive disclosure — complexity should surface only when needed. A simple user shouldn't see advanced features; they appear on demand. These principles guided every major design decision.",
+      label: "What did the first year build?",
+      body: [
+        "A lot. By September 2023 the company had talked to its customers constantly, logged 1,200 insights and shipped 500 bugs and minor features in a year.",
+        "It had also shipped 37 features, and when the founders sat down with them, the verdict was blunt: we were chasing features instead of chasing love.",
+        "Much of what we had built were design tools that Miro and Figma already did better. The features that mattered most were not spotlighted, and none had been refined enough to be loved.",
+      ],
+      shots: ["/naya/brief-to-tracking.png"],
+    },
+
+    {
+      label: "What was getting in the way?",
+      kind: "points",
+      body: "Underneath the feature count were three problems. Each one needed architectural thinking, not another feature.",
+      points: [
+        { t: "Information was scattered", b: "Teams had to think about storage instead of meaning. Projects were containers, not contexts." },
+        { t: "Process had nowhere to live", b: "The features were there, but no structure for how teams actually work through product development." },
+        { t: "Collaboration was friction-heavy", b: "Sharing was one project, one person at a time — not how teams think about giving a team access." },
+      ],
+      shots: ["/naya/scattered-apps.jpg", "/naya/tangle.png"],
+    },
+
+    {
+      label: "What did the reset look like?",
+      kind: "points",
+      figure: { src: "/naya/sketch-block.png", alt: "A hand-drawn box with a notes panel beside it", cap: "The block, first sketch" },
+      body: [
+        "The company reset around one idea, the block: a container for anything, from a sketch to a 3D model to a decision, that can be linked into a journey.",
+        "Rather than building our own Figma, we would integrate with it. Everything else was demoted or promoted against five promises:",
+      ],
+      points: [
+        { t: "Easy entry", b: "Jump in with whatever file you have, or request one." },
+        { t: "Make your journey", b: "Lay blocks out as the process actually ran, branches included." },
+        { t: "Feedback from everyone", b: "Share with a client, a fabricator or a whole group, and never lose what they said." },
+        { t: "Show progress, tell the story", b: "Highlights, lenses, and a view of where the project stands. Nobody prints their Asana board; the design process is beautiful." },
+        { t: "Superpowers", b: "Search across every app, and later, AI over everything the journey holds." },
+      ],
+      /* Drawn, not the deck slide: the same five promises as blocks on the
+         journey line, in the page's own type. Source: scratch promises.html. */
+      shots: [
+        "/naya/workflow-five-promises.png",
+      ],
+    },
+
+    {
+      label: "What guided my decisions?",
+      kind: "points",
+      body: "The reset gave the company its direction. Three principles are how I held every feature to it.",
+      points: [
+        { t: "Systems thinking", b: "Every new feature had to connect to what came before it, or the product becomes a pile of features." },
+        { t: "Constraint-based design", b: "We ruled out the three-month workspace solution and designed Group Sharing instead — a smaller MVP that actually shipped." },
+        { t: "Progressive disclosure", b: "Complexity surfaces only when needed. A simple user shouldn't see advanced features; they appear on demand." },
+      ],
       shots: [],
     },
 
     {
-      label: "Solution 1: From Information Storage to Product Context",
-      body: "Before: Projects were file containers. References were images. Metadata was bureaucratic. Teams had to think about storage categories, not meaning. After: Projects became spaces where information is connected and purposeful. A project shows its cover, item count, status, and collaborators at a glance. References connect to the products they inform. Metadata tells a story about where work stands. The redesign reframed the model from 'where do I put this?' to 'what does this tell me about my product?'",
+      label: "Where do I put this?",
+      kind: "beforeAfter",
+      before: "Projects were file containers. References were images. Metadata was bureaucratic. Teams had to think about storage categories, not meaning.",
+      after: "Projects became spaces where information is connected and purposeful. A project shows its cover, item count, status and collaborators at a glance, and references connect to the products they inform.",
+      body: "The redesign changed the question itself, from 'where do I put this?' to 'what does this tell me about my product?'",
       shots: [
         "/naya/workflow-project-context.png",
         "/naya/workflow-project-evolution.png",
@@ -71,8 +168,15 @@ export const PROJECTS = [
     },
 
     {
-      label: "Solution 2: Giving Teams Structure Without Forcing One Path",
-      body: "Before: Projects were flat containers. No way to express process or phases. After: Phases, Blocks, and Journey structures let teams organize work matching their actual process. Early exploration → concept selection → design refinement → manufacturing planning → feedback loops. The design challenge: make these structures invisible to users who don't need them. Simple organization stays simple. Advanced structure surfaces only when you want it. Progressive disclosure proved essential as the platform grew.",
+      label: "How does a team show its process?",
+      kind: "beforeAfter",
+      figure: { src: "/naya/sketch-journeys.png", alt: "Two sketched project timelines, a chair and a planter, with milestones", cap: "Journeys, as first sketched" },
+      before: "Projects were flat containers. No way to express process or phases.",
+      after: "Phases, Blocks and Journey structures let teams organise work the way they run it: early exploration, concept selection, design refinement, manufacturing planning, feedback loops.",
+      body: [
+        "The design challenge was making these structures invisible to anyone who doesn't need them.",
+        "Simple organisation stays simple. Advanced structure surfaces only when you want it.",
+      ],
       shots: [
         "/naya/workflow-phases-structure.png",
         "/naya/workflow-blocks-hierarchy.png",
@@ -80,8 +184,15 @@ export const PROJECTS = [
     },
 
     {
-      label: "Solution 3: Group Sharing — MVP Thinking Under Constraint",
-      body: "Before: Sharing was one project, one person at a time. Fifty shares for ten projects across five people. After: Share a group, and everyone sees what's inside. Access is inherited; direct shares stack on top. Remove someone from the group, and you remove the team's access—not just one favor. The key constraint: we couldn't build a full workspace (3 months, engineering cost). So we designed something smaller that matched how teams actually think. It's narrower than Slack's workspace model but clearer and faster to execute.",
+      label: "How do I give my team access?",
+      kind: "beforeAfter",
+      figure: { src: "/naya/stakeholder-rings.png", alt: "Core team at the centre, then leadership, the broader team, fabricators, experts and end users in rings", cap: "Who needs to see a project" },
+      before: "Sharing was one project, one person at a time. Fifty shares for ten projects across five people, with no way to check which one you missed.",
+      after: "Share a group, and everyone sees what's inside. Access is inherited; direct shares stack on top. Remove someone from the group and you remove the team's access — not just one favour.",
+      body: [
+        "We couldn't build a full workspace on the time and engineering cost available.",
+        "So we designed something smaller that matched how teams already think. Narrower than a workspace model, but clearer and faster to ship.",
+      ],
       shots: [
         "/naya/workflow-group-sharing.png",
         "/naya/workflow-collaboration-inheritance.png",
@@ -90,8 +201,14 @@ export const PROJECTS = [
     },
 
     {
-      label: "Solution 4: Extending Beyond Desktop",
-      body: "Before: Product work only happened at desks. Mobile had no first-class support. After: Teams can open projects on mobile, select 3D models, rotate them, review product information, and provide feedback. The design wasn't 'shrink the desktop app.' It was 'what matters when teams are away from computers?' The answer: quick access to projects and 3D viewing. On mobile, that flow is all that matters. Everything else is secondary.",
+      label: "What happens away from the desk?",
+      kind: "beforeAfter",
+      before: "Product work only happened at desks. Mobile had no first-class support.",
+      after: "Teams can open projects on mobile, select 3D models, rotate them, review product information and give feedback.",
+      body: [
+        "The brief wasn't 'shrink the desktop app'. It was 'what matters when a team is away from their computers?'",
+        "The answer was quick access to projects and 3D viewing. On mobile, that flow is all that matters.",
+      ],
       shots: [
         "/naya/workflow-mobile-flow.png",
         "/naya/workflow-3d-viewer-mobile.png",
@@ -99,8 +216,14 @@ export const PROJECTS = [
     },
 
     {
-      label: "Solution 5: Design System for Scale",
-      body: "Before: Every new feature risked inconsistency. Modals varied. Context menus followed different patterns. Sharing appeared in multiple ways. After: A design system emerged from what worked. Components, patterns, interaction models, and rules. The system wasn't invented—it was extracted from successful features and iterated. As new capabilities arrived (3D, AI, mobile), the system evolved to accommodate them while the foundation stayed consistent. This allowed features to ship faster because the system provided the structure.",
+      label: "How does it all stay consistent?",
+      kind: "beforeAfter",
+      before: "Every new feature risked inconsistency. Modals varied. Context menus followed different patterns. Sharing appeared in multiple ways.",
+      after: "A design system drawn from what worked: components, patterns, interaction models and rules.",
+      body: [
+        "The system wasn't invented. It was extracted from successful features and iterated.",
+        "As 3D, AI and mobile arrived, it evolved to take them while the foundation stayed put. Features shipped faster because the structure was already there.",
+      ],
       shots: [
         "/naya/workflow-design-system-components.png",
         "/naya/workflow-design-system-patterns.png",
@@ -108,18 +231,14 @@ export const PROJECTS = [
     },
 
     {
-      label: "200+ Features, One Coherent Product",
-      body: "The work added up to over 200 shipped UI and UX features. But users don't experience Naya as 200 features. They experience it as a product where things make sense, where actions are consistent, where complexity surfaces only when needed. This coherence didn't happen by accident. It came from constantly asking: 'Does this feel like Naya? Does the user understand where this is? Can they predict what happens next?' The number of features matters less than whether they feel like they belong.",
-      shots: [
-        "/naya/workflow-feature-gallery-1.png",
-        "/naya/workflow-feature-gallery-2.png",
-        "/naya/workflow-feature-gallery-3.png",
+      label: "How did the four years unfold?",
+      kind: "timeline",
+      steps: [
+        { y: "2022", t: "Building foundations", b: "Projects, basic collaboration, the core structure." },
+        { y: "2023", t: "The reset", b: "Thirty-seven features audited, the block introduced, and the journey built on it. Phases and structure followed." },
+        { y: "2024", t: "Increasing complexity", b: "Mobile in three phases, comments rebuilt as a system, grid view and preview, billing and subscriptions. Consistency became critical." },
+        { y: "2025–26", t: "Connecting the ecosystem", b: "Project memory and generating with AI from the journey. Workflows fed into Estimation and Estimation fed back. The Workflow AI website, written and animated from the product. My role shifted from designing features to thinking about the whole." },
       ],
-    },
-
-    {
-      label: "Four Years of Evolution",
-      body: "2022: Building Foundations. Projects, basic collaboration, the core structure. 2023: Expanding Workflows. Phases, blocks, journey structures. Users needed ways to express process. 2024: Increasing Complexity. Mobile access, 3D viewers, metadata systems, deeper collaboration. The platform served different contexts and devices. Consistency became critical. 2025–2026: Connecting the Ecosystem. Workflows fed into Estimation. Estimation fed back into projects. The platform became a system. My role shifted from designing features to thinking about the whole.",
       shots: [
         "/naya/workflow-evolution-2022.png",
         "/naya/workflow-evolution-2023.png",
@@ -129,30 +248,156 @@ export const PROJECTS = [
     },
 
     {
-      label: "How My Process Evolved",
-      body: "Early: Research → Roadmap → Sketches → Design → Prototype → Handoff. As Naya needed to move faster, I adapted. Static Figma files couldn't communicate complex interactions — developers would interpret them differently. So I started building working prototypes in code, deployed to Vercel. Engineering could click through the real experience. I used Claude Code to build quickly, not as finished products but as communication tools. Better communication meant fewer misunderstandings and faster shipping.",
+      label: "How did my own process change?",
+      kind: "beforeAfter",
+      before: "Research, roadmap, sketches, design, prototype, handoff. Static Figma files couldn't communicate complex interactions, and developers would each interpret them differently.",
+      after: "Working prototypes built in code and deployed to Vercel, so engineering could click through the real experience before a ticket was written.",
+      body: "I used Claude Code to build quickly — not as finished products, but as communication tools. Better communication meant fewer misunderstandings and faster shipping.",
       shots: [
         "/naya/workflow-process-evolution.png",
       ],
     },
 
     {
-      label: "Connecting Workflows & Estimation",
-      body: "Estimation AI is a separate product, but it's part of the Naya ecosystem. Teams work in Naya, gather product information, then upload to Estimation AI. The AI analyzes images and asks clarifying questions. It builds a costing plan. The estimate lands back in Naya as a PDF in a project. Every data source is a link block. Estimation isn't a separate tool — it's part of the workflow. Designing this connection showed how to integrate new capabilities into an existing system without breaking coherence.",
+      label: "What if the journey already knew enough to generate?",
+      kind: "pivot",
+      body: "By 2025 a journey held everything about a product: its images, documents, renders and decisions. Naya's AI still asked you to describe all of that in a prompt, and the output showed it.",
+      shots: [],
+    },
+
+    {
+      label: "What was there before?",
+      body: [
+        "Naya had AI generation already, and it was prompt-based like everything else at the time. You typed what you wanted and the model started from nothing.",
+        "The output was not good, and it could not be: the model never saw the product it was generating for. Everything the team knew about it sat in the journey, a click away, unused.",
+      ],
+      shots: [],
+    },
+
+    {
+      label: "What does the journey know?",
+      figure: { src: "/naya/sketch-superpowers.png", alt: "Sketched block types: sustainability, 3D, matchmaking, AI estimation, print order", cap: "Superpowers, sketched early" },
+      clip: {
+        src: "/naya/project-memory.mp4", poster: "/naya/project-memory-poster.jpg",
+        alt: "Blocks stream into the Naya mark, which then hands out insight cards: project summary, content creation, next steps, estimation, manufacturing analysis, sustainability analysis",
+        note: "I made this motion graphic alongside the feature. It ran on Autodesk's page while the founders presented.",
+        link: { href: "https://www.instagram.com/reels/DdbgIENB3or/", label: "Watch the Autodesk feature" },
+      },
+      body: [
+        "Project memory, when you turn it on, ingests every asset in the journey and works out what is in each of them.",
+        "I sat with the engineers for a week to understand how that ingestion works before drawing anything. Two things came out of it.",
+        "It happens all at once: block by block, so you can see how many are done, but nothing can be generated until everything is in. Per-asset ingestion would have let people start early. It was a technical limit, so the design had to show the wait honestly rather than hide it.",
+      ],
+      shots: [],
+    },
+
+    {
+      label: "How do you ask it for something?",
+      kind: "points",
+      body: [
+        "Once ingestion was clear, we diverged on options in Figma and settled on one rule: you generate from a selection, and everything starts with a right-click.",
+        "Select a single block, a group, the whole journey, or any handful of assets, then choose what you want made from them:",
+      ],
+      points: [
+        { t: "A product", b: "Written back into project memory, so what the AI made is part of what the journey knows." },
+        { t: "Renders", b: "Concepts generated from the assets you selected, not from a description of them." },
+        { t: "A summary", b: "What the selection says, in a few lines." },
+      ],
+      shots: [
+        "/naya/workflow-multi-in-menu.png",
+        "/naya/workflow-multi-in-ask.png",
+        "/naya/workflow-multi-in-result.png",
+      ],
+    },
+
+    {
+      label: "Why is there no prompt box?",
+      kind: "beforeAfter",
+      before: "Keep the prompt and attach the journey's assets to it: a new block type where you type what you want, with the memory behind it.",
+      after: "A right-click on what is already there. The assets are the prompt, and a text block, which the journey already had, covers anything you want to say in words.",
+      body: [
+        "A prompt requires input before it does anything, and the old prompt was the thing producing poor output. A selection is input you already made.",
+        "It shipped, and it was picked up by student product teams at USC and MIT.",
+      ],
+      shots: [],
+    },
+
+    {
+      label: "Where does Estimation fit?",
+      body: [
+        "By 2026 Naya was three products in one studio. Estimation AI is the appetizer: the costing tool a customer tries first. Workflow AI, the platform this study is about, is the main course they stay for. Sustainability AI is the dessert.",
+        "The three share a journey. Teams gather product information in Workflow, Estimation reads it and builds a costing plan, and the estimate lands back in the project as a PDF with every data source kept as a link block.",
+        "Designing that connection showed how to add a whole product to an existing system without breaking its coherence.",
+      ],
       shots: [
         "/naya/workflow-estimation-connection.png",
       ],
     },
 
     {
-      label: "Key Learnings",
-      body: "Depth teaches more than breadth. Four years on one product teaches you what short-term projects never can: how products actually change over time, how today's decisions affect tomorrow's work, how constraints drive better solutions. Systems thinking scales. Individual features don't compound into product—they fall apart without a system. The system is the work. Constraints drive clarity. We couldn't build workspace, so we built Group Sharing instead. Better. Consistency isn't limitation—it's freedom. When the system is strong, new features don't require reinventing interaction design. Communication matters more than tools. Prototypes in code communicated better than static frames because the format matched the outcome.",
+      label: "How does a stranger meet it?",
+      kind: "points",
+      clip: [
+        {
+          src: "/naya/site-feedback.mp4", poster: "/naya/site-feedback-poster.jpg",
+          alt: "The feedback section of the Workflow AI site: a comment pinned to a 3D model and a timed comment on a video",
+          note: "Feedback on a 3D model and on a video, the section loop from the site.",
+        },
+        {
+          src: "/naya/site-search.mp4", poster: "/naya/site-search-poster.jpg",
+          alt: "The search section of the Workflow AI site: an AI search bar over a project archive",
+          note: "The copy, the motion and every asset on the Workflow AI site are mine.",
+          link: { href: "https://naya.studio", label: "See the site" },
+        },
+      ],
+      body: [
+        "The website is the first screen most teams ever see, and it had to say in a paragraph what took the product four years to become.",
+        "I wrote it and made everything on it, because I knew what every screen was for. Most product designers hand the site to an agency. This one came from the person who had designed the product.",
+      ],
+      points: [
+        { t: "The copy", b: "Written from the same five promises the product was reset around, so the site and the app say the same thing." },
+        { t: "The motion", b: "Section animations that show feedback landing on a 3D model and search finding an old file, the product doing what the copy claims, not decoration." },
+        { t: "The assets", b: "Every screen, illustration and product shot on the page, taken from the live product and composed for the site." },
+      ],
+      shots: [
+        "/naya/site-integrations.png",
+        "/naya/site-views.png",
+        "/naya/site-ai-tools.png",
+      ],
+    },
+
+    {
+      label: "That's 200+ features. It isn't how anyone experiences it.",
+      kind: "pivot",
+      body: [
+        "People experience Naya as a product where things make sense, where actions are consistent, and where complexity surfaces only when it's needed. The number of features matters less than whether they feel like they belong.",
+        "The numbers: 263,579 blocks created, an NPS above 70 held for two years, usage doubled in a quarter, and a USC programme that grew from one class to 1,500 licences. A director there called it a design journal.",
+      ],
+      shots: [
+        "/naya/workflow-feature-gallery-1.png",
+        "/naya/workflow-feature-gallery-2.png",
+        "/naya/workflow-feature-gallery-3.png",
+      ],
+    },
+
+    {
+      label: "What did it teach me?",
+      kind: "points",
+      points: [
+        { t: "Depth teaches more than breadth", b: "Four years on one product shows you how products actually change, and how today's decisions affect tomorrow's work." },
+        { t: "Systems thinking scales", b: "Individual features don't compound into a product. Without a system they fall apart. The system is the work." },
+        { t: "Constraints drive clarity", b: "We couldn't build workspaces, so we built Group Sharing instead. It was better." },
+        { t: "Consistency is freedom", b: "When the system is strong, a new feature doesn't require reinventing interaction design." },
+        { t: "Communication beats tools", b: "Prototypes in code communicated better than static frames, because the format matched the outcome." },
+      ],
       shots: [],
     },
 
     {
-      label: "Depth as Strength",
-      body: "I didn't design 200 separate features. I spent four years helping shape how those features evolved into a connected product experience. The hardest design work wasn't individual features — it was the system that holds them together. That's what matters at the senior level: thinking about the whole, maintaining coherence across complexity, understanding how products actually grow. Depth isn't limitation. It's the only way to learn this.",
+      label: "Depth as strength",
+      kind: "quote",
+      quote: "I didn't design 200 separate features. I spent four years shaping how those features became one product people could understand.",
+      body: "The hardest design work wasn't any one feature. It was the system that holds them together: thinking about the whole, keeping coherence across complexity, understanding how products actually grow.",
       shots: [
         "/naya/workflow-final-reflection.png",
       ],
@@ -170,16 +415,19 @@ export const PROJECTS = [
 
     /* The second case study, not an example. It grew alongside the workflow
        platform across the same four years and ends up inside it — an
-       estimate lands back in a Naya project as a PDF. */
+       estimate lands back in a Naya project as a PDF. The arc follows the
+       founders' own account of the platform (LinkedIn, June 2026): why
+       costing is a black box, four generations, how it works, where it is
+       now. My part sits in the middle two generations. */
     feature: true,
-    lede: "It began inside the platform: working with the engineers on how a project's own memory could estimate what the product in it was worth. By 2025 it had become a standalone app — upload a photo, get a costed estimate — and I took on its interface, moving a generic AI build onto Naya's brand one layer at a time.",
+    lede: "Costing a physical product is a black box: weeks of emails to suppliers, then a number with no explanation. Naya spent seven years opening it. I came in for the middle of that story, first inside the platform, where a project's own memory could estimate what was in it, then on the standalone app, moving a generic AI build onto Naya's brand one layer at a time and giving the estimate somewhere to land.",
     figures: [
-      { v: "2", l: "lives: in the platform, then standalone" },
-      { v: "6", l: "production stages costed" },
+      { v: "4", l: "generations in seven years" },
+      { v: "6", l: "steps from any input to an estimate" },
       { v: "0s", l: "wait when you press Export" },
     ],
 
-    overview: "Estimation AI turns product images into a costed estimate in minutes. You upload your photos, the AI asks a few clarifying questions, then works through a visible plan — machining, moulding, PCB assembly, final assembly, packaging, shipping — before returning a cost. I picked it up after a first version had already been generated in Google AI Studio. It worked, but it did not look like Naya, and the estimate it produced was a dead end: a number on a screen with nowhere to go.",
+    overview: "Estimation AI turns whatever you have, a sketch, a photo, a 3D model or a bill of materials, into a costed estimate in minutes. You add a few details, the AI works through a visible plan, and a full breakdown comes back: materials, parts, labour, tooling, logistics. I picked up the standalone app after a first version had been generated in Google AI Studio. It worked, but it did not look like Naya, and the estimate it produced was a dead end: a number on a screen with nowhere to go.",
     outcomes: [
       "Shipped as an MVP that looks and behaves like the rest of Naya",
       "Export is instant: the file is built in the background before anyone asks for it",
@@ -191,21 +439,138 @@ export const PROJECTS = [
     ],
     caseStudy: [
       {
-        label: "Problem",
-        body: "The first build was put together fast in Google AI Studio. The flow worked — upload your product images, answer a short set of questions about quantity, country, material and whether there is a PCB, then watch the AI build a step-by-step plan and cost each part of it. But nothing about it felt like our product: a generic dark theme, default form controls, a squared-off primary button, and none of the type, elevation or radius we use everywhere else. The first thing you saw was a spinner on an empty page. And once the AI gave you a number, that was the end of it. You could not hand it to anyone, and there was no record of where it came from.",
+        label: "The question before every product",
+        kind: "story",
+        figure: { src: "/work/estimation-opener.png", alt: "A pair of headphones, a chair, a shoe, a parka and a multitool, each with a manufacturing cost tag that reads a question mark" },
+        lead: "Imagine you've designed a product. A pair of headphones, say.",
+        sub: "All you have is photos of the prototype.",
+        pairs: [
+          { a: "Before anyone funds it or builds it, you need one answer.", b: "What will it cost to make?" },
+          { a: "Finding out means chasing quotes.", b: "Email suppliers, wait days or weeks, and get back numbers that differ by orders of magnitude, with no explanation." },
+          { a: "Pick one, and the other quotes were wasted work.", b: "Then find out, months in, that the design was too costly to make." },
+        ],
+        close: "Costing is a black box. That was the design problem.",
+        peep: "point",
+      },
+
+      {
+        label: "What's inside the box?",
+        kind: "points",
+        body: [
+          "A cost reads as one number. Getting to it means holding all of this at once, which is why it lives in one person's head, or in a spreadsheet nobody else can read.",
+        ],
+        points: [
+          { t: "Parts", b: "The bill of materials: subassemblies, hardware, fasteners, consumables." },
+          { t: "Process", b: "Machining, casting, moulding, welding, and the trade-offs between them." },
+          { t: "Material", b: "Grade, sourcing and yield. Solid wood wastes a fifth to two fifths of the stock. Leather yields two thirds of the hide." },
+          { t: "Supply chain", b: "Who can make it, where, and how long they take." },
+          { t: "Logistics", b: "Freight, import duties and tariffs, the landed cost at the door." },
+          { t: "Sustainability", b: "The second cost of every choice, and the first to be dropped when there is no time." },
+        ],
         shots: [
-          "/work/estimation-ai-before-1.png", // spinner on an empty page
-          "/work/estimation-ai-before-2.png", // the question form, dark and generic
-          "/work/estimation-ai-before-3.png", // "AI is thinking"
-          "/work/estimation-ai-before-4.png", // the AI action plan
+          "/work/estimation-workflow-before.png",
+          { src: "/work/estimation-li-challenges.png", wide: true },
         ],
       },
-      { label: "Constraints", body: "Short timeline, and no Figma file to design from — the interface only existed as code inside Google AI Studio. So I learned the tool and made the edits directly in it, and rebuilt the parts I needed in Figma to work them through properly. Everything went through rounds of feedback before it went live. On top of that, exporting was slow, and hitting Export is exactly the wrong moment to make someone wait." },
+
       {
-        label: "Solution",
-        body: "I turned down a full redesign — on that timeline it would have stalled. Instead I moved the interface onto our brand one layer at a time: our light theme in place of the generic dark one, our typeface, our drop shadows for elevation, our corner radius on inputs and cards, and the pill shape on the primary action. The questions and their order did not change; only the surface did. I also designed the report the AI produces, not just the form that feeds it. Then I gave the estimate somewhere to go: exporting writes the whole thing into a Naya Journey as a PDF, with every data source the AI used as link blocks inside a structured project. It stops being a number on a screen and becomes an estimate review you can share with stakeholders and come back to later.",
+        label: "How the platform answers it",
+        kind: "timeline",
+        body: [
+          "It works at any stage. Early on, a fast should-cost to check a direction. Late, precision for sourcing and negotiation. The workflow is the same six steps either way.",
+        ],
+        steps: [
+          { y: "01", t: "Start anywhere", b: "A brief, a sketch, a photo, a 3D model, a drawing, a bill of materials. There is no required starting point." },
+          { y: "02", t: "Add a few details", b: "Order quantity, where it will be made, packaging, where it has to arrive." },
+          { y: "03", t: "Bring what you know", b: "Past quotes, labour rates, material pricing, if you have them. If not, the platform sources what is relevant." },
+          { y: "04", t: "The agents run", b: "Cost research, value engineering, scenario planning, duties and tariffs, shipping, each handled by its own agent." },
+          { y: "05", t: "The estimate comes back", b: "Materials, parts, labour, overhead, tooling, processes, and where the cost can come down. In minutes." },
+          { y: "06", t: "Adjust without starting over", b: "Change the quantity, the location or the material and the estimate updates in real time." },
+        ],
         shots: [
-          "/work/estimation-ai-export.png", // the estimate landed in a Naya project
+          "/work/estimation-li-how-it-works.png",
+          "/work/estimation-li-skills.png",
+        ],
+      },
+
+      {
+        label: "Seven years, four generations",
+        kind: "timeline",
+        figure: { src: "/work/estimation-li-timeline.png", wide: true, alt: "A timeline from 2020 to 2026: ML models for estimation, LLM integrations, project memory, agentic AI", cap: "The product journey, as the founders drew it" },
+        body: [
+          "Each generation fixed the limit of the one before it. The accuracy figures are Naya's own, from the founders' account.",
+        ],
+        steps: [
+          { y: "Gen One", t: "Furniture only · 70%", b: "A chat trained on 5,000 data points that asked for dimensions and a material and returned a number. It worked for furniture, and could not read a file." },
+          { y: "Gen Two", t: "Project memory · 85%", b: "Inside the platform. The journey's own images, documents and models became the input, and the estimate was written back into it. This is where I came in." },
+          { y: "Gen Three", t: "Agents · 90%", b: "A standalone app. A network of agents, one per concern, returning a landed cost per unit with the breakdown behind it. The build I redesigned." },
+          { y: "Gen Four", t: "Skills · 95%", b: "Industry expertise encoded as layers: material yields, labour rates, compliance, processes. The interface speaks each industry's language." },
+        ],
+        shots: [
+          "/work/estimation-gen-one-chat.png",
+          "/work/estimation-gen-two-journey.png",
+          "/work/estimation-gen-three-report.png",
+          "/work/estimation-li-skills.png",
+        ],
+      },
+
+      {
+        label: "My role",
+        kind: "role",
+        peep: "sit",
+        body: [
+          "Two of those generations are mine. In the second, I worked with the engineers on how the memory a project already holds could estimate what the product in it was worth, and on how the estimate should sit inside the journey.",
+          "In the third, the idea became a standalone app, first generated in Google AI Studio. I took on its interface.",
+          "I moved it onto Naya's brand a layer at a time, designed the report the AI produces, and gave the estimate somewhere to go.",
+        ],
+        shots: [],
+      },
+
+      {
+        label: "So how does a number on a screen become something you can hand to someone?",
+        kind: "pivot",
+        peep: "ease",
+        body: "Here's what I picked up and what I changed, in the order it happened.",
+        shots: [],
+      },
+
+      {
+        label: "What did I inherit?",
+        body: [
+          "The first build was put together fast in Google AI Studio. The flow worked: upload your images, answer a few questions, watch the AI plan and cost each part.",
+          "But nothing about it felt like our product. A generic dark theme, default form controls, a squared-off primary button. The first thing you saw was a spinner on an empty page.",
+          "And once the AI gave you a number, that was the end of it. You couldn't hand it to anyone, and there was no record of where it came from.",
+        ],
+        shots: [
+          "/work/estimation-ai-before-1.png",
+          "/work/estimation-ai-before-2.png",
+          "/work/estimation-ai-before-3.png",
+          "/work/estimation-ai-before-4.png",
+        ],
+      },
+
+      {
+        label: "Why not just redesign it?",
+        kind: "points",
+        body: "Three constraints, and none of them left room for the redesign this obviously wanted.",
+        points: [
+          { t: "A short timeline", b: "A full redesign would have stalled on it, so I turned one down and moved the surface a layer at a time instead." },
+          { t: "No Figma file", b: "The interface existed only as code inside Google AI Studio. I learned the tool and edited it directly, rebuilding in Figma only the parts I needed to work through properly." },
+          { t: "A slow export", b: "Hitting Export is exactly the wrong moment to make someone wait." },
+        ],
+        shots: [],
+      },
+
+      {
+        label: "What changed, if the questions didn't?",
+        kind: "beforeAfter",
+        before: "A generic dark theme, default form controls, a squared-off primary button, and none of the type, elevation or radius we use everywhere else.",
+        after: "Our light theme in place of the dark one, our typeface, our drop shadows for elevation, our corner radius on inputs and cards, and the pill shape on the primary action.",
+        body: [
+          "The questions and their order stayed exactly as they were. Only the surface moved.",
+          "I also designed the report the AI produces, not just the form that feeds it: cost per unit, a confidence score, the sources it drew on, and the summary.",
+        ],
+        shots: [
           "/work/estimation-ai-new-1.png",
           "/work/estimation-ai-new-2.png",
           "/work/estimation-ai-new-3.png",
@@ -214,7 +579,67 @@ export const PROJECTS = [
           "/work/estimation-ai-new-6.png",
         ],
       },
-      { label: "Interaction highlights", body: "The export wait was solved with engineering, not with a spinner. We looked at three options: show a saving indicator on click, which is still a wait in nicer clothes; leave it alone, which fixes nothing; or start building the export in the background the moment the estimate is generated. We went with the third. By the time anyone presses Export the file already exists, so it opens straight away." },
+
+      {
+        label: "Where does an estimate go?",
+        kind: "beforeAfter",
+        before: "The AI gave you a number and that was the end of it. You could not hand it to anyone, and there was no record of where it came from.",
+        after: "Exporting writes the whole thing into a Naya Journey as a PDF, with every data source the AI used kept as link blocks inside a structured project.",
+        body: "It stops being a number on a screen and becomes an estimate review you can share with stakeholders and come back to later. The black box gets an audit trail.",
+        shots: [
+          "/work/estimation-ai-export.png",
+          "/work/estimation-ai-landing.png",
+        ],
+      },
+
+      {
+        label: "What about the wait on Export?",
+        kind: "points",
+        body: [
+          "There were three ways to deal with it.",
+          "We solved it with engineering, not with a spinner.",
+        ],
+        points: [
+          { t: "Show a saving indicator", b: "Still a wait, in nicer clothes." },
+          { t: "Leave it alone", b: "Fixes nothing." },
+          { t: "Build it in the background", b: "Start the moment the estimate is generated. We went with this one: by the time anyone presses Export the file already exists, so it opens straight away." },
+        ],
+        shots: ["/work/estimation-costing-problem.png"],
+      },
+
+      {
+        label: "Where is it now?",
+        kind: "points",
+        body: [
+          "The fourth generation is the one Naya leads with. To see it from the user's side I modelled a hand tool of my own and ran it through: a landed cost per unit, an accuracy score, and every category of the cost, in minutes.",
+          "The estimate is no longer the end of the workflow. It is the start of the next question.",
+        ],
+        points: [
+          { t: "Value engineering", b: "Where the cost can come down, shown while you look at the design." },
+          { t: "Scenario planning", b: "Quantity, route and tooling against cost, without regenerating the estimate." },
+          { t: "Tuned to the company", b: "Enterprise teams layer in their own supplier pricing and cost rules, an hour or two of an expert's week, and the accuracy closes towards 99%." },
+        ],
+        shots: [
+          "/work/estimation-report-today.png",
+          "/work/estimation-li-value-engineering.png",
+          "/work/estimation-li-scenario-planning.png",
+          "/work/estimation-li-accuracy.png",
+        ],
+      },
+
+      {
+        label: "What it taught",
+        kind: "quote",
+        quote: "A redesign I turned down was the reason this shipped at all.",
+        body: [
+          "The timeline couldn't carry one, so the surface moved a layer at a time and the questions underneath never changed. The part that mattered most wasn't the theme at all. It was giving the estimate somewhere to land.",
+          "Naya now leads with it. Estimation is the product a customer tries first, and Workflow is the one they stay for. MillerKnoll's VP of Product puts it at close to 70% of the team's time saved.",
+        ],
+        shots: [
+          "/work/estimation-li-cover.png",
+          "/work/estimation-li-roi.png",
+        ],
+      },
     ],
   },
   {
@@ -466,6 +891,78 @@ export const BUILT = [
   },
 ];
 
+/* The hero says four plain things instead of one tagline. Each is a fact a
+   stranger can check further down the page or on the resume. */
+export const ABOUT_POINTS = [
+  /* A point can be a string, or { t, b, href? }: the sentence, then a bold
+     line under it, which links somewhere when href is set. */
+  { t: "I design award-winning platforms: four years as Senior Product Designer at Naya Studio.",
+    b: "iF Design Award winner for UX." },
+  { t: "A computer science graduate who started in graphic design and never stopped building.",
+    b: "Designed for TEDxJNEC." },
+  { t: "I design in Figma, then build the prototype in working code.",
+    b: "This site is one of those prototypes." },
+  { t: "On the side I ship my own tools — Yoink pastes any website into Figma as editable layers.",
+    b: "Check out Yoink, which I built with Claude Code.", href: "#/work/yoink" },
+];
+
+/* What it is like to have me on the team, in the first person. `t` is the
+   sentence that makes the claim and `d` the work that backs it; `proof` is a
+   project id the link opens, `label` names it. `mark` underlines the one
+   line to leave with. */
+export const WORKING_WITH_ME = [
+  { t: "You review a working prototype, not a mock.",
+    d: "I explore directions as coded prototypes with real states and motion, so engineers click through the feature before they build it instead of decoding a spec.",
+    proof: "naya-workflow", label: "Naya Workflow Platform" },
+  { t: "I cut scope before I cut quality.",
+    d: "When a full workspace model was three months of engineering we didn't have, I designed Group Sharing instead. It was smaller, and it shipped.",
+    proof: "sharing", label: "Group Sharing" },
+  { t: "I write it down before I draw it.",
+    d: "Problem, scope and what success looks like go in a PRD first, so founders and engineers are arguing about the same thing before there are pixels to defend." },
+  { t: "If AI made it, you should be able to see how.",
+    d: "An AI answer nobody can audit is a dead end. Estimation AI shows its plan as it works and files every estimate with its data sources attached.",
+    proof: "estimation-ai", label: "Estimation AI" },
+  { t: "I pick up what is lying on the floor.", mark: true,
+    d: "A three-week, three-person signature process became a self-serve tool because nobody owned it. Same story for the QR builder, launch videos and App Store copy.",
+    href: "#side", label: "Side projects" },
+];
+
+/* What each missing Naya screenshot should show, in plain words. The dev
+   server prints the hint in the empty slot, above the path to drop the file
+   at. Delete a line once its file exists; nothing reads it after that. */
+export const SHOT_HINTS = {
+  "/naya/workflow-product-overview.png": "A full journey, zoomed out: image blocks, a PDF, a 3D model and a few comments visible. The one screen that says what Naya is.",
+  "/naya/workflow-project-context.png": "Homebase today: project cards with cover, item count, status and collaborator avatars.",
+  "/naya/workflow-project-evolution.png": "Homebase before the redesign, so the two sit side by side. An old screenshot or a Figma frame is fine.",
+  "/naya/workflow-phases-structure.png": "A journey with phases visible: the phase headers and the blocks under each.",
+  "/naya/workflow-blocks-hierarchy.png": "A group opened to show the blocks inside it, or the expanded view of one block.",
+  "/naya/workflow-group-sharing.png": "The Share group dialog: email field, role, Invite, and the sentence about inherited access.",
+  "/naya/workflow-collaboration-inheritance.png": "A project's share list showing someone with access via a group and someone with a direct share.",
+  "/naya/workflow-group-sharing-flow.png": "The Figma flow for group sharing, or the remove-from-group confirmation.",
+  "/naya/workflow-mobile-flow.png": "Phone screenshots: Studio, then a journey, then Preview. Three phone frames side by side in one PNG is ideal.",
+  "/naya/workflow-3d-viewer-mobile.png": "A 3D model open on a phone, mid-rotate.",
+  "/naya/workflow-design-system-components.png": "A Figma page or a nayadesign.md excerpt: buttons, avatars, icons, the type scale.",
+  "/naya/workflow-design-system-patterns.png": "Two or three shipped screens that share the same modal, snackbar and pill buttons.",
+  "/naya/workflow-evolution-2022.png": "The oldest Naya screenshot you have: projects and basic sharing, 2022.",
+  "/naya/workflow-evolution-2023.png": "A 2023 journey with phases and blocks.",
+  "/naya/workflow-evolution-2024.png": "A 2024 screen: comments open on a block, or the mobile app.",
+  "/naya/workflow-evolution-2025.png": "A 2025 screen: project memory on, or the estimate PDF inside a project.",
+  "/naya/workflow-process-evolution.png": "A coded prototype running on Vercel, browser chrome included so the URL shows.",
+  "/naya/workflow-multi-in-ask.png": "The generate dialog after the right-click: what you asked for, over the assets it will read.",
+  "/naya/workflow-multi-in-menu.png": "The right-click menu open on that selection, with the generate options showing.",
+  "/naya/workflow-multi-in-result.png": "The generated product, render or summary landed in the journey.",
+  "/naya/workflow-estimation-connection.png": "The estimate PDF sitting in a Naya project as a block, with its link blocks beside it.",
+  "/naya/workflow-feature-gallery-1.png": "Any shipped screen you are proud of, 1 of 3. Different surfaces work best: desktop, mobile, a modal.",
+  "/naya/workflow-feature-gallery-2.png": "Any shipped screen you are proud of, 2 of 3.",
+  "/naya/workflow-feature-gallery-3.png": "Any shipped screen you are proud of, 3 of 3.",
+  "/naya/workflow-final-reflection.png": "One wide, calm screenshot of the product to close on. A full journey works.",
+  "/naya/site-feedback.mp4": "The feedback section loop from the Workflow AI site: a comment on a 3D model, a timed comment on a video.",
+  "/naya/site-search.mp4": "The AI search section loop from the Workflow AI site.",
+  "/naya/site-integrations.png": "The integrations visual from the site: the tool tiles and a project holding files from each.",
+  "/naya/site-views.png": "The views visual from the site: timeline view over a project, and the client / manufacturer view switch.",
+  "/naya/site-ai-tools.png": "The AI tools visual from the site: cost estimate, sketch to 3D model to rendering.",
+};
+
 /* Shared narrative used by both versions' process sections. */
 export const PROCESS = [
   { t: "It starts with a question", d: "Product strategy with founders — roadmap prioritisation, grounded in user insights." },
@@ -476,3 +973,69 @@ export const PROCESS = [
   { t: "And we listen, always", d: "Usability testing and cross-functional feedback between every stage — iterate, ship, repeat." },
 ];
 
+
+/* The line under each screen: what it is, in one breath. */
+export const SHOT_CAPS = {
+  "/naya/workflow-five-promises.png": "The five promises the company reset around, laid along the journey a project runs.",
+  "/naya/workflow-product-overview.png": "A MillerKnoll journey zoomed out: phases across the top, blocks under each.",
+  "/naya/brief-to-tracking.png": "Before Naya: a brief in a PDF, a plan in a sheet, progress tracked by hand.",
+  "/naya/scattered-apps.jpg": "Where one desk lived before Naya: an email, a folder, a Miro board, a Drive and a row of tabs.",
+  "/naya/tangle.png": "Stages, file types, stakeholders and platforms multiplied into one tangle.",
+  "/naya/workflow-project-context.png": "Homebase today: project cards with a cover, a count, a status and the team.",
+  "/naya/workflow-project-evolution.png": "Homebase before the redesign, as a Figma frame, for comparison.",
+  "/naya/workflow-phases-structure.png": "A journey template: phase headers with the blocks that belong to each.",
+  "/naya/workflow-blocks-hierarchy.png": "One block opened in preview, a 3D model with the viewer's tools.",
+  "/naya/workflow-group-sharing.png": "The Share group dialog: an email, a role, and the sentence about inherited access.",
+  "/naya/workflow-collaboration-inheritance.png": "Added to a group: everyone in it can now open the project.",
+  "/naya/workflow-group-sharing-flow.png": "Moving a project out of a group: the confirmation names who loses access.",
+  "/naya/workflow-mobile-flow.png": "A journey on an iPad, with search and filters open.",
+  "/naya/workflow-3d-viewer-mobile.png": "A 3D model open in the viewer, mid-rotate.",
+  "/naya/workflow-design-system-components.png": "The design system's parts: buttons, avatars, icons and the type scale.",
+  "/naya/workflow-design-system-patterns.png": "Three shipped screens, a journey, a dialog and a comment, drawn from one system.",
+  "/naya/workflow-evolution-2022.png": "The early Homebase: projects in a grid, shared one at a time.",
+  "/naya/workflow-evolution-2023.png": "2023: a journey with phases and blocks.",
+  "/naya/workflow-evolution-2024.png": "2024: a comment pinned to a 3D model, the thread open beside it.",
+  "/naya/workflow-evolution-2025.png": "2025: AI search reading the whole journey.",
+  "/naya/workflow-process-evolution.png": "A coded prototype running on Vercel, the URL in the bar.",
+  "/naya/workflow-multi-in-menu.png": "Right-click on a selection: the generate options in the menu.",
+  "/naya/workflow-multi-in-ask.png": "The ask, written over the assets the AI will read.",
+  "/naya/workflow-multi-in-result.png": "What came back, landed in the journey as a block.",
+  "/naya/workflow-estimation-connection.png": "An estimate inside a Naya journey, its sources kept as link blocks.",
+  "/naya/site-integrations.png": "The site's integrations visual: the tools, and a project holding files from each.",
+  "/naya/site-views.png": "The site's views visual: a timeline over a project, and the client or manufacturer switch.",
+  "/naya/site-ai-tools.png": "The site's AI visual: a cost estimate, then sketch to model to rendering.",
+  "/naya/workflow-feature-gallery-1.png": "Team notes opened in preview.",
+  "/naya/workflow-feature-gallery-2.png": "The block menu, open on a journey.",
+  "/naya/workflow-feature-gallery-3.png": "A comment opened on a block.",
+  "/naya/workflow-final-reflection.png": "A full journey, at rest.",
+  "/work/estimation-ai-landing.png": "The Estimation landing page: upload your assets and start.",
+  "/work/estimation-li-challenges.png": "The same weeks, drawn as the founders see them: chasing, waiting, redesigning.",
+  "/work/estimation-li-how-it-works.png": "The six steps as the product shows them, from any starting point to an estimate.",
+  "/work/estimation-li-skills.png": "Industry skills: what each one knows about materials, labour and compliance.",
+  "/work/estimation-li-timeline.png": "Seven years of estimation, from ML models to agentic AI.",
+  "/work/estimation-li-gen-one.png": "Gen One: a chat that asked for dimensions and returned a number.",
+  "/work/estimation-li-gen-two.png": "Gen Two: an estimate generated from the memory of a Naya journey.",
+  "/work/estimation-li-gen-three.png": "Gen Three: agents return a full cost breakdown.",
+  "/work/estimation-workflow-before.png": "The old workflow, day 0 to week 6: spec, email suppliers, wait, compare quotes that don't compare, pick one.",
+  "/work/estimation-gen-one-chat.png": "Gen One: a chat that asked for dimensions and a material and returned a number.",
+  "/work/estimation-gen-two-journey.png": "Gen Two: the estimate written into a Naya journey from what the project already held.",
+  "/work/estimation-gen-three-report.png": "Gen Three: agents return a landed cost per unit with the breakdown behind it.",
+  "/work/estimation-report-today.png": "The report today, for a hand tool I modelled myself: cost per unit, an accuracy score, every category.",
+  "/work/estimation-li-accuracy.png": "How the last stretch closes: feedback, then skills, then the company's own data.",
+  "/work/estimation-ai-before-1.png": "Inherited: a spinner on an empty page.",
+  "/work/estimation-ai-before-2.png": "Inherited: the questions, in default form controls on a dark theme.",
+  "/work/estimation-ai-before-3.png": "Inherited: the AI thinking, with the product photos beside it.",
+  "/work/estimation-ai-before-4.png": "Inherited: the plan as a list, nowhere to go from it.",
+  "/work/estimation-ai-new-1.png": "The same questions on the light theme, in our controls.",
+  "/work/estimation-ai-new-2.png": "A material picked from a proper dropdown.",
+  "/work/estimation-ai-new-3.png": "The plan being written, shown honestly while it works.",
+  "/work/estimation-ai-new-4.png": "Each step explained, with room to correct the AI before it moves on.",
+  "/work/estimation-ai-new-5.png": "Every source the AI used, and a button to save it as a Naya project.",
+  "/work/estimation-ai-new-6.png": "The report: cost per unit, a confidence score and the summary.",
+  "/work/estimation-ai-export.png": "Exported into a Naya journey: reference, details, plan and the report as blocks.",
+  "/work/estimation-costing-problem.png": "The problem slide: from a spec with no cost visibility to a decision, five to six weeks later.",
+  "/work/estimation-li-cover.png": "Estimation AI as Naya leads with it now.",
+  "/work/estimation-li-value-engineering.png": "Value engineering: where the cost can come down, in real time.",
+  "/work/estimation-li-scenario-planning.png": "Scenario planning: quantity, route and tooling against cost.",
+  "/work/estimation-li-roi.png": "The return: hours recaptured when an estimate takes minutes.",
+};
