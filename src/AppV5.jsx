@@ -2,6 +2,7 @@ import { useState, useEffect, useLayoutEffect, useRef, useCallback,
          useContext, createContext, memo, Component } from "react";
 import { ArrowUpRight, ArrowRight, ArrowLeft, Download } from "lucide-react";
 import { PROJECTS, ARCHIVE, BUILT, ABOUT_POINTS, WORKING_WITH_ME, SHOT_HINTS, SHOT_CAPS } from "./data.js";
+import { pictureMode } from "./config.js";
 
 /* ─────────────────────────────────────────────────────────
    v5 — THE SHEET. v4's content and structure, reset as print.
@@ -226,6 +227,8 @@ const Styles = memo(() => (
     .v5-shot-wide img { object-fit:contain; object-position:center; }
     .v5-shot-none { position:absolute; inset:0; display:flex; align-items:center;
                     justify-content:center; padding:clamp(16px,2.4vw,28px); }
+    .v5-shot-none code { position:absolute; left:14px; right:14px; bottom:12px;
+      font-family:var(--font-mono); font-size:0.68rem; color:var(--ink-2); }
     .v5-shot-none b { font-weight:500; font-size:clamp(1.45rem,2.5vw,2rem); line-height:1.08;
                       letter-spacing:-0.04em; color:var(--ink-2); text-wrap:balance;
                       text-align:center; }
@@ -658,7 +661,7 @@ class ErrorBoundary extends Component {
 /* A cached image can finish decoding before React attaches onLoad, so settle
    it on attach rather than waiting for an event that has already fired. */
 const useMissing = () => {
-  const [missing, setMissing] = useState(false);
+  const [missing, setMissing] = useState(PLACEHOLDERS);
   const attach = useCallback(el => {
     if (el?.complete && !el.naturalWidth) setMissing(true);
   }, []);
@@ -706,7 +709,7 @@ const Lightbox = memo(function Lightbox({ shot, onClose }) {
   return (
     <div className={`v5-lb${zoomed ? " in" : ""}`} ref={box} onClick={onClose}
       role="dialog" aria-modal="true" aria-label={shot.alt || "Image"}>
-      <img src={stamp(shot.src)} alt={shot.alt || ""} onClick={toggle} />
+      <img src={pic(shot.src)} alt={shot.alt || ""} onClick={toggle} />
       <button type="button" className="v5-lb-x" onClick={onClose} aria-label="Close">ESC</button>
     </div>
   );
@@ -757,7 +760,7 @@ const Zoomable = memo(function Zoomable({ src, alt, attach, fail, className, i =
   return (
     <button type="button" className={`v5-zoom${className ? ` ${className}` : ""}`}
       onClick={() => open({ src, alt })} aria-label={alt ? `${alt} (open larger)` : "Open larger"}>
-      <img ref={attach} src={stamp(src)} alt={alt} loading="lazy" onError={fail}
+      <img ref={attach} src={pic(src)} alt={alt} loading="lazy" onError={fail}
         onLoad={e => {
           const el = e.currentTarget;
           if (el.naturalHeight > el.naturalWidth) el.classList.add("v5-tall");
@@ -774,7 +777,7 @@ const Zoomable = memo(function Zoomable({ src, alt, attach, fail, className, i =
    not in a half-width card. */
 const Shot = memo(function Shot({ src, alt, i, wide }) {
   const [missing, attach, fail] = useMissing();
-  if (missing) return import.meta.env.DEV ? <Slot src={src} what="screenshot" /> : null;
+  if (missing) return SLOTS ? <Slot src={src} what="screenshot" /> : null;
   const cap = SHOT_CAPS[src];
   return (
     <figure className={`v5-shot-f${wide ? " v5-wide" : ""}`}>
@@ -806,9 +809,10 @@ const Card = memo(function Card({ id, tag, title, short, wide, foot, onOpen }) {
       onClick={onOpen}>
       <div className={`v5-shot${wide ? " v5-shot-wide" : ""}`}>
         {missing ? (
-          <div className="v5-shot-none"><b>{title}</b></div>
+          <div className="v5-shot-none"><b>{title}</b>
+            {PLACEHOLDERS && <code>public/work/{id}.png</code>}</div>
         ) : (
-          <img ref={attach} src={stamp(`/work/${id}.png`)} alt={`${title} screenshot`}
+          <img ref={attach} src={pic(`/work/${id}.png`)} alt={`${title} screenshot`}
             loading="lazy" onError={fail} />
         )}
       </div>
@@ -841,9 +845,11 @@ const Feature = memo(function Feature({ project, onOpen }) {
           <span className="v5-feature-d">{lede || short}</span>
           <span className="v5-feature-cta">Read the case study <ArrowRight /></span>
         </div>
-        {!missing && (
+        {PLACEHOLDERS ? (
+          <div className="v5-feature-poster"><Slot src={`/work/${id}.png`} what="poster" /></div>
+        ) : !missing && (
           <div className="v5-feature-poster">
-            <img ref={attach} src={stamp(`/work/${id}.png`)} alt="" loading="lazy"
+            <img ref={attach} src={pic(`/work/${id}.png`)} alt="" loading="lazy"
               onError={fail} />
           </div>
         )}
@@ -892,6 +898,15 @@ const NoOrphan = ({ text }) => {
    a file replaced under the same name is fetched again after a deploy. */
 const stamp = src => (src && !src.includes("?") ? `${src}?v=${__BUILD__}` : src);
 
+/* Which set the case-study pictures come from — see PICTURES in config.js.
+   "archive" reads the frozen copy under /archive; "new" reads the working
+   folders; "placeholder" shows no picture and leaves a labelled slot in
+   its place, on the built site as well as the dev server. */
+const PICTURES = pictureMode();
+const PLACEHOLDERS = PICTURES === "placeholder";
+const SLOTS = PLACEHOLDERS || import.meta.env.DEV;
+const pic = src => (src ? stamp(PICTURES === "archive" ? `/archive${src}` : src) : src);
+
 const paras = body => (Array.isArray(body) ? body : body ? [body] : []);
 
 const Cols = memo(function Cols({ items, wide = items.length > 3 }) {
@@ -922,7 +937,7 @@ const Peep = memo(function Peep({ name, className }) {
 const Fig = memo(function Fig({ fig, className }) {
   const [missing, attach, fail] = useMissing();
   if (!fig?.src) return null;
-  if (missing) return import.meta.env.DEV ? (
+  if (missing) return SLOTS ? (
     <figure className={className}><Slot src={fig.src} what="figure" hint={fig.alt} /></figure>
   ) : null;
   return (
@@ -941,21 +956,21 @@ const Clip = memo(function Clip({ clip }) {
 });
 
 const OneClip = memo(function OneClip({ clip, i = 0 }) {
-  const [missing, setMissing] = useState(false);
+  const [missing, setMissing] = useState(PLACEHOLDERS);
   const [bg, setBg] = useState(null);
   /* The poster arrives before the first frame does, so the card takes its
      colour from the poster and the frame only confirms it. */
   useEffect(() => {
-    if (!clip?.poster) return;
+    if (!clip?.poster || PLACEHOLDERS) return;
     const im = new Image();
     const done = () => { const c = cardColor(im, i); if (c) setBg(c); };
-    im.onload = done; im.src = stamp(clip.poster);
+    im.onload = done; im.src = pic(clip.poster);
     if (im.complete && im.naturalWidth) done();
   }, [clip?.poster, i]);
   if (!clip?.src) return null;
   /* Like a shot: a clip whose file is not there yet leaves the page in
      production and a labelled slot on the dev server. */
-  if (missing) return import.meta.env.DEV ? (
+  if (missing) return SLOTS ? (
     <figure className="v5-clip"><Slot src={clip.src} what="clip" hint={clip.alt} /></figure>
   ) : null;
   return (
@@ -963,7 +978,7 @@ const OneClip = memo(function OneClip({ clip, i = 0 }) {
       {/* React sets muted as a property, not an attribute, and browsers only
           autoplay what is muted in the markup; the ref makes sure of it. */}
       <video ref={el => { if (el) { el.muted = true; el.defaultMuted = true; } }}
-        src={stamp(clip.src)} poster={stamp(clip.poster)} autoPlay muted loop playsInline
+        src={pic(clip.src)} poster={pic(clip.poster)} autoPlay muted loop playsInline
         preload="metadata" aria-label={clip.alt || ""} onError={() => setMissing(true)}
         style={bg ? { background: bg } : undefined}
         onLoadedData={e => { const c = cardColor(e.currentTarget, i); if (c) setBg(c); }} />
