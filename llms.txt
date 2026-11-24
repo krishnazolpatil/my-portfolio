@@ -1,0 +1,38 @@
+# Krishna Zolpatil
+
+> Krishna Zolpatil (Krishna Zol, @krishnazolpatil) is an AI-native Senior Product Designer at Uniblox, based in India. Before that, Krishna spent four years at Naya Studio, shipping 200+ features on a platform that won an iF Design Award in 2024.
+
+I designed the AI inside two products. A workflow platform that generates from what a project already holds, with no prompt box. An estimator that files every number with its source. Teams at Google and MillerKnoll run on the platform.
+
+## Facts
+- 200+ features shipped in four years at Naya
+- 30 features designed in two months, 20 already released
+- ~50% less design time, prototyping in code with Claude
+- 70+ NPS on the product, held for two years
+- Now at: Uniblox, AI-powered insurance infrastructure
+- Strong in: Agentic UX, human-AI interaction, zero to one, design systems, B2B SaaS
+- Works in: Figma, Claude Code, React, GitHub, Vercel
+- Started in: Computer science, then graphic design
+- Based in: India, remote worldwide
+
+## Recognition
+- iF Design Award (Product UX, 2024): The platform I joined at its foundations won an iF Design Award for Product UX.
+- MillerKnoll (Estimation AI): Close to 70% of the team's time saved, by their VP of Product's count.
+- USC (Workflow platform): One class became 1,500 licences. A director there called it a design journal.
+- Autodesk (Project memory): I designed the AI feature and the film that explained it. The film ran on Autodesk's page.
+- RISD (Review panel): Invited to sit alongside RISD professors and critique the next generation of designers.
+
+## Work
+- [Naya Workflow Platform](https://krishnazolpatil.com/work/naya-workflow/): A workspace where AI generates from everything a product team already has. Used by teams at Google and MillerKnoll.
+- [Estimation AI](https://krishnazolpatil.com/work/estimation-ai/): Upload a product photo, get a costed estimate in minutes, with the plan and every source in view.
+- [Group Sharing](https://krishnazolpatil.com/work/sharing/): Share the folder, not the file.
+- [Yoink](https://krishnazolpatil.com/work/yoink/): Copy any website into Figma as editable layers. Designed, coded and shipped alone, on the Chrome Web Store.
+- [Email Signature Generator](https://krishnazolpatil.com/work/email-signature-generator/): Replaced a three-week, three-person manual process.
+- [QR Code Builder](https://krishnazolpatil.com/work/qr-code-builder/): On-brand QR codes, self-serve for the whole company.
+
+## Resume and contact
+- [Resume as Markdown](https://krishnazolpatil.com/resume.md)
+- [Resume as PDF](https://krishnazolpatil.com/resume.pdf)
+- [LinkedIn](https://www.linkedin.com/in/krishnazolpatil/)
+- [GitHub](https://github.com/krishnazolpatil)
+- Email: krishna.zolpatil@gmail.com
