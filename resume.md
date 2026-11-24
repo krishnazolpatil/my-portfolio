@@ -1,62 +1,72 @@
 # Krishna Zolpatil
 
-**Senior Product Designer** · *I design AI products, then I build them.*
-India · Remote (global) · +91 70200 73891 · krishna.zolpatil@gmail.com
+**Senior Product Designer, AI-native** · *I design AI that shows its work.*
+India, remote worldwide · +91 70200 73891 · krishna.zolpatil@gmail.com
 Portfolio: [krishnazolpatil.com](https://krishnazolpatil.com) · [linkedin.com/in/krishnazolpatil](https://www.linkedin.com/in/krishnazolpatil/)
+
+- **200+** features shipped in four years, on one platform
+- **30** features designed in two months, 20 already released
+- **~50%** less design time, prototyping in code with Claude
+- **70+** NPS on the product, held for two years
 
 ## Summary
 
-Senior Product Designer — 5 years in design, 4+ as a product designer taking AI products zero-to-one at Naya Studio, a B2B/B2C SaaS startup based in Brooklyn, NYC — a digital platform for physical products. I simplify complex, multi-step workflows into flows that feel obvious. AI-native, end-to-end: frame in Figma, prototype in working code with Claude Code, hand off through GitHub and Vercel — cutting design time ~50% on rapid prototyping and the time developers need to understand major-feature handoffs by 40–50%. 200+ features shipped across agentic AI, core product, design systems and monetisation.
+Five years in design, four taking AI products from zero to one at Naya, a B2B/B2C SaaS startup in Brooklyn, NYC, founded by Harvard alumni. The platform won an iF Design Award, and teams at Google and MillerKnoll run on it. I simplify complex, multi-step workflows into flows that feel obvious, end to end: frame in Figma, prototype in working code with Claude Code, hand off through GitHub and Vercel.
 
 ## Experience
 
-### Senior Product Designer — Naya Studio (Remote)
-*Jun 2023 → Present*
+### Senior Product Designer · Naya Studio, Remote
+*Jun 2023 – Present*
 
-- Shipped 19 high-impact features in 2024 — before adopting the AI workflow — contributing to a clear NPS improvement within one year.
-- **Adapted fast to the 2026 AI shift:** learned a Claude-first design workflow in weeks — divergent directions explored as working code prototypes with real states, motion and micro-interactions instead of static mocks — cutting design time on rapid prototyping by ~50%.
-- **Rebuilt design→dev handoff** around GitHub and Vercel: plug-and-play, click-through prototypes reduced the time engineers need to understand major features by 40–50%.
-- Designed 30 features in Apr–May 2026 (20 released to users, 10+ build-ready) at sustained quality.
-- Own flagship **agentic AI** end to end: AI Workflow Builder (template-first, progressive disclosure so teams trust and reuse AI workflows) and Estimation AI (explainability-first human-AI interaction — every AI output auditable, full state design).
-- Designed **Group Sharing & Nested Groups** (web + mobile): permission-inheritance logic with live previews of who gains access, replacing person-by-person invites with 1-click sharing to entire nested orgs.
-- Redesigned Projects & Homebase, the surface every user lands on daily, from a wall of competing actions to a clear next step.
-- Built and own the **design system**: created primitives and tokens with the dev team in Storybook, mirrored between Figma and code — design and dev stay in sync, and AI-assisted prototyping is on-brand by default.
-- Invited onto a design review panel alongside **RISD professors** to critique student work.
-- Designed Subscriptions, Teams & **Stripe checkout UX** — plan comparison, upgrade paths, billing states; ran research and usability testing across 3,000+ user insights to drive iteration.
-- **Beyond design:** shape roadmap prioritisation and product strategy with founders; ran influencer partnerships (100+ profiles researched across 10 industries, rate benchmarking, landed a collaboration); own content end to end — motion graphics, video, AI voice-overs, copywriting and Onshape App Store marketing.
+- **Agentic AI, end to end.** Estimation AI: explainability-first, every output auditable. MillerKnoll's VP of Product puts the time it saves at close to 70%. AI Workflow Builder: template-first with progressive disclosure, so teams trust and reuse it.
+- **Project memory.** Designed the AI that reads every asset in a project, and the film explaining it that ran on Autodesk's page.
+- **AI-native process.** Learned a Claude-first workflow in weeks: directions explored as code prototypes with real states and motion, cutting rapid-prototyping design time by ~50%. Designed 30 features in Apr–May 2026.
+- **Design-to-dev handoff.** Rebuilt around GitHub and Vercel: click-through prototypes cut the time engineers need to understand major features by 40–50%.
+- **Design system.** Built and own it: primitives and tokens made with the dev team in Storybook, mirrored between Figma and code, so AI-assisted prototyping is on-brand by default.
+- **Group Sharing.** Scoped a three-month workspace model down to a one-week design that shipped: access inherited from one shared group, with confirmations that name who loses it.
+- **Core product.** Redesigned Projects & Homebase, the surface every user lands on daily. Shipped 19 high-impact features in 2024, contributing to a clear NPS improvement within one year.
+- **Monetisation and research.** Designed Subscriptions, Teams and Stripe checkout UX: plan comparison, upgrade paths, billing states. Ran user research and usability testing across 3,000+ user insights.
+- **Beyond design.** Shape roadmap and product strategy with founders; ran influencer partnerships (100+ profiles, 10 industries); own content end to end: motion graphics, video, AI voice-overs, copywriting, Onshape App Store marketing.
 
-### Product Designer — Naya Studio (Remote)
-*Jun 2022 → Jun 2023*
+### Product Designer · Naya Studio, Remote
+*Jun 2022 – Jun 2023*
 
-- Implemented responsive designs across platforms; built reusable style guides and UI components that seeded the later design system.
-- Improved usability through user research and usability testing, shipping iterations that contributed to the NPS improvement.
-- Promoted to Senior Product Designer after one year.
+- Responsive interfaces across platforms, and the style guides and UI components that seeded the design system.
+- Improved usability through research and testing that contributed to the NPS improvement. Promoted to Senior after one year.
 
-### Graphic Design Intern — Vruksh Ecosystem (Nagpur)
-*Jan 2021 → Aug 2021*
+### Graphic Design Intern · Vruksh Ecosystem, Nagpur
+*Jan 2021 – Aug 2021*
 
-- Created logos, illustration and typography for the growth team, increasing user engagement by 60%; built infographics for complex data.
+- Logos, illustration and typography for the growth team, increasing user engagement by 60%; infographics for complex data.
 
-## Independent Tools — Designed & Built Solo
+## Recognition
 
-- **Yoink** — Chrome extension that pastes any website into Figma as fully editable layers; actively used by designers.
-- **Email Signature Generator** — replaced a 3-week, 3-person manual process with a self-serve tool built end to end.
-- **QR Code Builder** — on-brand QR codes, self-serve for the whole company.
+- **[iF Design Award 2024, Product UX.](https://ifdesign.com/en/winner-ranking/project/naya/643559)** Won by the Naya platform, which I joined at its foundations.
+- **USC.** One class on Naya grew to 1,500 licences.
+- **RISD.** Invited onto a design review panel alongside RISD professors.
+
+## Independent tools, designed and built solo
+
+- **[Yoink.](https://chromewebstore.google.com/detail/yoink/lecfomokhlobahfkpojglfcigbbdckia)** Chrome extension that pastes any website into Figma as editable layers. Live on the Chrome Web Store.
+- **Email Signature Generator.** Replaced a 3-week, 3-person manual process.
+- **QR Code Builder.** Self-serve, on-brand.
 
 ## Skills
 
-**Craft** — End-to-end product design · Wireframes, high-fidelity mockups & prototypes · Interaction design · Pixel-perfect UI & visual design · Design systems · Motion & micro-interactions · Responsive design · Storytelling
-**AI-native workflow** — Agentic UX · Human-AI interaction · Rapid prototyping in code with Claude Code · Figma · GitHub · Vercel · Design-to-dev handoff
-**Product & growth** — Zero-to-one · PRDs · User research & usability testing · Competitive research · Cross-functional collaboration · Stakeholder alignment · Copywriting · Video & motion graphics
+**Craft:** End-to-end product design, wireframes, high-fidelity mockups, prototypes, interaction design, pixel-perfect UI and visual design, design systems, motion and micro-interactions, responsive design, storytelling
+
+**AI-native workflow:** Agentic UX, human-AI interaction, rapid prototyping in code, Claude Code, Figma, GitHub, Vercel, design-to-dev handoff
+
+**Product and growth:** Zero-to-one, PRDs, user research, usability testing, competitive research, cross-functional collaboration, stakeholder alignment, copywriting, video and motion graphics
 
 ## Education
 
-**B.Tech, Computer Science** — MGM's Jawaharlal Nehru Engineering College, India (2017 → 2021)
+**B.Tech, Computer Science,** MGM's Jawaharlal Nehru Engineering College, India, 2017 – 2021
 
 ## Languages
 
-English · Hindi · Marathi
+English, Hindi, Marathi
 
 ---
 
-*Markdown version of my resume — paste this into Claude or any AI assistant for screening, summaries or interview prep. PDF: krishnazolpatil.com/resume.pdf*
+*Markdown version of my resume. Paste it into Claude or any AI assistant for screening, summaries or interview prep. PDF: krishnazolpatil.com/resume.pdf*
